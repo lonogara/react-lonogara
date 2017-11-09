@@ -3530,10 +3530,10 @@ regjsparser@^0.1.4:
   dependencies:
     jsesc "~0.5.0"
 
-"rehype-align@file:.packages/rehype-align":
+"rehype-align@file:./.packages/rehype-align":
   version "0.0.0"
 
-"rehype-blank@file:.packages/rehype-blank":
+"rehype-blank@file:./.packages/rehype-blank":
   version "0.0.0"
 
 rehype-img-as@^0.0.5:
