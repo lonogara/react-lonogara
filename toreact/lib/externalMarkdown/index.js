@@ -20,11 +20,11 @@ var _rehypeRaw = require('rehype-raw')
 
 var _rehypeRaw2 = _interopRequireDefault(_rehypeRaw)
 
-var _rehypeAlign = require('rehype-align')
+var _rehypeAlign = require('../../../.packages/rehype-align')
 
 var _rehypeAlign2 = _interopRequireDefault(_rehypeAlign)
 
-var _rehypeBlank = require('rehype-blank')
+var _rehypeBlank = require('../../../.packages/rehype-blank')
 
 var _rehypeBlank2 = _interopRequireDefault(_rehypeBlank)
 

@@ -12,7 +12,7 @@ var _rehypeParse = require('rehype-parse')
 
 var _rehypeParse2 = _interopRequireDefault(_rehypeParse)
 
-var _rehypeBlank = require('rehype-blank')
+var _rehypeBlank = require('../../../.packages/rehype-blank')
 
 var _rehypeBlank2 = _interopRequireDefault(_rehypeBlank)
 

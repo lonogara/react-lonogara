@@ -10,8 +10,6 @@
     "create-keyframes": "^1.0.1",
     "hast-util-select": "^1.0.1",
     "orph": "^1.0.2",
-    "rehype-align": "file:./.packages/rehype-align",
-    "rehype-blank": "file:./.packages/rehype-blank",
     "rehype-img-as": "^0.0.5",
     "rehype-minify-whitespace": "^2.0.3",
     "rehype-parse": "^4.0.0",
