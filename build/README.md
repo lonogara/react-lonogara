@@ -1,3 +1,0 @@
-# util for build
-
-- `markdownToHtml`

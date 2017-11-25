@@ -1,0 +1,30 @@
+{
+  "env": {
+    "BUILD": {
+      "presets": [
+        "es2015-rollup",
+        "react"
+      ]
+    },
+    "TEST": {
+      "presets": [
+        ["env", { "targets": { "node": "current" } }],
+        "flow",
+        "react"
+      ],
+      "plugins": [
+        "istanbul",
+        "rewire",
+        ["espower", { "embedAst": true }],
+        "empower-assert"
+      ]
+    },
+    "hoge": {
+      "presets": [
+        ["env", { "targets": { "browsers": ["last 2 versions", "safari >= 7"] } }],
+        "flow"
+      ],
+      "plugins": ["transform-runtime"]
+    }
+  }
+}
