@@ -22,9 +22,9 @@
     "postbuild": "run-s test:require format"
   },
   "dependencies": {
-    "atra": "^1.1.0",
+    "atra": "^1.1.1",
     "babel-runtime": "^6.26.0",
-    "orph": "^1.0.2"
+    "orph": "^1.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -38,30 +38,29 @@
     "babel-preset-react": "^6.24.1",
     "codecov": "^3.0.0",
     "cross-env": "^5.1.0",
-    "enzyme": "^3.1.0",
-    "enzyme-adapter-react-16": "^1.0.2",
-    "flow-bin": "^0.57.3",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-16": "^1.1.0",
+    "flow-bin": "^0.59.0",
     "flow-typed": "^2.2.1",
-    "jsdom": "^11.3.0",
+    "jsdom": "^11.4.0",
     "jsdom-global": "^3.0.2",
     "mocha": "^4.0.1",
-    "npm-run-all": "^4.1.1",
+    "npm-run-all": "^4.1.2",
     "nyc": "^11.1.0",
     "power-assert": "^1.4.4",
-    "prettier": "^1.7.4",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-test-renderer": "^16.0.0",
-    "rewire": "^2.5.2",
-    "rollup": "^0.51.8",
+    "prettier": "^1.8.2",
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "react-test-renderer": "^16.1.1",
+    "rewire": "^3.0.2",
+    "rollup": "^0.52.0",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-flow": "^1.1.1",
-    "sinon": "^4.0.1"
+    "sinon": "^4.1.2"
   },
   "peerDependencies": {
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "react": "^16.0.0"
   },
   "prettier": {
     "tabWidth": 2,

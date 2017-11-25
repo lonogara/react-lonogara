@@ -1462,7 +1462,6 @@ var LigureMobile = (function(_Component) {
           onTransitionEnd: this.listeners['DOM:OFF_PRELOADING'],
           children: this.preloader
         })
-        // children: valued(this.props.Preloader)
       }
     },
     {
