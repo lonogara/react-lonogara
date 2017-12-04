@@ -1,35 +1,38 @@
 import Orph from 'orph'
-// import * as _util from './util'
-import * as _render from './render'
-import * as _store from './store'
-import * as _react from './react'
-import * as _dom from './dom'
-import * as _window from './window'
+import * as _dom from './_dom.js'
+import * as _react from './_react.js'
+import * as _render from './_render.js'
+import * as _store from './_store.js'
+import * as _window from './_window.js'
+import { isPureObject } from './util.js'
 
-const { entries } = Object
-const { isArray } = Array
-const isPureObject = target => typeof target === 'object' && !isArray(target)
-
-const imports = [
-  // ['UTIL', _util],
-  ['RENDER', _render],
-  ['STORE', _store],
-  ['REACT', _react],
-  ['DOM', _dom],
-  ['WINDOW', _window]
-]
-
-const orph = new Orph(
-  [].concat(
-    ...imports.map(([prefix, orphans]) =>
-      entries(orphans)
-        .filter(([name, listener]) => !isPureObject(listener))
-        .map(([name, listener]) => {
-          const NAME = `${prefix}:${name}`
-          return isArray(listener) ? [NAME, ...listener] : [NAME, listener]
-        })
-    )
-  )
-)
-
+const orph = new Orph()
+add(_dom, 'DOM')
+add(_react, 'REACT')
+add(_render, 'RENDER')
+add(_store, 'STORE')
+add(_window, 'WINDOW')
 export default orph
+
+function add(_import, prefix) {
+  Object.entries(_import)
+    .filter(([name, value]) => !isPureObject(value))
+    .forEach(([name, value]) => {
+      const addedName = `${prefix}:${name}`
+
+      let listener, states, dispatches
+
+      if (Array.isArray(value)) {
+        const [fn, opts] = value
+        listener = fn
+        states = opts.states || []
+        dispatches = opts.dispatches || []
+      } else {
+        listener = value
+        states = []
+        dispatches = []
+      }
+
+      orph.add(addedName, listener, { states, dispatches })
+    })
+}

@@ -2,9 +2,9 @@ import { isObjectPure, isString, error, typerror } from '../util.js'
 
 const { keys, values } = Object
 const colorsKey = ['base', 'sub', 'side']
-const BASE_COLOR = '#484848'
+const BASE_COLOR = '#181823'
 const SUB_COLOR = '#ffffff'
-const SIDE_COLOR = '#484848'
+const SIDE_COLOR = '#1f1c1c'
 
 export default ({ colors }) => {
   const result = {

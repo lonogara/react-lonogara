@@ -13,7 +13,8 @@ const a = Atra({
       position:"relative",
       height: "100%",
       overflowScrolling:"touch",
-      WebkitOverflowScrolling:"touch"
+      WebkitOverflowScrolling:"touch",
+      overflowX: "hidden"
     }
   }
 })

@@ -1,5 +1,8 @@
 import React from 'react'
 import Atra from 'atra'
+import { Burger } from './components'
+
+const burger = <Burger />
 
 export default ({
   height,
@@ -12,7 +15,7 @@ export default ({
       {word}
     </span>
     <span {...a('HEAD_BUTTON', { onTouchEnd, style: { padding: `${(height - 100) / 2}px 25px` } })}>
-      {children}
+      {burger}
     </span>
   </header>
 )

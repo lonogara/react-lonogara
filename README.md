@@ -1,31 +1,30 @@
 # ligure
 
-[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![Build Status]()]()
 [![Coverage Status]()]()
 
-- **Local figures gathered**
+* **Local figures gathered**
 
-- **ローカルの形があつまった**
+* **ローカルの形があつまった**
 
-- **view the local's real.**
+* **view the local's real.**
 
 ## usage
+
 ```js
-import React from "react"
-import { render } from "react-dom"
-import { Desktop, Mobile } from "ligure"
-import props from "./props"
+import React from 'react'
+import { render } from 'react-dom'
+import { Desktop, Mobile } from 'ligure'
+import props from './props'
 
 render(
-  isMobile()
-    ? <Mobile {...props} />
-    : <Desktop {...props} />,
-  document.getElementById("app")
+  isMobile() ? <Mobile {...props} /> : <Desktop {...props} />,
+  document.getElementById('app')
 )
 ```
 
 ## props
+
 ```js
 type Props = {
   firstIndex: number,
@@ -72,8 +71,7 @@ type Side = {
 }
 ```
 
-
-## development flow
+<!-- ## development flow -->
 
 <!-- ## Installation
 ```shell

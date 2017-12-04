@@ -18,31 +18,25 @@ export default ({
   descriptionStyle
 }) => (
   <div {...a('ROOT')}>
-    <span
-      {...a('WRAP', {
-        onTouchStart,
-        onTouchEnd: HoTouchEnd(href),
-        style: {
-          width: size,
-          height: size,
-          backgroundImage: buttonImage
-        }
-      })}
-    >
+    <span {...a('WRAP', {
+      onTouchStart,
+      onTouchEnd: HoTouchEnd(href),
+      style: {
+        width: size,
+        height: size,
+        backgroundImage: buttonImage
+      }
+    })}>
       {coverColor && (
-        <span
-          {...a('COVER', {
-            style: { backgroundColor: coverColor }
-          })}
-        />
+        <span {...a('COVER', {
+          style: { backgroundColor: coverColor }
+        })} />
       )}
       {descriptionText && (
-        <span
-          {...a('DESCRIPTION', {
-            style: descriptionStyle,
-            children: descriptionText
-          })}
-        />
+        <span {...a('DESCRIPTION', {
+          style: descriptionStyle,
+          children: descriptionText
+        })} />
       )}
     </span>
   </div>

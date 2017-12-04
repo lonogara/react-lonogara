@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import Atra from 'atra'
 import orph from './orph'
 import {
-  Burger,
   Button,
   Detail,
   Exhibit,
@@ -21,11 +20,11 @@ const HEAD_HEIGHT = 170
 const BUTTON_HEIGHT = 150
 
 const listeners = [
-  'DOM:OFF_PRELOADING',
+  'RENDER:OFF_PRELOADING',
   'DOM:SWITCH_VIEW',
   'DOM:OFF_DETAIL',
-  'DOM:ON_DRIFTING',
-  'DOM:LAG_DRIFTING',
+  'RENDER:ON_DRIFTING',
+  'RENDER:LAG_DRIFTING',
   'DOM:OFF_DRIFTING'
 ]
 
@@ -38,7 +37,8 @@ export default class LigureMobile extends Component {
       drifting: false,
       index: undefined,
       exhibit: undefined,
-      detail: undefined
+      detail: undefined,
+      buttonUnitIndex: 0
     }
   }
 
@@ -96,7 +96,7 @@ export default class LigureMobile extends Component {
   createPreload() {
     return <Preload {...{
       vanish: typeof this.state.index === 'number',
-      onTransitionEnd: this.listeners['DOM:OFF_PRELOADING'],
+      onTransitionEnd: this.listeners['RENDER:OFF_PRELOADING'],
       children: this.preloader
     }} />
   }
@@ -105,10 +105,8 @@ export default class LigureMobile extends Component {
     return <Head {...{
       height: HEAD_HEIGHT,
       word: this.props.views[this.state.index].head,
-      onTouchEnd: this.listeners['DOM:ON_DRIFTING']
-    }}>
-      <Burger />
-    </Head>
+      onTouchEnd: this.listeners['RENDER:ON_DRIFTING']
+    }} />
   }
 
   createMain() {
@@ -120,12 +118,15 @@ export default class LigureMobile extends Component {
         height: window.innerHeight - (HEAD_HEIGHT + BUTTON_HEIGHT),
         backgroundStyle: this.props.exhibitBgStyle
       }}>
+      
         <Exhibit {...{ detail, children: exhibit }} />
+
         {detail && <Detail {...{
+          onQuit: this.listeners['DOM:OFF_DETAIL'],
           mountWithShut: detail.mountWithShut,
-          children: detail.elements,
-          onQuit: this.listeners['DOM:OFF_DETAIL']
+          children: detail.elements
         }} />}
+
       </Main>
     )
   }
@@ -160,7 +161,7 @@ export default class LigureMobile extends Component {
   createVeil() {
     return <Veil {...{
       drifting: this.state.drifting,
-      onTouchEnd: this.listeners['DOM:LAG_DRIFTING'],
+      onTouchEnd: this.listeners['RENDER:LAG_DRIFTING'],
       onTransitionEnd: this.listeners['DOM:OFF_DRIFTING']
     }} />
   }
@@ -168,7 +169,11 @@ export default class LigureMobile extends Component {
 
 const a = Atra({
 
-  ROOT: {},
+  ROOT: {
+    style: {
+      backgroundColor: 'var(--side-color)'
+    }
+  },
 
   HEAD_AND_MAIN: {
     style: {
@@ -201,9 +206,3 @@ const a = Atra({
     }
   }
 })
-
-// 'DOM:UPDATE_VIEW',
-// 'DOM:ON_DETAIL',
-// sides: Array<React$Element>
-// backgroundImage: string
-// css: string

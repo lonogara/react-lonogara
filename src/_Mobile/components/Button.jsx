@@ -25,9 +25,11 @@ const a = Atra({
       objectFit: 'contain',
       position: 'relative',
       // height: '50%',
-      width: '42%',
+      // width: '42%',
+      width: '40%',
       // top: '23%',
-      top: '18%'
+      // top: '18%'
+      top: '17%'
       // strokeLinecap: 'round',
       // strokeLinejoin: 'round'
     }

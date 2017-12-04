@@ -134,17 +134,6 @@ var slicedToArray = (function() {
   }
 })()
 
-var toConsumableArray = function(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++)
-      arr2[i] = arr[i]
-
-    return arr2
-  } else {
-    return Array.from(arr)
-  }
-}
-
 var isArray = Array.isArray
 var isObjectPure = function isObjectPure(target) {
   return (
@@ -367,9 +356,9 @@ var keys = Object.keys
 var values = Object.values
 
 var colorsKey = ['base', 'sub', 'side']
-var BASE_COLOR = '#484848'
+var BASE_COLOR = '#181823'
 var SUB_COLOR = '#ffffff'
-var SIDE_COLOR = '#484848'
+var SIDE_COLOR = '#1f1c1c'
 
 var index$6 = function(_ref) {
   var colors = _ref.colors
@@ -490,192 +479,321 @@ var isNumber$1 = function isNumber(target) {
   return typeof target === 'number'
 }
 
+var isPureObject = function isPureObject(target) {
+  return (
+    (typeof target === 'undefined' ? 'undefined' : _typeof(target)) ===
+      'object' && !Array.isArray(target)
+  )
+}
+
 //
-var BY_REACT_DIDMOUNT = [
-  function(_ref, _ref2) {
-    var index = _ref.index,
-      exhibit = _ref.exhibit
-    var render = _ref2.render
-    return render({ index: index, exhibit: exhibit })
-  },
-  { states: ['index', 'exhibit'], dispatches: [] }
-]
-
-var BY_DOM_SWITCH_VIEW = [
-  function(packet, _ref3) {
-    var render = _ref3.render,
-      dispatch = _ref3.dispatch
-    var viewIndex = packet.viewIndex,
-      exhibit = packet.exhibit,
-      scrollTop = packet.scrollTop
-
-    var detail = packet.detail
-      ? { elements: packet.detail, mountWithShut: false }
-      : undefined
-    render({ index: viewIndex, exhibit: exhibit, detail: detail }, function() {
-      scrollDOM().scrollTop = scrollTop
-    })
-  },
+var SWITCH_VIEW = [
+  switchView,
   {
-    states: ['index', 'exhibit', 'detail'],
-    dispatches: []
+    dispatches: [
+      'STORE:SET_SCROLLTOP',
+      'STORE:GET_FACTORY_EXHIBIT',
+      'STORE:GET_SCROLLTOP',
+      'STORE:GET_DETAIL_INDEX',
+      'STORE:GET_FACTORY_DETAIL',
+      'RENDER:BY_DOM_SWITCH_VIEW'
+    ]
   }
 ]
 
-var BY_DOM_UPDATE_VIEW = [
-  function(exhibit, _ref4) {
-    var render = _ref4.render
-    return render({ exhibit: exhibit })
-  },
-  { states: ['exhibit'], dispatches: [] }
+var UPDATE_VIEW = [
+  updateView,
+  {
+    dispatches: [
+      'STORE:UPDATE_FACTORY',
+      'STORE:GET_FACTORY_EXHIBIT',
+      'RENDER:BY_DOM_UPDATE_VIEW'
+    ]
+  }
 ]
 
 var ON_DETAIL = [
-  function(detailElements, _ref5) {
-    var render = _ref5.render
-    return render({ detail: { elements: detailElements, mountWithShut: true } })
-  },
-  { states: ['detail'], dispatches: [] }
+  onDetail,
+  {
+    dispatches: ['STORE:GET_FACTORY_DETAIL', 'RENDER:ON_DETAIL']
+  }
 ]
 
 var OFF_DETAIL = [
-  function(n, _ref6) {
-    var render = _ref6.render
-    return render({ detail: undefined })
-  },
-  { states: ['detail'], dispatches: [] }
-]
-
-var OFF_PRELOADING = [
-  function(n, _ref7) {
-    var render = _ref7.render
-    return render({ preloading: false })
-  },
-  { states: ['preloading'], dispatches: [] }
-]
-
-var ON_DRIFTING = [
-  function(n, _ref8) {
-    var render = _ref8.render
-    return render({ drifting: true })
-  },
-  { states: ['drifting'], dispatches: [] }
-]
-
-var LAG_DRIFTING = [
-  function(n, _ref9) {
-    var render = _ref9.render
-    return render({ drifting: 'lag' })
-  },
-  { states: ['drifting'], dispatches: [] }
+  offDetail,
+  {
+    dispatches: ['STORE:OFF_DETAIL_INDEX', 'RENDER:OFF_DETAIL']
+  }
 ]
 
 var OFF_DRIFTING = [
-  function(n, _ref10) {
-    var render = _ref10.render
-    return render({ drifting: false })
-  },
-  { states: ['drifting'], dispatches: [] }
+  offDrifting,
+  {
+    dispatches: ['RENDER:OFF_DRIFTING']
+  }
 ]
 
-var _render = Object.freeze({
-  BY_REACT_DIDMOUNT: BY_REACT_DIDMOUNT,
-  BY_DOM_SWITCH_VIEW: BY_DOM_SWITCH_VIEW,
-  BY_DOM_UPDATE_VIEW: BY_DOM_UPDATE_VIEW,
+async function switchView(e, _ref) {
+  var state = _ref.state,
+    dispatch = _ref.dispatch
+
+  var nowIndex = state().index
+  var viewIndex = +e.target.dataset.index
+
+  if (nowIndex === viewIndex) return
+
+  // SET NOW SCROLLTOP STORE
+  await dispatch('STORE:SET_SCROLLTOP', {
+    index: nowIndex,
+    value: scrollDOM().scrollTop
+  })
+
+  // RENDER
+  var detailIndex = await dispatch('STORE:GET_DETAIL_INDEX', viewIndex)
+
+  dispatch('RENDER:BY_DOM_SWITCH_VIEW', {
+    viewIndex: viewIndex,
+    exhibit: await dispatch('STORE:GET_FACTORY_EXHIBIT', viewIndex),
+    scrollTop: await dispatch('STORE:GET_SCROLLTOP', viewIndex),
+    detail:
+      isNumber$1(detailIndex) &&
+      (await dispatch('STORE:GET_FACTORY_DETAIL', {
+        viewIndex: viewIndex,
+        detailIndex: detailIndex
+      }))
+  })
+}
+
+function updateView(e, _ref2) {
+  var state = _ref2.state,
+    dispatch = _ref2.dispatch
+
+  var viewIndex = state().index
+
+  dispatch('STORE:UPDATE_FACTORY', viewIndex)
+    .then(function() {
+      return dispatch('STORE:GET_FACTORY_EXHIBIT', viewIndex)
+    })
+    .then(function(exhibit) {
+      return dispatch('RENDER:BY_DOM_UPDATE_VIEW', exhibit)
+    })
+}
+
+function onDetail(index, _ref3) {
+  var state = _ref3.state,
+    dispatch = _ref3.dispatch
+
+  if (index) {
+    dispatch('STORE:GET_FACTORY_DETAIL', {
+      viewIndex: state().index,
+      detailIndex: +index
+    }).then(function(detail) {
+      return dispatch('RENDER:ON_DETAIL', detail)
+    })
+  }
+}
+
+function offDetail(e, _ref4) {
+  var state = _ref4.state,
+    dispatch = _ref4.dispatch
+
+  dispatch('STORE:OFF_DETAIL_INDEX', state().index).then(function() {
+    return dispatch('RENDER:OFF_DETAIL')
+  })
+}
+
+function offDrifting(e, _ref5) {
+  var state = _ref5.state,
+    dispatch = _ref5.dispatch
+
+  if (state().drifting === 'lag') {
+    dispatch('RENDER:OFF_DRIFTING')
+  }
+}
+
+var _dom = Object.freeze({
+  SWITCH_VIEW: SWITCH_VIEW,
+  UPDATE_VIEW: UPDATE_VIEW,
   ON_DETAIL: ON_DETAIL,
   OFF_DETAIL: OFF_DETAIL,
-  OFF_PRELOADING: OFF_PRELOADING,
-  ON_DRIFTING: ON_DRIFTING,
-  LAG_DRIFTING: LAG_DRIFTING,
   OFF_DRIFTING: OFF_DRIFTING
 })
 
 //
 
-var views = new Map()
-
-var SET_VIEW = [
-  function(_ref) {
-    var index = _ref.index,
-      factory = _ref.factory
-    return views.set(index, new View(factory))
-  },
-  { states: [], dispatches: [] }
-]
-
-var INIT_FACTORY = [
-  function(viewIndex) {
-    return views.get(viewIndex).factory.init()
-  },
-  { states: [], dispatches: [] }
-]
-
-var UPDATE_FACTORY = [
-  function(viewIndex) {
-    return views.get(viewIndex).factory.update()
-  },
-  { states: [], dispatches: [] }
-]
-
-var GET_FACTORY_EXHIBIT = [
-  function(viewIndex, _ref2) {
-    var dispatch = _ref2.dispatch
-    return views.get(viewIndex).factory.Exhibit({
-      detailing: function detailing(e) {
-        return dispatch('DOM:ON_DETAIL', e.target.dataset.index)
-      },
-      updating: function updating() {
-        return dispatch('DOM:UPDATE_VIEW')
-      }
-    })
-  },
+var DID_MOUNT = [
+  didMount,
   {
-    states: [],
-    dispatches: ['DOM:ON_DETAIL', 'DOM:UPDATE_VIEW']
+    dispatches: [
+      'STORE:SET_VIEW',
+      'STORE:GET_FACTORY_EXHIBIT',
+      'RENDER:BY_REACT_DIDMOUNT'
+    ]
   }
 ]
 
-var GET_FACTORY_DETAIL = [
-  function(_ref3) {
-    var viewIndex = _ref3.viewIndex,
-      detailIndex = _ref3.detailIndex
+async function didMount(n, _ref) {
+  var props = _ref.props,
+    dispatch = _ref.dispatch
 
-    var view = views.get(viewIndex)
-    view.setDetailIndex(detailIndex)
-    return view.factory.Detail(detailIndex)
-  },
-  { states: [], dispatches: [] }
+  var _props = props(),
+    views = _props.views,
+    firstIndex = _props.firstIndex
+
+  await Promise.all(
+    views.map(async function(_ref2, index) {
+      var create = _ref2.create
+
+      var factory = create()
+      await factory.init()
+      await dispatch('STORE:SET_VIEW', { index: index, factory: factory })
+      return
+    })
+  )
+
+  var exhibit = await dispatch('STORE:GET_FACTORY_EXHIBIT', firstIndex)
+  dispatch('RENDER:BY_REACT_DIDMOUNT', { index: firstIndex, exhibit: exhibit })
+}
+
+var _react = Object.freeze({
+  DID_MOUNT: DID_MOUNT
+})
+
+//
+var OFF_PRELOADING = [offPreloading, { states: ['preloading'] }]
+var ON_DETAIL$1 = [onDetail$1, { states: ['detail'] }]
+var OFF_DETAIL$1 = [offDetail$1, { states: ['detail'] }]
+var ON_DRIFTING = [onDrifting, { states: ['drifting'] }]
+var LAG_DRIFTING = [lagDrifting, { states: ['drifting'] }]
+var OFF_DRIFTING$1 = [offDrifting$1, { states: ['drifting'] }]
+var BY_REACT_DIDMOUNT = [byReactDidMount, { states: ['index', 'exhibit'] }]
+var BY_DOM_UPDATE_VIEW = [byDomUpdateView, { states: ['exhibit'] }]
+var BY_DOM_SWITCH_VIEW = [
+  byDomSwitchView,
+  { states: ['index', 'exhibit', 'detail'] }
 ]
 
-var GET_DETAIL_INDEX = [
-  function(index) {
-    return views.get(index).getDetailIndex()
-  },
-  { states: [], dispatches: [] }
-]
+function offPreloading(n, _ref) {
+  var render = _ref.render
+  render({ preloading: false })
+}
+function onDetail$1(elements, _ref2) {
+  var render = _ref2.render
+  render({ detail: { elements: elements, mountWithShut: true } })
+}
+function offDetail$1(n, _ref3) {
+  var render = _ref3.render
+  render({ detail: undefined })
+}
+function onDrifting(n, _ref4) {
+  var render = _ref4.render
+  render({ drifting: true })
+}
+function lagDrifting(n, _ref5) {
+  var render = _ref5.render
+  render({ drifting: 'lag' })
+}
+function offDrifting$1(n, _ref6) {
+  var render = _ref6.render
+  render({ drifting: false })
+}
+function byReactDidMount(_ref7, _ref8) {
+  var index = _ref7.index,
+    exhibit = _ref7.exhibit
+  var render = _ref8.render
+  render({ index: index, exhibit: exhibit })
+}
+function byDomUpdateView(exhibit, _ref9) {
+  var render = _ref9.render
+  render({ exhibit: exhibit })
+}
+function byDomSwitchView(packet, _ref10) {
+  var render = _ref10.render,
+    dispatch = _ref10.dispatch
 
-var OFF_DETAIL_INDEX = [
-  function(index) {
-    return views.get(index).setDetailIndex(false)
-  },
-  { states: [], dispatches: [] }
-]
+  var index = packet.viewIndex
+  var exhibit = packet.exhibit
+  var scrollTop = packet.scrollTop
+  var detail = packet.detail
+    ? { elements: packet.detail, mountWithShut: false }
+    : undefined
 
-var GET_SCROLLTOP = [
-  function(index) {
-    return views.get(index).getScrollTop()
-  },
-  { states: [], dispatches: [] }
-]
+  render({ index: index, exhibit: exhibit, detail: detail }, function() {
+    scrollDOM().scrollTop = scrollTop
+  })
+}
 
-var SET_SCROLLTOP = [
-  function(_ref4) {
-    var index = _ref4.index,
-      value = _ref4.value
-    return views.get(index).setScrollTop(value)
-  },
-  { states: [], dispatches: [] }
+var _render = Object.freeze({
+  OFF_PRELOADING: OFF_PRELOADING,
+  ON_DETAIL: ON_DETAIL$1,
+  OFF_DETAIL: OFF_DETAIL$1,
+  ON_DRIFTING: ON_DRIFTING,
+  LAG_DRIFTING: LAG_DRIFTING,
+  OFF_DRIFTING: OFF_DRIFTING$1,
+  BY_REACT_DIDMOUNT: BY_REACT_DIDMOUNT,
+  BY_DOM_UPDATE_VIEW: BY_DOM_UPDATE_VIEW,
+  BY_DOM_SWITCH_VIEW: BY_DOM_SWITCH_VIEW
+})
+
+//
+
+var SET_VIEW = setView
+var UPDATE_FACTORY = updateView$1
+var GET_DETAIL_INDEX = getDetailIndex
+var OFF_DETAIL_INDEX = offDetailIndex
+var GET_SCROLLTOP = getScrollTop
+var SET_SCROLLTOP = setScrollTop
+var GET_FACTORY_EXHIBIT = [
+  getFactoryExhibit,
+  { dispatches: ['DOM:ON_DETAIL', 'DOM:UPDATE_VIEW'] }
 ]
+var GET_FACTORY_DETAIL = getFactoryDetail
+
+function setView(_ref) {
+  var index = _ref.index,
+    factory = _ref.factory
+  views.set(index, new View(factory))
+}
+function updateView$1(viewIndex) {
+  return views.get(viewIndex).factory.update()
+}
+function getDetailIndex(index) {
+  return views.get(index).getDetailIndex()
+}
+function offDetailIndex(index) {
+  views.get(index).setDetailIndex(false)
+}
+function getScrollTop(index) {
+  return views.get(index).getScrollTop()
+}
+function setScrollTop(_ref2) {
+  var index = _ref2.index,
+    value = _ref2.value
+  views.get(index).setScrollTop(value)
+}
+function getFactoryExhibit(viewIndex, _ref3) {
+  var dispatch = _ref3.dispatch
+
+  return views.get(viewIndex).factory.Exhibit({
+    detailing: function detailing(e) {
+      return dispatch('DOM:ON_DETAIL', e.target.dataset.index)
+    },
+    updating: function updating() {
+      return dispatch('DOM:UPDATE_VIEW')
+    }
+  })
+}
+function getFactoryDetail(_ref4) {
+  var viewIndex = _ref4.viewIndex,
+    detailIndex = _ref4.detailIndex
+
+  var view = views.get(viewIndex)
+  view.setDetailIndex(detailIndex)
+  var detailElements = view.factory.Detail(detailIndex)
+  return detailElements
+}
+
+var views = new Map()
 
 var View = (function() {
   function View(factory) {
@@ -717,312 +835,64 @@ var View = (function() {
 
 var _store = Object.freeze({
   SET_VIEW: SET_VIEW,
-  INIT_FACTORY: INIT_FACTORY,
   UPDATE_FACTORY: UPDATE_FACTORY,
-  GET_FACTORY_EXHIBIT: GET_FACTORY_EXHIBIT,
-  GET_FACTORY_DETAIL: GET_FACTORY_DETAIL,
   GET_DETAIL_INDEX: GET_DETAIL_INDEX,
   OFF_DETAIL_INDEX: OFF_DETAIL_INDEX,
   GET_SCROLLTOP: GET_SCROLLTOP,
-  SET_SCROLLTOP: SET_SCROLLTOP
+  SET_SCROLLTOP: SET_SCROLLTOP,
+  GET_FACTORY_EXHIBIT: GET_FACTORY_EXHIBIT,
+  GET_FACTORY_DETAIL: GET_FACTORY_DETAIL
 })
 
+// export const FUNCTION = [() => {}, { states: [], dispatches: [] }]
 //
+// export const TEST = () => {}
 
-var DID_MOUNT = [
-  async function(n, _ref) {
-    var props = _ref.props,
-      dispatch = _ref.dispatch
+var _window = Object.freeze({})
 
-    var _props = props(),
-      views = _props.views,
-      firstIndex = _props.firstIndex
+var orph = new Orph()
+add(_dom, 'DOM')
+add(_react, 'REACT')
+add(_render, 'RENDER')
+add(_store, 'STORE')
+add(_window, 'WINDOW')
+function add(_import, prefix) {
+  Object.entries(_import)
+    .filter(function(_ref) {
+      var _ref2 = slicedToArray(_ref, 2),
+        name = _ref2[0],
+        value = _ref2[1]
 
-    // INIT
-
-    await Promise.all(
-      views.map(async function(_ref2, index) {
-        var create = _ref2.create
-
-        var factory = create()
-        await dispatch('STORE:SET_VIEW', { index: index, factory: factory })
-        await dispatch('STORE:INIT_FACTORY', index)
-      })
-    )
-
-    // RENDER
-    var exhibit = await dispatch('STORE:GET_FACTORY_EXHIBIT', firstIndex)
-    dispatch('RENDER:BY_REACT_DIDMOUNT', {
-      index: firstIndex,
-      exhibit: exhibit
+      return !isPureObject(value)
     })
-  },
-  {
-    states: [],
-    dispatches: [
-      'STORE:SET_VIEW',
-      'STORE:INIT_FACTORY',
-      'STORE:GET_FACTORY_EXHIBIT',
-      'RENDER:BY_REACT_DIDMOUNT'
-    ]
-  }
-]
+    .forEach(function(_ref3) {
+      var _ref4 = slicedToArray(_ref3, 2),
+        name = _ref4[0],
+        value = _ref4[1]
 
-// export const DID_UPDATE = [
-//   (n, util) => {},
-//   {
-//     states: [],
-//     dispatches: []
-//   }
-// ]
+      var addedName = prefix + ':' + name
 
-var _react = Object.freeze({
-  DID_MOUNT: DID_MOUNT
-})
+      var listener = void 0,
+        states = void 0,
+        dispatches = void 0
 
-//
-var OFF_PRELOADING$1 = [
-  function(n, _ref) {
-    var dispatch = _ref.dispatch
-    return dispatch('RENDER:OFF_PRELOADING')
-  },
-  { states: [], dispatches: ['RENDER:OFF_PRELOADING'] }
-]
+      if (Array.isArray(value)) {
+        var _value = slicedToArray(value, 2),
+          fn = _value[0],
+          opts = _value[1]
 
-var SWITCH_VIEW = [
-  async function(e, _ref2) {
-    var state = _ref2.state,
-      dispatch = _ref2.dispatch
+        listener = fn
+        states = opts.states || []
+        dispatches = opts.dispatches || []
+      } else {
+        listener = value
+        states = []
+        dispatches = []
+      }
 
-    var nowIndex = state().index
-    var viewIndex = +e.target.dataset.index
-
-    if (nowIndex === viewIndex) return
-
-    // SET NOW SCROLLTOP STORE
-    await dispatch('STORE:SET_SCROLLTOP', {
-      index: nowIndex,
-      value: scrollDOM().scrollTop
+      orph.add(addedName, listener, { states: states, dispatches: dispatches })
     })
-
-    // RENDER
-    var detailIndex = await dispatch('STORE:GET_DETAIL_INDEX', viewIndex)
-    dispatch('RENDER:BY_DOM_SWITCH_VIEW', {
-      viewIndex: viewIndex,
-      exhibit: await dispatch('STORE:GET_FACTORY_EXHIBIT', viewIndex),
-      scrollTop: await dispatch('STORE:GET_SCROLLTOP', viewIndex),
-      detail:
-        isNumber$1(detailIndex) &&
-        (await dispatch('STORE:GET_FACTORY_DETAIL', {
-          viewIndex: viewIndex,
-          detailIndex: detailIndex
-        }))
-    })
-  },
-  {
-    states: [],
-    dispatches: [
-      'STORE:SET_SCROLLTOP',
-      'STORE:GET_FACTORY_EXHIBIT',
-      'STORE:GET_SCROLLTOP',
-      'STORE:GET_DETAIL_INDEX',
-      'STORE:GET_FACTORY_DETAIL',
-      'RENDER:BY_DOM_SWITCH_VIEW'
-    ]
-  }
-]
-
-var UPDATE_VIEW = [
-  function(e, _ref3) {
-    var state = _ref3.state,
-      dispatch = _ref3.dispatch
-
-    var viewIndex = state().index
-    return dispatch('STORE:UPDATE_FACTORY', viewIndex)
-      .then(function() {
-        return dispatch('STORE:GET_FACTORY_EXHIBIT', viewIndex)
-      })
-      .then(function(exhibit) {
-        return dispatch('RENDER:BY_DOM_UPDATE_VIEW', exhibit)
-      })
-  },
-  {
-    states: [],
-    dispatches: [
-      'STORE:UPDATE_FACTORY',
-      'STORE:GET_FACTORY_EXHIBIT',
-      'RENDER:BY_DOM_UPDATE_VIEW'
-    ]
-  }
-]
-
-var ON_DETAIL$1 = [
-  function(index, _ref4) {
-    var state = _ref4.state,
-      dispatch = _ref4.dispatch
-    return (
-      index &&
-      dispatch('STORE:GET_FACTORY_DETAIL', {
-        viewIndex: state().index,
-        detailIndex: +index
-      }).then(function(detail) {
-        return dispatch('RENDER:ON_DETAIL', detail)
-      })
-    )
-  },
-  {
-    states: [],
-    dispatches: ['STORE:GET_FACTORY_DETAIL', 'RENDER:ON_DETAIL']
-  }
-]
-
-var OFF_DETAIL$1 = [
-  function(e, _ref5) {
-    var state = _ref5.state,
-      dispatch = _ref5.dispatch
-    return dispatch('STORE:OFF_DETAIL_INDEX', state().index).then(function() {
-      return dispatch('RENDER:OFF_DETAIL')
-    })
-  },
-  {
-    states: [],
-    dispatches: ['STORE:OFF_DETAIL_INDEX', 'RENDER:OFF_DETAIL']
-  }
-]
-
-var ON_DRIFTING$1 = [
-  function(e, _ref6) {
-    var dispatch = _ref6.dispatch
-    return dispatch('RENDER:ON_DRIFTING')
-  },
-  { states: [], dispatches: ['RENDER:ON_DRIFTING'] }
-]
-
-var LAG_DRIFTING$1 = [
-  function(e, _ref7) {
-    var dispatch = _ref7.dispatch
-    return dispatch('RENDER:LAG_DRIFTING')
-  },
-  { states: [], dispatches: ['RENDER:LAG_DRIFTING'] }
-]
-
-var OFF_DRIFTING$1 = [
-  function(e, _ref8) {
-    var state = _ref8.state,
-      dispatch = _ref8.dispatch
-    return state().drifting === 'lag' && dispatch('RENDER:OFF_DRIFTING')
-  },
-  { states: [], dispatches: ['RENDER:OFF_DRIFTING'] }
-]
-
-var _dom = Object.freeze({
-  OFF_PRELOADING: OFF_PRELOADING$1,
-  SWITCH_VIEW: SWITCH_VIEW,
-  UPDATE_VIEW: UPDATE_VIEW,
-  ON_DETAIL: ON_DETAIL$1,
-  OFF_DETAIL: OFF_DETAIL$1,
-  ON_DRIFTING: ON_DRIFTING$1,
-  LAG_DRIFTING: LAG_DRIFTING$1,
-  OFF_DRIFTING: OFF_DRIFTING$1
-})
-
-var FUNCTION = [function() {}, { states: [], dispatches: [] }]
-
-var _window = Object.freeze({
-  FUNCTION: FUNCTION
-})
-
-var _ref
-
-// import * as _util from './util'
-var entries = Object.entries
-var isArray$1 = Array.isArray
-
-var isPureObject = function isPureObject(target) {
-  return (
-    (typeof target === 'undefined' ? 'undefined' : _typeof(target)) ===
-      'object' && !isArray$1(target)
-  )
 }
-
-var imports = [
-  // ['UTIL', _util],
-  ['RENDER', _render],
-  ['STORE', _store],
-  ['REACT', _react],
-  ['DOM', _dom],
-  ['WINDOW', _window]
-]
-
-var orph = new Orph(
-  (_ref = []).concat.apply(
-    _ref,
-    toConsumableArray(
-      imports.map(function(_ref2) {
-        var _ref3 = slicedToArray(_ref2, 2),
-          prefix = _ref3[0],
-          orphans = _ref3[1]
-
-        return entries(orphans)
-          .filter(function(_ref4) {
-            var _ref5 = slicedToArray(_ref4, 2),
-              name = _ref5[0],
-              listener = _ref5[1]
-
-            return !isPureObject(listener)
-          })
-          .map(function(_ref6) {
-            var _ref7 = slicedToArray(_ref6, 2),
-              name = _ref7[0],
-              listener = _ref7[1]
-
-            var NAME = prefix + ':' + name
-            return isArray$1(listener)
-              ? [NAME].concat(toConsumableArray(listener))
-              : [NAME, listener]
-          })
-      })
-    )
-  )
-)
-
-var Burger = function() {
-  return React.createElement(
-    'svg',
-    a$1('SVG'),
-    React.createElement(
-      'g',
-      a$1('G'),
-      React.createElement('path', a$1('PATH_0')),
-      React.createElement('path', a$1('PATH_1')),
-      React.createElement('path', a$1('PATH_2'))
-    )
-  )
-}
-
-var a$1 = Atra({
-  SVG: {
-    viewBox: '0 0 300 300',
-    style: {
-      height: '100%'
-    }
-  },
-  G: {
-    style: {
-      stroke: 'var(--sub-color)',
-      strokeWidth: 26
-    }
-  },
-  PATH_0: {
-    d: 'm 40,224.5 220,0'
-  },
-  PATH_1: {
-    d: 'm 40,149.49959 220,0'
-  },
-  PATH_2: {
-    d: 'm 40,74.499594 220,0'
-  }
-})
 
 var Button = function(_ref) {
   var inform = _ref.inform,
@@ -1031,12 +901,12 @@ var Button = function(_ref) {
     children = _ref.children
   return React.createElement(
     'div',
-    a$2('ROOT'),
-    React.createElement('span', a$2('CHILDREN_WRAP'), children),
-    inform > 0 && React.createElement('div', a$2('INFORM'), inform),
+    a$1('ROOT'),
+    React.createElement('span', a$1('CHILDREN_WRAP'), children),
+    inform > 0 && React.createElement('div', a$1('INFORM'), inform),
     React.createElement(
       'div',
-      a$2('CLICK_COVER', {
+      a$1('CLICK_COVER', {
         'data-index': buttonIndex,
         onTouchStart: onTouchStart
       })
@@ -1044,7 +914,7 @@ var Button = function(_ref) {
   )
 }
 
-var a$2 = Atra({
+var a$1 = Atra({
   ROOT: {
     style: {
       display: 'inline-block',
@@ -1060,9 +930,11 @@ var a$2 = Atra({
       objectFit: 'contain',
       position: 'relative',
       // height: '50%',
-      width: '42%',
+      // width: '42%',
+      width: '40%',
       // top: '23%',
-      top: '18%'
+      // top: '18%'
+      top: '17%'
       // strokeLinecap: 'round',
       // strokeLinejoin: 'round'
     }
@@ -1094,35 +966,63 @@ var a$2 = Atra({
   }
 })
 
-var Detail = function(_ref) {
-  var mountWithShut = _ref.mountWithShut,
-    onQuit = _ref.onQuit,
-    children = _ref.children
+var Burger = function() {
   return React.createElement(
-    ShutFromLeft,
-    { mountWithShut: mountWithShut, onQuit: onQuit, Quit: Quit },
-    children
-  )
-}
-
-var Quit = function Quit(_ref2) {
-  var fn = _ref2.fn
-  return React.createElement(
-    'span',
-    a$3('ROOT'),
+    'svg',
+    a$3('SVG'),
     React.createElement(
-      'svg',
-      a$3('SVG'),
-      React.createElement('path', a$3('PATH'))
-    ),
-    React.createElement('span', a$3('COVER', { onTouchEnd: fn }))
+      'g',
+      a$3('G'),
+      React.createElement('path', a$3('PATH_0')),
+      React.createElement('path', a$3('PATH_1')),
+      React.createElement('path', a$3('PATH_2'))
+    )
   )
 }
 
 var a$3 = Atra({
+  SVG: {
+    viewBox: '0 0 300 300',
+    style: {
+      height: '100%'
+    }
+  },
+  G: {
+    style: {
+      stroke: 'var(--sub-color)',
+      strokeWidth: 26
+    }
+  },
+  PATH_0: {
+    d: 'm 40,224.5 220,0'
+  },
+  PATH_1: {
+    d: 'm 40,149.49959 220,0'
+  },
+  PATH_2: {
+    d: 'm 40,74.499594 220,0'
+  }
+})
+
+var Quit = function(_ref) {
+  var fn = _ref.fn
+  return React.createElement(
+    'span',
+    a$4('ROOT'),
+    React.createElement(
+      'svg',
+      a$4('SVG'),
+      React.createElement('path', a$4('PATH'))
+    ),
+    React.createElement('span', a$4('COVER', { onTouchEnd: fn }))
+  )
+}
+
+var a$4 = Atra({
   ROOT: {
     style: {
       zIndex: 1000,
+      width: 91,
       height: 91,
       position: 'absolute',
       right: 24,
@@ -1130,10 +1030,12 @@ var a$3 = Atra({
       // left: 16,
     }
   },
+
   SVG: {
     viewBox: '0 0 300 300'
     // viewBox:"0 -20 300 340"
   },
+
   PATH: {
     // d: "M 241.83659,7.6084992 58.731126,148.71429 241.83659,289.82008",
     // d: "M 58.370181,291.10579 241.47564,150 58.370181,8.8942098",
@@ -1151,6 +1053,7 @@ var a$3 = Atra({
       strokeLinecap: 'round'
     }
   },
+
   COVER: {
     style: {
       position: 'absolute',
@@ -1163,24 +1066,38 @@ var a$3 = Atra({
   }
 })
 
+var Detail = function(_ref) {
+  var mountWithShut = _ref.mountWithShut,
+    onQuit = _ref.onQuit,
+    children = _ref.children
+  return React.createElement(
+    ShutFromLeft,
+    { mountWithShut: mountWithShut, onQuit: onQuit, Quit: Quit },
+    React.createElement('div', null, children)
+  )
+}
+
+var a$2 = Atra({})
+
 var Exhibit = function(_ref) {
   var detail = _ref.detail,
     children = _ref.children
   return React.createElement(
     'div',
-    a$4('ROOT', { style: { overflowY: !detail ? 'scroll' : 'hidden' } }),
+    a$5('ROOT', { style: { overflowY: !detail ? 'scroll' : 'hidden' } }),
     children
   )
 }
 
-var a$4 = Atra({
+var a$5 = Atra({
   ROOT: {
     id: 'exhibitScrollElement',
     style: {
       position: 'relative',
       height: '100%',
       overflowScrolling: 'touch',
-      WebkitOverflowScrolling: 'touch'
+      WebkitOverflowScrolling: 'touch',
+      overflowX: 'hidden'
     }
   }
 })
@@ -1190,6 +1107,8 @@ var a$4 = Atra({
 // height:innerHeight-160-160,
 // overflowY: (!depth) ? "scroll" : "hidden"
 
+var burger = React.createElement(Burger, null)
+
 var Head = function(_ref) {
   var height = _ref.height,
     word = _ref.word,
@@ -1197,24 +1116,24 @@ var Head = function(_ref) {
     children = _ref.children
   return React.createElement(
     'header',
-    a$5('HEAD_ROOT', { style: { height: height } }),
+    a$6('HEAD_ROOT', { style: { height: height } }),
     React.createElement(
       'span',
-      a$5('HEAD_WORD', { style: { marginTop: height - 105 } }),
+      a$6('HEAD_WORD', { style: { marginTop: height - 105 } }),
       word
     ),
     React.createElement(
       'span',
-      a$5('HEAD_BUTTON', {
+      a$6('HEAD_BUTTON', {
         onTouchEnd: onTouchEnd,
         style: { padding: (height - 100) / 2 + 'px 25px' }
       }),
-      children
+      burger
     )
   )
 }
 
-var a$5 = Atra({
+var a$6 = Atra({
   HEAD_ROOT: {
     style: {
       backgroundColor: 'var(--base-color)',
@@ -1255,16 +1174,16 @@ var Main = function(_ref) {
   var background = backgroundStyle.backgroundImage ? BG_WITH_IMG : BG_NO_IMG
   return React.createElement(
     'main',
-    a$6('ROOT', { style: style }),
+    a$7('ROOT', { style: style }),
     React.createElement(
       'div',
-      a$6('WRAP', { style: { background: background } }),
+      a$7('WRAP', { style: { background: background } }),
       children
     )
   )
 }
 
-var a$6 = Atra({
+var a$7 = Atra({
   ROOT: {
     style: {
       position: 'relative'
@@ -1388,10 +1307,10 @@ var Side = function(_ref) {
     descriptionStyle = _ref.descriptionStyle
   return React.createElement(
     'div',
-    a$7('ROOT'),
+    a$8('ROOT'),
     React.createElement(
       'span',
-      a$7('WRAP', {
+      a$8('WRAP', {
         onTouchStart: onTouchStart,
         onTouchEnd: HoTouchEnd(href),
         style: {
@@ -1403,14 +1322,14 @@ var Side = function(_ref) {
       coverColor &&
         React.createElement(
           'span',
-          a$7('COVER', {
+          a$8('COVER', {
             style: { backgroundColor: coverColor }
           })
         ),
       descriptionText &&
         React.createElement(
           'span',
-          a$7('DESCRIPTION', {
+          a$8('DESCRIPTION', {
             style: descriptionStyle,
             children: descriptionText
           })
@@ -1420,7 +1339,7 @@ var Side = function(_ref) {
 }
 // style: { background: coverColor || 'rgba(0, 29, 36, 0.48)' }
 
-var a$7 = Atra({
+var a$8 = Atra({
   ROOT: {
     style: {
       textAlign: 'center',
@@ -1485,7 +1404,7 @@ var Veil = function(_ref) {
     onTransitionEnd = _ref.onTransitionEnd
   return React.createElement(
     'div',
-    a$8('VEIL', {
+    a$9('VEIL', {
       onTouchEnd: onTouchEnd,
       onTransitionEnd: onTransitionEnd,
       style: {
@@ -1499,7 +1418,7 @@ var Veil = function(_ref) {
   )
 }
 
-var a$8 = Atra({
+var a$9 = Atra({
   VEIL: {
     style: {
       position: 'absolute',
@@ -1522,11 +1441,11 @@ var HEAD_HEIGHT = 170
 var BUTTON_HEIGHT = 150
 
 var listeners = [
-  'DOM:OFF_PRELOADING',
+  'RENDER:OFF_PRELOADING',
   'DOM:SWITCH_VIEW',
   'DOM:OFF_DETAIL',
-  'DOM:ON_DRIFTING',
-  'DOM:LAG_DRIFTING',
+  'RENDER:ON_DRIFTING',
+  'RENDER:LAG_DRIFTING',
   'DOM:OFF_DRIFTING'
 ]
 
@@ -1549,7 +1468,8 @@ var LigureMobile = (function(_Component) {
       drifting: false,
       index: undefined,
       exhibit: undefined,
-      detail: undefined
+      detail: undefined,
+      buttonUnitIndex: 0
     }
     return _this
   }
@@ -1636,7 +1556,7 @@ var LigureMobile = (function(_Component) {
       value: function createPreload() {
         return React.createElement(Preload, {
           vanish: typeof this.state.index === 'number',
-          onTransitionEnd: this.listeners['DOM:OFF_PRELOADING'],
+          onTransitionEnd: this.listeners['RENDER:OFF_PRELOADING'],
           children: this.preloader
         })
       }
@@ -1644,15 +1564,11 @@ var LigureMobile = (function(_Component) {
     {
       key: 'createHead',
       value: function createHead() {
-        return React.createElement(
-          Head,
-          {
-            height: HEAD_HEIGHT,
-            word: this.props.views[this.state.index].head,
-            onTouchEnd: this.listeners['DOM:ON_DRIFTING']
-          },
-          React.createElement(Burger, null)
-        )
+        return React.createElement(Head, {
+          height: HEAD_HEIGHT,
+          word: this.props.views[this.state.index].head,
+          onTouchEnd: this.listeners['RENDER:ON_DRIFTING']
+        })
       }
     },
     {
@@ -1671,9 +1587,9 @@ var LigureMobile = (function(_Component) {
           React.createElement(Exhibit, { detail: detail, children: exhibit }),
           detail &&
             React.createElement(Detail, {
+              onQuit: this.listeners['DOM:OFF_DETAIL'],
               mountWithShut: detail.mountWithShut,
-              children: detail.elements,
-              onQuit: this.listeners['DOM:OFF_DETAIL']
+              children: detail.elements
             })
         )
       }
@@ -1720,7 +1636,7 @@ var LigureMobile = (function(_Component) {
       value: function createVeil() {
         return React.createElement(Veil, {
           drifting: this.state.drifting,
-          onTouchEnd: this.listeners['DOM:LAG_DRIFTING'],
+          onTouchEnd: this.listeners['RENDER:LAG_DRIFTING'],
           onTransitionEnd: this.listeners['DOM:OFF_DRIFTING']
         })
       }
@@ -1730,7 +1646,11 @@ var LigureMobile = (function(_Component) {
 })(Component)
 
 var a = Atra({
-  ROOT: {},
+  ROOT: {
+    style: {
+      backgroundColor: 'var(--side-color)'
+    }
+  },
 
   HEAD_AND_MAIN: {
     style: {
@@ -1763,12 +1683,6 @@ var a = Atra({
     }
   }
 })
-
-// 'DOM:UPDATE_VIEW',
-// 'DOM:ON_DETAIL',
-// sides: Array<React$Element>
-// backgroundImage: string
-// css: string
 
 var Desktop = Guardian(App)
 var Mobile = Guardian(LigureMobile)
