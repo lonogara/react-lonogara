@@ -2,10 +2,18 @@
 import React, { Component } from 'react'
 import Atra from 'atra'
 import orph from './orph'
-import { Veil, Side, Preload, Main, Head, Button } from './components'
+import {
+  Burger,
+  Button,
+  Detail,
+  Exhibit,
+  Head,
+  Main,
+  Preload,
+  Side,
+  Veil
+} from './components'
 
-// const forcep = (value) => Promise.resolve(value)
-// const firstCamel = (string) => `${string[0].toUpperCase()}${string.slice(1)}`
 const valued = target => (typeof target === 'function' ? target() : target)
 
 const SIDE_WIDTH = 370
@@ -15,17 +23,13 @@ const BUTTON_HEIGHT = 150
 const listeners = [
   'DOM:OFF_PRELOADING',
   'DOM:SWITCH_VIEW',
-  'DOM:UPDATE_VIEW',
-  'DOM:ON_DETAIL',
   'DOM:OFF_DETAIL',
   'DOM:ON_DRIFTING',
+  'DOM:LAG_DRIFTING',
   'DOM:OFF_DRIFTING'
 ]
 
 export default class LigureMobile extends Component {
-  // sides: Array<React$Element>
-  // backgroundImage: string
-  // css: string
 
   constructor(props) {
     super(props)
@@ -48,49 +52,34 @@ export default class LigureMobile extends Component {
   }
 
   render() {
-    return (
-      <div>
-        {typeof this.state.index === 'number' && this.tree()}
-        {this.state.preloading && this.createPreload()}
-      </div>
-    )
+    return <div>
+      {typeof this.state.index === 'number' && this.tree()}
+      {this.state.preloading && this.createPreload()}
+    </div>
   }
 
-  componentDidMount() {
-    orph.dispatch('REACT:DID_MOUNT')
-  }
+  componentDidMount() { orph.dispatch('REACT:DID_MOUNT') }
 
   tree() {
-    const head = this.createHead()
-    const main = this.createMain()
     const veil = this.createVeil()
-    const buttons = this.createButtons()
-    const sides = this.sides
 
     const { drifting } = this.state
+    const transform = (!drifting || drifting === "lag") ? `translateX(0px)` : `translateX(${-SIDE_WIDTH}px)`
+    const transition = (!drifting || drifting === "lag") ? "0.6s" : "0.72s"
 
     return (
       <div {...a('ROOT')}>
-        <div {...a('HEAD_AND_MAIN', {
-          style: {
-            transform: `translateX(${drifting ? -SIDE_WIDTH : 0}px)`
-          }
-        })}>
-          {head}
-          {main}
+        <div {...a('HEAD_AND_MAIN', { style: { transform } })}>
+          {this.createHead()}
+          {this.createMain()}
           {veil}
         </div>
         <nav {...a('BUTTONS')}>
-          {buttons}
+          {this.createButtons()}
           {veil}
         </nav>
-        <aside {...a('SIDES', {
-          style: {
-            transform: `translateX(${drifting ? -SIDE_WIDTH : 0}px)`,
-            transition: `${drifting ? 0.72 : 0.6}s`
-          }
-        })}>
-          {sides}
+        <aside {...a('SIDES', { style: { transform, transition } })}>
+          {this.sides}
         </aside>
       </div>
     )
@@ -100,8 +89,6 @@ export default class LigureMobile extends Component {
     if (this.preloader && !this.state.preloading) {
       this.preloader = null
     }
-
-    orph.dispatch('REACT:DID_UPDATE')
   }
 
   /*----------------------- create -----------------------*/
@@ -119,23 +106,28 @@ export default class LigureMobile extends Component {
       height: HEAD_HEIGHT,
       word: this.props.views[this.state.index].head,
       onTouchEnd: this.listeners['DOM:ON_DRIFTING']
-    }} />
+    }}>
+      <Burger />
+    </Head>
   }
 
   createMain() {
-    return <Main {...{
-      height: window.innerHeight - (HEAD_HEIGHT + BUTTON_HEIGHT),
-      backgroundStyle: this.props.exhibitBgStyle,
-      exhibit: this.state.exhibit,
-      detail: this.state.detail
-    }} />
-  }
 
-  createVeil() {
-    return <Veil {...{
-      drifting: this.state.drifting,
-      onTouchEnd: this.listeners['DOM:OFF_DRIFTING']
-    }} />
+    const { exhibit, detail } = this.state
+
+    return (
+      <Main {...{
+        height: window.innerHeight - (HEAD_HEIGHT + BUTTON_HEIGHT),
+        backgroundStyle: this.props.exhibitBgStyle
+      }}>
+        <Exhibit {...{ detail, children: exhibit }} />
+        {detail && <Detail {...{
+          mountWithShut: detail.mountWithShut,
+          children: detail.elements,
+          onQuit: this.listeners['DOM:OFF_DETAIL']
+        }} />}
+      </Main>
+    )
   }
 
   createButtons() {
@@ -164,9 +156,18 @@ export default class LigureMobile extends Component {
         }} />
     )
   }
+
+  createVeil() {
+    return <Veil {...{
+      drifting: this.state.drifting,
+      onTouchEnd: this.listeners['DOM:LAG_DRIFTING'],
+      onTransitionEnd: this.listeners['DOM:OFF_DRIFTING']
+    }} />
+  }
 }
 
 const a = Atra({
+
   ROOT: {},
 
   HEAD_AND_MAIN: {
@@ -200,3 +201,9 @@ const a = Atra({
     }
   }
 })
+
+// 'DOM:UPDATE_VIEW',
+// 'DOM:ON_DETAIL',
+// sides: Array<React$Element>
+// backgroundImage: string
+// css: string

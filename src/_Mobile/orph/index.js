@@ -1,5 +1,5 @@
 import Orph from 'orph'
-import * as _util from './util'
+// import * as _util from './util'
 import * as _render from './render'
 import * as _store from './store'
 import * as _react from './react'
@@ -11,7 +11,7 @@ const { isArray } = Array
 const isPureObject = target => typeof target === 'object' && !isArray(target)
 
 const imports = [
-  ['UTIL', _util],
+  // ['UTIL', _util],
   ['RENDER', _render],
   ['STORE', _store],
   ['REACT', _react],

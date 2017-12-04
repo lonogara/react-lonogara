@@ -1,25 +1,21 @@
 // @flow
 
 export const DID_MOUNT = [
-  (n, util) => {
-    const { views, firstIndex } = util.props()
-    const { dispatch } = util
+  async (n, { props, dispatch }) => {
+    const { views, firstIndex } = props()
 
-    Promise.all(
-      views.map(({ factory }, index) =>
-        dispatch('STORE:SET_VIEW', { index, factory: factory() }).then(() =>
-          dispatch('STORE:INIT_FACTORY', index)
-        )
-      )
-    ).then(() =>
-      dispatch('STORE:GET_FACTORY_EXHIBIT', firstIndex).then(exhibit =>
-        dispatch('RENDER:INDEX_EXHIBIT', { index: firstIndex, exhibit })
-      )
+    // INIT
+    await Promise.all(
+      views.map(async ({ create }, index) => {
+        const factory = create()
+        await dispatch('STORE:SET_VIEW', { index, factory })
+        await dispatch('STORE:INIT_FACTORY', index)
+      })
     )
-    // .then(() =>
-    //   dispatch("UTIL:SET_TIMEOUT", 1500).then(() =>
-    //     dispatch("RENDER:OFF_PRELOADING")
-    //   ))
+
+    // RENDER
+    const exhibit = await dispatch('STORE:GET_FACTORY_EXHIBIT', firstIndex)
+    dispatch('RENDER:BY_REACT_DIDMOUNT', { index: firstIndex, exhibit })
   },
   {
     states: [],
@@ -27,20 +23,15 @@ export const DID_MOUNT = [
       'STORE:SET_VIEW',
       'STORE:INIT_FACTORY',
       'STORE:GET_FACTORY_EXHIBIT',
-      'RENDER:INDEX_EXHIBIT'
-      // "UTIL:SET_TIMEOUT",
-      // "RENDER:OFF_PRELOADING"
+      'RENDER:BY_REACT_DIDMOUNT'
     ]
   }
 ]
 
-export const DID_UPDATE = [
-  (n, util) => {
-    console.log('DID_UPDATE')
-    console.log(util.state())
-  },
-  {
-    states: [],
-    dispatches: []
-  }
-]
+// export const DID_UPDATE = [
+//   (n, util) => {},
+//   {
+//     states: [],
+//     dispatches: []
+//   }
+// ]

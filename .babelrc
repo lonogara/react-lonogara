@@ -18,13 +18,6 @@
         ["espower", { "embedAst": true }],
         "empower-assert"
       ]
-    },
-    "hoge": {
-      "presets": [
-        ["env", { "targets": { "browsers": ["last 2 versions", "safari >= 7"] } }],
-        "flow"
-      ],
-      "plugins": ["transform-runtime"]
     }
   }
 }

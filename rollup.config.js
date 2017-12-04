@@ -6,7 +6,11 @@ const flow = require('rollup-plugin-flow')
 rollup
   .rollup({
     input: `src/index.js`,
-    plugins: [flow(), babel(), commonjs({ sourceMap: false })]
+    plugins: [
+      flow({ pretty: true }),
+      babel({ exclude: 'node_modules/**' }),
+      commonjs({ sourceMap: false })
+    ]
   })
   .then(bundle => {
     bundle.write({ format: 'cjs', file: `dist/cjs.js` })

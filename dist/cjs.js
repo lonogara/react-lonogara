@@ -10,6 +10,7 @@ var React = require('react')
 var React__default = _interopDefault(React)
 var Atra = _interopDefault(require('atra'))
 var Orph = _interopDefault(require('orph'))
+var reactShut = require('react-shut')
 
 var _typeof =
   typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol'
@@ -84,10 +85,6 @@ var inherits = function(subClass, superClass) {
     Object.setPrototypeOf
       ? Object.setPrototypeOf(subClass, superClass)
       : (subClass.__proto__ = superClass)
-}
-
-var objectDestructuringEmpty = function(obj) {
-  if (obj == null) throw new TypeError('Cannot destructure undefined')
 }
 
 var possibleConstructorReturn = function(self, call) {
@@ -193,7 +190,7 @@ var index = function(_ref) {
     views.forEach(function(_ref2) {
       var head = _ref2.head,
         Button = _ref2.Button,
-        factory = _ref2.factory
+        create = _ref2.create
 
       if (!isString(head)) {
         typerror('')
@@ -201,17 +198,17 @@ var index = function(_ref) {
       if (!isObjectPure(Button) && !isFunction(Button)) {
         typerror('')
       }
-      if (!factory) {
-        error('view.factory is required')
+      if (!create) {
+        error('view.create is required')
       }
-      if (!isFunction(factory)) {
+      if (!isFunction(create)) {
         typerror(
-          'view factory must be "function" but ' +
-            (typeof factory === 'undefined' ? 'undefined' : _typeof(factory))
+          'view create must be "function" but ' +
+            (typeof create === 'undefined' ? 'undefined' : _typeof(create))
         )
       }
 
-      result.push({ head: head, Button: Button, factory: factory })
+      result.push({ head: head, Button: Button, create: create })
     })
   }
 
@@ -248,12 +245,14 @@ var index$1 = function(_ref) {
         }
         side.href = href
       }
+
       if (buttonImage) {
         if (!isString(buttonImage)) {
           typerror('')
         }
         side.buttonImage = 'url(' + buttonImage + ')'
       }
+
       if (coverColor) {
         if (!isString(coverColor)) {
           typerror('')
@@ -292,8 +291,6 @@ var index$1 = function(_ref) {
 
 var index$2 = function(_ref) {
   var Preloader = _ref.Preloader
-
-  console.log(Preloader)
   return Preloader
 }
 
@@ -315,7 +312,7 @@ var index$4 = function(_ref) {
       var url = exhibitBg
 
       result.exhibitBgURL = url
-      result.exhibitBgStyle = { backgroundImage: 'url(' + url + ')' }
+      result.exhibitBgStyle.backgroundImage = 'url(' + url + ')'
     } else if (isArray(exhibitBg)) {
       var _exhibitBg = slicedToArray(exhibitBg, 2),
         _url = _exhibitBg[0],
@@ -329,9 +326,14 @@ var index$4 = function(_ref) {
       }
 
       result.exhibitBgURL = _url
-      result.exhibitBgStyle = Object.assign(style, {
-        backgroundImage: 'url(' + _url + ')'
+      Object.entries(style).forEach(function(_ref2) {
+        var _ref3 = slicedToArray(_ref2, 2),
+          key = _ref3[0],
+          value = _ref3[1]
+
+        result.exhibitBgStyle[key] = value
       })
+      result.exhibitBgStyle.backgroundImage = 'url(' + _url + ')'
     } else {
       typerror('')
     }
@@ -495,44 +497,39 @@ var App = (function(_Component) {
   return App
 })(React.Component)
 
-var SET_TIMEOUT = [
-  function() {
-    var time =
-      arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1000
-    return new Promise(function(resolve) {
-      return setTimeout(resolve, time)
-    })
-  },
-  { states: [], dispatches: [] }
-]
+//
+var scrollDOM = function scrollDOM() {
+  return document.getElementById('exhibitScrollElement')
+}
 
-var _util = Object.freeze({
-  SET_TIMEOUT: SET_TIMEOUT
-})
+var isNumber$1 = function isNumber(target) {
+  return typeof target === 'number'
+}
 
 //
-
-var INDEX_EXHIBIT = [
-  function(packet, _ref) {
-    var render = _ref.render
-    return render({
-      index: packet.index,
-      exhibit: packet.exhibit
-    })
+var BY_REACT_DIDMOUNT = [
+  function(_ref, _ref2) {
+    var index = _ref.index,
+      exhibit = _ref.exhibit
+    var render = _ref2.render
+    return render({ index: index, exhibit: exhibit })
   },
-  {
-    states: ['index', 'exhibit'],
-    dispatches: []
-  }
+  { states: ['index', 'exhibit'], dispatches: [] }
 ]
 
-var INDEX_EXHIBIT_DETAIL = [
-  function(packet, _ref2) {
-    var render = _ref2.render
-    return render({
-      index: packet.index,
-      exhibit: packet.exhibit,
-      detail: packet.detail
+var BY_DOM_SWITCH_VIEW = [
+  function(packet, _ref3) {
+    var render = _ref3.render,
+      dispatch = _ref3.dispatch
+    var viewIndex = packet.viewIndex,
+      exhibit = packet.exhibit,
+      scrollTop = packet.scrollTop
+
+    var detail = packet.detail
+      ? { elements: packet.detail, mountWithShut: false }
+      : undefined
+    render({ index: viewIndex, exhibit: exhibit, detail: detail }, function() {
+      scrollDOM().scrollTop = scrollTop
     })
   },
   {
@@ -541,110 +538,76 @@ var INDEX_EXHIBIT_DETAIL = [
   }
 ]
 
-var DETAIL = [
-  function(detail, _ref3) {
-    var render = _ref3.render
-    return render({ detail: detail })
+var BY_DOM_UPDATE_VIEW = [
+  function(exhibit, _ref4) {
+    var render = _ref4.render
+    return render({ exhibit: exhibit })
   },
-  {
-    states: ['detail'],
-    dispatches: []
-  }
+  { states: ['exhibit'], dispatches: [] }
+]
+
+var ON_DETAIL = [
+  function(detailElements, _ref5) {
+    var render = _ref5.render
+    return render({ detail: { elements: detailElements, mountWithShut: true } })
+  },
+  { states: ['detail'], dispatches: [] }
+]
+
+var OFF_DETAIL = [
+  function(n, _ref6) {
+    var render = _ref6.render
+    return render({ detail: undefined })
+  },
+  { states: ['detail'], dispatches: [] }
 ]
 
 var OFF_PRELOADING = [
-  function(n, _ref4) {
-    var render = _ref4.render
+  function(n, _ref7) {
+    var render = _ref7.render
     return render({ preloading: false })
   },
-  {
-    states: ['preloading'],
-    dispatches: []
-  }
+  { states: ['preloading'], dispatches: [] }
 ]
 
 var ON_DRIFTING = [
-  function(n, _ref5) {
-    var render = _ref5.render
+  function(n, _ref8) {
+    var render = _ref8.render
     return render({ drifting: true })
   },
-  {
-    states: ['drifting'],
-    dispatches: []
-  }
+  { states: ['drifting'], dispatches: [] }
+]
+
+var LAG_DRIFTING = [
+  function(n, _ref9) {
+    var render = _ref9.render
+    return render({ drifting: 'lag' })
+  },
+  { states: ['drifting'], dispatches: [] }
 ]
 
 var OFF_DRIFTING = [
-  function(n, _ref6) {
-    var render = _ref6.render
+  function(n, _ref10) {
+    var render = _ref10.render
     return render({ drifting: false })
   },
-  {
-    states: ['drifting'],
-    dispatches: []
-  }
+  { states: ['drifting'], dispatches: [] }
 ]
 
 var _render = Object.freeze({
-  INDEX_EXHIBIT: INDEX_EXHIBIT,
-  INDEX_EXHIBIT_DETAIL: INDEX_EXHIBIT_DETAIL,
-  DETAIL: DETAIL,
+  BY_REACT_DIDMOUNT: BY_REACT_DIDMOUNT,
+  BY_DOM_SWITCH_VIEW: BY_DOM_SWITCH_VIEW,
+  BY_DOM_UPDATE_VIEW: BY_DOM_UPDATE_VIEW,
+  ON_DETAIL: ON_DETAIL,
+  OFF_DETAIL: OFF_DETAIL,
   OFF_PRELOADING: OFF_PRELOADING,
   ON_DRIFTING: ON_DRIFTING,
+  LAG_DRIFTING: LAG_DRIFTING,
   OFF_DRIFTING: OFF_DRIFTING
 })
 
 //
 
-var View = (function() {
-  // _factory: any
-  // _detailing: boolean
-  // _scrollTop: number
-
-  function View(factory) {
-    classCallCheck(this, View)
-
-    this._factory = factory
-    this._detailing = false
-    this._scrollTop = 0
-  }
-
-  createClass(View, [
-    {
-      key: 'factory',
-      value: function factory() {
-        return this._factory
-      }
-    },
-    {
-      key: 'detailing',
-      value: function detailing() {
-        return this._detailing
-      }
-    },
-    {
-      key: 'scrollTop',
-      value: function scrollTop() {
-        return this._scrollTop
-      }
-    },
-    {
-      key: 'setDetailing',
-      value: function setDetailing(value) {
-        this._detailing = value
-      }
-    },
-    {
-      key: 'setScrollTop',
-      value: function setScrollTop(value) {
-        this._scrollTop = value
-      }
-    }
-  ])
-  return View
-})()
-
-//
 var views = new Map()
 
 var SET_VIEW = [
@@ -657,76 +620,116 @@ var SET_VIEW = [
 ]
 
 var INIT_FACTORY = [
-  function(index) {
-    return views
-      .get(index)
-      .factory()
-      .init()
+  function(viewIndex) {
+    return views.get(viewIndex).factory.init()
   },
   { states: [], dispatches: [] }
 ]
 
 var UPDATE_FACTORY = [
-  function(index) {
-    return views
-      .get(index)
-      .factory()
-      .update()
+  function(viewIndex) {
+    return views.get(viewIndex).factory.update()
   },
   { states: [], dispatches: [] }
 ]
 
 var GET_FACTORY_EXHIBIT = [
-  function(index) {
-    return views
-      .get(index)
-      .factory()
-      .Exhibit()
+  function(viewIndex, _ref2) {
+    var dispatch = _ref2.dispatch
+    return views.get(viewIndex).factory.Exhibit({
+      detailing: function detailing(e) {
+        return dispatch('DOM:ON_DETAIL', e.target.dataset.index)
+      },
+      updating: function updating() {
+        return dispatch('DOM:UPDATE_VIEW')
+      }
+    })
   },
-  { states: [], dispatches: [] }
+  {
+    states: [],
+    dispatches: ['DOM:ON_DETAIL', 'DOM:UPDATE_VIEW']
+  }
 ]
 
 var GET_FACTORY_DETAIL = [
-  function(_ref2) {
-    var viewIndex = _ref2.viewIndex,
-      exhibitIndex = _ref2.exhibitIndex
+  function(_ref3) {
+    var viewIndex = _ref3.viewIndex,
+      detailIndex = _ref3.detailIndex
 
     var view = views.get(viewIndex)
-    view.setDetailing(true)
-    return view.factory().Detail(exhibitIndex)
+    view.setDetailIndex(detailIndex)
+    return view.factory.Detail(detailIndex)
   },
   { states: [], dispatches: [] }
 ]
 
-var GET_DETAILING = [
+var GET_DETAIL_INDEX = [
   function(index) {
-    return views.get(index).detailing()
+    return views.get(index).getDetailIndex()
   },
   { states: [], dispatches: [] }
 ]
 
-var OFF_DETAILING = [
+var OFF_DETAIL_INDEX = [
   function(index) {
-    return views.get(index).setDetailing(false)
+    return views.get(index).setDetailIndex(false)
   },
   { states: [], dispatches: [] }
 ]
 
 var GET_SCROLLTOP = [
   function(index) {
-    return views.get(index).scrollTop()
+    return views.get(index).getScrollTop()
   },
   { states: [], dispatches: [] }
 ]
 
 var SET_SCROLLTOP = [
-  function(_ref3) {
-    var index = _ref3.index,
-      value = _ref3.value
+  function(_ref4) {
+    var index = _ref4.index,
+      value = _ref4.value
     return views.get(index).setScrollTop(value)
   },
   { states: [], dispatches: [] }
 ]
+
+var View = (function() {
+  function View(factory) {
+    classCallCheck(this, View)
+
+    this.factory = factory
+    this._detailIndex = false
+    this._scrollTop = 0
+  }
+
+  createClass(View, [
+    {
+      key: 'getDetailIndex',
+      value: function getDetailIndex() {
+        return this._detailIndex
+      }
+    },
+    {
+      key: 'setDetailIndex',
+      value: function setDetailIndex(value) {
+        this._detailIndex = value
+      }
+    },
+    {
+      key: 'getScrollTop',
+      value: function getScrollTop() {
+        return this._scrollTop
+      }
+    },
+    {
+      key: 'setScrollTop',
+      value: function setScrollTop(value) {
+        this._scrollTop = value
+      }
+    }
+  ])
+  return View
+})()
 
 var _store = Object.freeze({
   SET_VIEW: SET_VIEW,
@@ -734,8 +737,8 @@ var _store = Object.freeze({
   UPDATE_FACTORY: UPDATE_FACTORY,
   GET_FACTORY_EXHIBIT: GET_FACTORY_EXHIBIT,
   GET_FACTORY_DETAIL: GET_FACTORY_DETAIL,
-  GET_DETAILING: GET_DETAILING,
-  OFF_DETAILING: OFF_DETAILING,
+  GET_DETAIL_INDEX: GET_DETAIL_INDEX,
+  OFF_DETAIL_INDEX: OFF_DETAIL_INDEX,
   GET_SCROLLTOP: GET_SCROLLTOP,
   SET_SCROLLTOP: SET_SCROLLTOP
 })
@@ -743,37 +746,32 @@ var _store = Object.freeze({
 //
 
 var DID_MOUNT = [
-  function(n, util) {
-    var _util$props = util.props(),
-      views = _util$props.views,
-      firstIndex = _util$props.firstIndex
+  async function(n, _ref) {
+    var props = _ref.props,
+      dispatch = _ref.dispatch
 
-    var dispatch = util.dispatch
+    var _props = props(),
+      views = _props.views,
+      firstIndex = _props.firstIndex
 
-    Promise.all(
-      views.map(function(_ref, index) {
-        var factory = _ref.factory
-        return dispatch('STORE:SET_VIEW', {
-          index: index,
-          factory: factory()
-        }).then(function() {
-          return dispatch('STORE:INIT_FACTORY', index)
-        })
+    // INIT
+
+    await Promise.all(
+      views.map(async function(_ref2, index) {
+        var create = _ref2.create
+
+        var factory = create()
+        await dispatch('STORE:SET_VIEW', { index: index, factory: factory })
+        await dispatch('STORE:INIT_FACTORY', index)
       })
-    ).then(function() {
-      return dispatch('STORE:GET_FACTORY_EXHIBIT', firstIndex).then(function(
-        exhibit
-      ) {
-        return dispatch('RENDER:INDEX_EXHIBIT', {
-          index: firstIndex,
-          exhibit: exhibit
-        })
-      })
+    )
+
+    // RENDER
+    var exhibit = await dispatch('STORE:GET_FACTORY_EXHIBIT', firstIndex)
+    dispatch('RENDER:BY_REACT_DIDMOUNT', {
+      index: firstIndex,
+      exhibit: exhibit
     })
-    // .then(() =>
-    //   dispatch("UTIL:SET_TIMEOUT", 1500).then(() =>
-    //     dispatch("RENDER:OFF_PRELOADING")
-    //   ))
   },
   {
     states: [],
@@ -781,118 +779,166 @@ var DID_MOUNT = [
       'STORE:SET_VIEW',
       'STORE:INIT_FACTORY',
       'STORE:GET_FACTORY_EXHIBIT',
-      'RENDER:INDEX_EXHIBIT'
-      // "UTIL:SET_TIMEOUT",
-      // "RENDER:OFF_PRELOADING"
+      'RENDER:BY_REACT_DIDMOUNT'
     ]
   }
 ]
 
-var DID_UPDATE = [
-  function(n, util) {
-    console.log('DID_UPDATE')
-    console.log(util.state())
-  },
-  {
-    states: [],
-    dispatches: []
-  }
-]
+// export const DID_UPDATE = [
+//   (n, util) => {},
+//   {
+//     states: [],
+//     dispatches: []
+//   }
+// ]
 
 var _react = Object.freeze({
-  DID_MOUNT: DID_MOUNT,
-  DID_UPDATE: DID_UPDATE
+  DID_MOUNT: DID_MOUNT
 })
 
+//
 var OFF_PRELOADING$1 = [
   function(n, _ref) {
     var dispatch = _ref.dispatch
     return dispatch('RENDER:OFF_PRELOADING')
   },
-  {
-    states: [],
-    dispatches: ['RENDER:OFF_PRELOADING']
-  }
+  { states: [], dispatches: ['RENDER:OFF_PRELOADING'] }
 ]
 
 var SWITCH_VIEW = [
-  function(e, util) {
-    var nowIndex = util.state().index
-    var nextIndex = +e.target.dataset.index
+  async function(e, _ref2) {
+    var state = _ref2.state,
+      dispatch = _ref2.dispatch
 
-    var dispatch = util.dispatch
+    var nowIndex = state().index
+    var viewIndex = +e.target.dataset.index
+
+    if (nowIndex === viewIndex) return
+
+    // SET NOW SCROLLTOP STORE
+    await dispatch('STORE:SET_SCROLLTOP', {
+      index: nowIndex,
+      value: scrollDOM().scrollTop
+    })
+
+    // RENDER
+    var detailIndex = await dispatch('STORE:GET_DETAIL_INDEX', viewIndex)
+    dispatch('RENDER:BY_DOM_SWITCH_VIEW', {
+      viewIndex: viewIndex,
+      exhibit: await dispatch('STORE:GET_FACTORY_EXHIBIT', viewIndex),
+      scrollTop: await dispatch('STORE:GET_SCROLLTOP', viewIndex),
+      detail:
+        isNumber$1(detailIndex) &&
+        (await dispatch('STORE:GET_FACTORY_DETAIL', {
+          viewIndex: viewIndex,
+          detailIndex: detailIndex
+        }))
+    })
   },
   {
     states: [],
     dispatches: [
       'STORE:SET_SCROLLTOP',
-      'STORE:GET_SCROLLTOP',
       'STORE:GET_FACTORY_EXHIBIT',
-      'STORE:GET_DETAILING',
-      'STORE:GET_FACTORY_DETAIL'
+      'STORE:GET_SCROLLTOP',
+      'STORE:GET_DETAIL_INDEX',
+      'STORE:GET_FACTORY_DETAIL',
+      'RENDER:BY_DOM_SWITCH_VIEW'
     ]
   }
 ]
 
 var UPDATE_VIEW = [
-  function(e, _ref2) {
-    objectDestructuringEmpty(_ref2)
-  },
-  {
-    states: [],
-    dispatches: []
-  }
-]
-
-var ON_DETAIL = [
   function(e, _ref3) {
-    objectDestructuringEmpty(_ref3)
+    var state = _ref3.state,
+      dispatch = _ref3.dispatch
+
+    var viewIndex = state().index
+    return dispatch('STORE:UPDATE_FACTORY', viewIndex)
+      .then(function() {
+        return dispatch('STORE:GET_FACTORY_EXHIBIT', viewIndex)
+      })
+      .then(function(exhibit) {
+        return dispatch('RENDER:BY_DOM_UPDATE_VIEW', exhibit)
+      })
   },
   {
     states: [],
-    dispatches: []
+    dispatches: [
+      'STORE:UPDATE_FACTORY',
+      'STORE:GET_FACTORY_EXHIBIT',
+      'RENDER:BY_DOM_UPDATE_VIEW'
+    ]
   }
 ]
 
-var OFF_DETAIL = [
-  function(e, _ref4) {
-    objectDestructuringEmpty(_ref4)
+var ON_DETAIL$1 = [
+  function(index, _ref4) {
+    var state = _ref4.state,
+      dispatch = _ref4.dispatch
+    return (
+      index &&
+      dispatch('STORE:GET_FACTORY_DETAIL', {
+        viewIndex: state().index,
+        detailIndex: +index
+      }).then(function(detail) {
+        return dispatch('RENDER:ON_DETAIL', detail)
+      })
+    )
   },
   {
     states: [],
-    dispatches: []
+    dispatches: ['STORE:GET_FACTORY_DETAIL', 'RENDER:ON_DETAIL']
+  }
+]
+
+var OFF_DETAIL$1 = [
+  function(e, _ref5) {
+    var state = _ref5.state,
+      dispatch = _ref5.dispatch
+    return dispatch('STORE:OFF_DETAIL_INDEX', state().index).then(function() {
+      return dispatch('RENDER:OFF_DETAIL')
+    })
+  },
+  {
+    states: [],
+    dispatches: ['STORE:OFF_DETAIL_INDEX', 'RENDER:OFF_DETAIL']
   }
 ]
 
 var ON_DRIFTING$1 = [
-  function(e, _ref5) {
-    var dispatch = _ref5.dispatch
+  function(e, _ref6) {
+    var dispatch = _ref6.dispatch
     return dispatch('RENDER:ON_DRIFTING')
   },
-  {
-    states: [],
-    dispatches: ['RENDER:ON_DRIFTING']
-  }
+  { states: [], dispatches: ['RENDER:ON_DRIFTING'] }
+]
+
+var LAG_DRIFTING$1 = [
+  function(e, _ref7) {
+    var dispatch = _ref7.dispatch
+    return dispatch('RENDER:LAG_DRIFTING')
+  },
+  { states: [], dispatches: ['RENDER:LAG_DRIFTING'] }
 ]
 
 var OFF_DRIFTING$1 = [
-  function(e, _ref6) {
-    var dispatch = _ref6.dispatch
-    return dispatch('RENDER:OFF_DRIFTING')
+  function(e, _ref8) {
+    var state = _ref8.state,
+      dispatch = _ref8.dispatch
+    return state().drifting === 'lag' && dispatch('RENDER:OFF_DRIFTING')
   },
-  {
-    states: [],
-    dispatches: ['RENDER:OFF_DRIFTING']
-  }
+  { states: [], dispatches: ['RENDER:OFF_DRIFTING'] }
 ]
 
 var _dom = Object.freeze({
   OFF_PRELOADING: OFF_PRELOADING$1,
   SWITCH_VIEW: SWITCH_VIEW,
   UPDATE_VIEW: UPDATE_VIEW,
-  ON_DETAIL: ON_DETAIL,
-  OFF_DETAIL: OFF_DETAIL,
+  ON_DETAIL: ON_DETAIL$1,
+  OFF_DETAIL: OFF_DETAIL$1,
   ON_DRIFTING: ON_DRIFTING$1,
+  LAG_DRIFTING: LAG_DRIFTING$1,
   OFF_DRIFTING: OFF_DRIFTING$1
 })
 
@@ -904,6 +950,7 @@ var _window = Object.freeze({
 
 var _ref
 
+// import * as _util from './util'
 var entries = Object.entries
 var isArray$1 = Array.isArray
 
@@ -915,7 +962,7 @@ var isPureObject = function isPureObject(target) {
 }
 
 var imports = [
-  ['UTIL', _util],
+  // ['UTIL', _util],
   ['RENDER', _render],
   ['STORE', _store],
   ['REACT', _react],
@@ -955,34 +1002,396 @@ var orph = new Orph(
   )
 )
 
-var Veil = function(_ref) {
-  var onTouchEnd = _ref.onTouchEnd,
-    drifting = _ref.drifting
+var Burger = function() {
   return React__default.createElement(
-    'div',
-    a$1('veil', {
-      onTouchEnd: onTouchEnd,
-      style: {
-        top: drifting ? 0 : undefined,
-        background: drifting ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0)'
-        // backgroundはdrifting === "wait"の段階がある
-      }
-    })
+    'svg',
+    a$1('SVG'),
+    React__default.createElement(
+      'g',
+      a$1('G'),
+      React__default.createElement('path', a$1('PATH_0')),
+      React__default.createElement('path', a$1('PATH_1')),
+      React__default.createElement('path', a$1('PATH_2'))
+    )
   )
 }
 
 var a$1 = Atra({
-  veil: {
-    className: '',
+  SVG: {
+    viewBox: '0 0 300 300',
+    style: {
+      height: '100%'
+    }
+  },
+  G: {
+    style: {
+      stroke: 'var(--sub-color)',
+      strokeWidth: 26
+    }
+  },
+  PATH_0: {
+    d: 'm 40,224.5 220,0'
+  },
+  PATH_1: {
+    d: 'm 40,149.49959 220,0'
+  },
+  PATH_2: {
+    d: 'm 40,74.499594 220,0'
+  }
+})
+
+var Button = function(_ref) {
+  var inform = _ref.inform,
+    buttonIndex = _ref.buttonIndex,
+    onTouchStart = _ref.onTouchStart,
+    children = _ref.children
+  return React__default.createElement(
+    'div',
+    a$2('ROOT'),
+    React__default.createElement('span', a$2('CHILDREN_WRAP'), children),
+    inform > 0 && React__default.createElement('div', a$2('INFORM'), inform),
+    React__default.createElement(
+      'div',
+      a$2('CLICK_COVER', {
+        'data-index': buttonIndex,
+        onTouchStart: onTouchStart
+      })
+    )
+  )
+}
+
+var a$2 = Atra({
+  ROOT: {
+    style: {
+      display: 'inline-block',
+      width: '25%',
+      height: '100%',
+      position: 'relative'
+    }
+  },
+  CHILDREN_WRAP: {
+    style: {
+      display: 'inline-block',
+      color: 'white',
+      objectFit: 'contain',
+      position: 'relative',
+      // height: '50%',
+      width: '42%',
+      // top: '23%',
+      top: '18%'
+      // strokeLinecap: 'round',
+      // strokeLinejoin: 'round'
+    }
+  },
+  INFORM: {
     style: {
       position: 'absolute',
-      bottom: 0,
+      fontSize: 27,
+      display: 'inline-block',
+      width: 34,
+      height: 34,
+      borderRadius: 50,
+      background: '#ff4444',
+      top: 14,
+      right: '20%',
+      color: '#fff',
+      lineHeight: 1.29
+    }
+  },
+  CLICK_COVER: {
+    className: 'for_view_change',
+    style: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
       width: '100%',
-      transition: '0.6s',
-      borderRight: 'solid 0.2px #3a3a3a'
+      height: '100%'
     }
   }
 })
+
+var Detail = function(_ref) {
+  var mountWithShut = _ref.mountWithShut,
+    onQuit = _ref.onQuit,
+    children = _ref.children
+  return React__default.createElement(
+    reactShut.ShutFromLeft,
+    { mountWithShut: mountWithShut, onQuit: onQuit, Quit: Quit },
+    children
+  )
+}
+
+var Quit = function Quit(_ref2) {
+  var fn = _ref2.fn
+  return React__default.createElement(
+    'span',
+    a$3('ROOT'),
+    React__default.createElement(
+      'svg',
+      a$3('SVG'),
+      React__default.createElement('path', a$3('PATH'))
+    ),
+    React__default.createElement('span', a$3('COVER', { onTouchEnd: fn }))
+  )
+}
+
+var a$3 = Atra({
+  ROOT: {
+    style: {
+      zIndex: 1000,
+      height: 91,
+      position: 'absolute',
+      right: 24,
+      top: 20
+      // left: 16,
+    }
+  },
+  SVG: {
+    viewBox: '0 0 300 300'
+    // viewBox:"0 -20 300 340"
+  },
+  PATH: {
+    // d: "M 241.83659,7.6084992 58.731126,148.71429 241.83659,289.82008",
+    // d: "M 58.370181,291.10579 241.47564,150 58.370181,8.8942098",
+    d:
+      'M 110.54023,257.79498 258.96569,150 110.54023,42.205019 M 136.35573,150 H 40.755811',
+    style: {
+      fill: 'none',
+      // stroke:"rgb(97, 97, 97)",
+      // stroke: "rgb(36, 38, 56)",
+      // stroke: "#fff",
+      stroke: 'rgb(30, 34, 67)',
+      // strokeWidth: 30,
+      strokeWidth: 42,
+      strokeLinejoin: 'round',
+      strokeLinecap: 'round'
+    }
+  },
+  COVER: {
+    style: {
+      position: 'absolute',
+      // background: "rgba(0,0,0,0.3)",
+      top: -10,
+      bottom: -10,
+      left: -10,
+      right: -10
+    }
+  }
+})
+
+var Exhibit = function(_ref) {
+  var detail = _ref.detail,
+    children = _ref.children
+  return React__default.createElement(
+    'div',
+    a$4('ROOT', { style: { overflowY: !detail ? 'scroll' : 'hidden' } }),
+    children
+  )
+}
+
+var a$4 = Atra({
+  ROOT: {
+    id: 'exhibitScrollElement',
+    style: {
+      position: 'relative',
+      height: '100%',
+      overflowScrolling: 'touch',
+      WebkitOverflowScrolling: 'touch'
+    }
+  }
+})
+
+// textAlign: textAlign || "center",
+// paddingTop:160,
+// height:innerHeight-160-160,
+// overflowY: (!depth) ? "scroll" : "hidden"
+
+var Head = function(_ref) {
+  var height = _ref.height,
+    word = _ref.word,
+    onTouchEnd = _ref.onTouchEnd,
+    children = _ref.children
+  return React__default.createElement(
+    'header',
+    a$5('HEAD_ROOT', { style: { height: height } }),
+    React__default.createElement(
+      'span',
+      a$5('HEAD_WORD', { style: { marginTop: height - 105 } }),
+      word
+    ),
+    React__default.createElement(
+      'span',
+      a$5('HEAD_BUTTON', {
+        onTouchEnd: onTouchEnd,
+        style: { padding: (height - 100) / 2 + 'px 25px' }
+      }),
+      children
+    )
+  )
+}
+
+var a$5 = Atra({
+  HEAD_ROOT: {
+    style: {
+      backgroundColor: 'var(--base-color)',
+      position: 'relative',
+      textAlign: 'center'
+    }
+  },
+  HEAD_WORD: {
+    style: {
+      color: 'var(--sub-color)',
+      fontSize: '2.5em',
+      fontWeight: 'bold',
+      letterSpacing: 2,
+      display: 'inline-block'
+    }
+  },
+  HEAD_BUTTON: {
+    style: {
+      height: 100,
+      position: 'absolute',
+      right: 0,
+      top: 0,
+      display: 'inline-block',
+      textAlign: 'center'
+    }
+  }
+})
+
+var BG_WITH_IMG = 'rgba(255, 255, 255, 0.83)'
+var BG_NO_IMG = 'rgb(245, 245, 245)'
+
+var Main = function(_ref) {
+  var height = _ref.height,
+    backgroundStyle = _ref.backgroundStyle,
+    children = _ref.children
+
+  var style = Object.assign({}, backgroundStyle, { height: height })
+  var background = backgroundStyle.backgroundImage ? BG_WITH_IMG : BG_NO_IMG
+  return React__default.createElement(
+    'main',
+    a$6('ROOT', { style: style }),
+    React__default.createElement(
+      'div',
+      a$6('WRAP', { style: { background: background } }),
+      children
+    )
+  )
+}
+
+var a$6 = Atra({
+  ROOT: {
+    style: {
+      position: 'relative'
+      // backgroundSize: 'cover',
+      // backgroundPosition: 'bottom center'
+    }
+  },
+
+  WRAP: {
+    style: {
+      outline: 'none',
+      position: 'relative',
+      height: '100%'
+    }
+  }
+})
+
+var Preload = (function(_React$Component) {
+  inherits(Preload, _React$Component)
+
+  function Preload(props) {
+    classCallCheck(this, Preload)
+
+    var _this = possibleConstructorReturn(
+      this,
+      (Preload.__proto__ || Object.getPrototypeOf(Preload)).call(this, props)
+    )
+
+    _this.a = A({
+      onTransitionEnd: props.onTransitionEnd,
+      ref: wrapRef.bind(_this)
+    })
+    return _this
+  }
+
+  createClass(Preload, [
+    {
+      key: 'render',
+      value: function render() {
+        var a = this.a
+
+        return React__default.createElement(
+          'div',
+          a('ROOT', { style: { opacity: this.props.vanish ? 0 : 1 } }),
+          React__default.createElement(
+            'span',
+            a('WRAP', { style: this.wrapStyle() }),
+            this.props.children
+          )
+        )
+      }
+    },
+    {
+      key: 'componentDidMount',
+      value: function componentDidMount() {
+        var _this2 = this
+
+        this.nowWrapHeight = this.wrapHeight()
+        window.requestAnimationFrame(function() {
+          return _this2.forceUpdate()
+        })
+      }
+    },
+    {
+      key: 'wrapStyle',
+      value: function wrapStyle() {
+        var nowWrapHeight = this.nowWrapHeight
+
+        return typeof nowWrapHeight === 'number'
+          ? { top: (window.innerHeight - nowWrapHeight) / 2 - 100 }
+          : { visibility: 'hidden' }
+      }
+    }
+  ])
+  return Preload
+})(React__default.Component)
+
+function wrapRef(target) {
+  this.wrapHeight = !this.wrapHeight
+    ? function() {
+        return target.clientHeight
+      }
+    : null
+}
+
+var A = function A(_ref) {
+  var onTransitionEnd = _ref.onTransitionEnd,
+    ref = _ref.ref
+  return Atra({
+    ROOT: {
+      onTransitionEnd: onTransitionEnd,
+      style: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        textAlign: 'center',
+        background: '#eeeeee',
+        transition: '0.4s'
+      }
+    },
+    WRAP: {
+      ref: ref,
+      style: {
+        position: 'relative',
+        display: 'inline-block'
+      }
+    }
+  })
+}
 
 var _style
 
@@ -995,10 +1404,10 @@ var Side = function(_ref) {
     descriptionStyle = _ref.descriptionStyle
   return React__default.createElement(
     'div',
-    a$2('ROOT'),
+    a$7('ROOT'),
     React__default.createElement(
       'span',
-      a$2('WRAP', {
+      a$7('WRAP', {
         onTouchStart: onTouchStart,
         onTouchEnd: HoTouchEnd(href),
         style: {
@@ -1010,14 +1419,14 @@ var Side = function(_ref) {
       coverColor &&
         React__default.createElement(
           'span',
-          a$2('COVER', {
+          a$7('COVER', {
             style: { backgroundColor: coverColor }
           })
         ),
       descriptionText &&
         React__default.createElement(
           'span',
-          a$2('DESCRIPTION', {
+          a$7('DESCRIPTION', {
             style: descriptionStyle,
             children: descriptionText
           })
@@ -1027,7 +1436,7 @@ var Side = function(_ref) {
 }
 // style: { background: coverColor || 'rgba(0, 29, 36, 0.48)' }
 
-var a$2 = Atra({
+var a$7 = Atra({
   ROOT: {
     style: {
       textAlign: 'center',
@@ -1086,260 +1495,40 @@ var HoTouchEnd = function HoTouchEnd(href) {
   }
 }
 
-var Preload = function(_ref) {
-  var vanish = _ref.vanish,
-    onTransitionEnd = _ref.onTransitionEnd,
-    children = _ref.children
+var Veil = function(_ref) {
+  var drifting = _ref.drifting,
+    onTouchEnd = _ref.onTouchEnd,
+    onTransitionEnd = _ref.onTransitionEnd
   return React__default.createElement(
     'div',
-    a$3('ROOT', {
-      style: { opacity: vanish ? 0 : 1 },
-      onTransitionEnd: onTransitionEnd
-    }),
-    React__default.createElement('span', a$3('WRAP'), children)
-  )
-}
-
-var a$3 = Atra({
-  ROOT: {
-    style: {
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      background: '#eeeeee',
-      transition: '0.4s'
-    }
-  },
-  WRAP: {
-    style: {
-      position: 'absolute',
-      top: (window.innerHeight - 140) / 2 - 100,
-      left: (window.innerWidth - 140) / 2,
-      display: 'inline-block',
-      height: 140
-    }
-  }
-})
-
-var Exhibit = function() {
-  return React__default.createElement('div', null)
-}
-
-var a$5 = Atra({})
-
-var Detail = function() {
-  return React__default.createElement('div', null)
-}
-
-var a$6 = Atra({})
-
-var Main = function(_ref) {
-  var height = _ref.height,
-    backgroundStyle = _ref.backgroundStyle,
-    exhibit = _ref.exhibit,
-    detail = _ref.detail
-  return React__default.createElement(
-    'main',
-    a$4('MAIN_ROOT', {
-      style: Object.assign({ height: height }, backgroundStyle)
-    }),
-    React__default.createElement(
-      'div',
-      a$4('MAIN_WRAP', {
-        style: {
-          background: backgroundStyle
-            ? 'rgba(255, 255, 255, 0.83)'
-            : 'rgb(245, 245, 245)'
-        }
-      }),
-      React__default.createElement(Exhibit, null),
-      detail && React__default.createElement(Detail, null)
-    )
-  )
-}
-
-var a$4 = Atra({
-  MAIN_ROOT: {
-    style: {
-      position: 'relative',
-      backgroundSize: 'cover',
-      backgroundPosition: 'bottom center'
-    }
-  },
-  MAIN_WRAP: {
-    style: {
-      outline: 'none',
-      position: 'relative',
-      height: '100%'
-    }
-  }
-})
-
-var Burger = function() {
-  return React__default.createElement(
-    'svg',
-    a$8('SVG'),
-    React__default.createElement(
-      'g',
-      a$8('G'),
-      React__default.createElement('path', a$8('PATH_0')),
-      React__default.createElement('path', a$8('PATH_1')),
-      React__default.createElement('path', a$8('PATH_2'))
-    )
+    a$8('VEIL', {
+      onTouchEnd: onTouchEnd,
+      onTransitionEnd: onTransitionEnd,
+      style: {
+        top: !drifting ? undefined : 0,
+        background:
+          !drifting || drifting === 'lag'
+            ? 'rgba(0, 0, 0, 0)'
+            : 'rgba(0, 0, 0, 0.8)'
+      }
+    })
   )
 }
 
 var a$8 = Atra({
-  SVG: {
-    viewBox: '0 0 300 300',
-    style: {
-      height: '100%'
-    }
-  },
-  G: {
-    style: {
-      stroke: 'var(--sub-color)',
-      strokeWidth: 26
-    }
-  },
-  PATH_0: {
-    d: 'm 40,224.5 220,0'
-  },
-  PATH_1: {
-    d: 'm 40,149.49959 220,0'
-  },
-  PATH_2: {
-    d: 'm 40,74.499594 220,0'
-  }
-})
-
-var Head = function(_ref) {
-  var height = _ref.height,
-    word = _ref.word,
-    onTouchEnd = _ref.onTouchEnd
-  return React__default.createElement(
-    'header',
-    a$7('HEAD_ROOT', { style: { height: height } }),
-    React__default.createElement(
-      'span',
-      a$7('HEAD_WORD', { style: { marginTop: height - 105 } }),
-      word
-    ),
-    React__default.createElement(
-      'span',
-      a$7('HEAD_BUTTON', {
-        style: { padding: (height - 100) / 2 + 'px 25px' },
-        onTouchEnd: onTouchEnd
-      }),
-      React__default.createElement(Burger, null)
-    )
-  )
-}
-
-var a$7 = Atra({
-  HEAD_ROOT: {
-    style: {
-      backgroundColor: 'var(--base-color)',
-      position: 'relative',
-      textAlign: 'center'
-    }
-  },
-  HEAD_WORD: {
-    style: {
-      color: 'var(--sub-color)',
-      fontSize: '2.5em',
-      fontWeight: 'bold',
-      letterSpacing: 2,
-      display: 'inline-block'
-    }
-  },
-  HEAD_BUTTON: {
-    style: {
-      height: 100,
-      position: 'absolute',
-      right: 0,
-      top: 0,
-      display: 'inline-block',
-      textAlign: 'center'
-    }
-  }
-})
-
-var Button = function(_ref) {
-  var inform = _ref.inform,
-    buttonIndex = _ref.buttonIndex,
-    onTouchStart = _ref.onTouchStart,
-    children = _ref.children
-  return React__default.createElement(
-    'div',
-    a$9('ROOT'),
-    React__default.createElement('span', a$9('CHILDREN_WRAP'), children),
-    inform > 0 && React__default.createElement('div', a$9('INFORM'), inform),
-    React__default.createElement(
-      'div',
-      a$9('CLICK_COVER', {
-        'data-index': buttonIndex,
-        onTouchStart: onTouchStart
-      })
-    )
-  )
-}
-
-var a$9 = Atra({
-  ROOT: {
-    style: {
-      display: 'inline-block',
-      width: '25%',
-      height: '100%',
-      position: 'relative'
-    }
-  },
-  CHILDREN_WRAP: {
-    style: {
-      display: 'inline-block',
-      color: 'white',
-      objectFit: 'contain',
-      position: 'relative',
-      // height: '50%',
-      width: '42%',
-      // top: '23%',
-      top: '18%'
-      // strokeLinecap: 'round',
-      // strokeLinejoin: 'round'
-    }
-  },
-  INFORM: {
+  VEIL: {
     style: {
       position: 'absolute',
-      fontSize: 27,
-      display: 'inline-block',
-      width: 34,
-      height: 34,
-      borderRadius: 50,
-      background: '#ff4444',
-      top: 14,
-      right: '20%',
-      color: '#fff',
-      lineHeight: 1.29
-    }
-  },
-  CLICK_COVER: {
-    className: 'for_view_change',
-    style: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
+      bottom: 0,
       width: '100%',
-      height: '100%'
+      transitionDuration: '0.6s',
+      transitionProperty: 'background-color',
+      borderRight: 'solid 0.2px #3a3a3a'
     }
   }
 })
 
 //
-// const forcep = (value) => Promise.resolve(value)
-// const firstCamel = (string) => `${string[0].toUpperCase()}${string.slice(1)}`
 var valued = function valued(target) {
   return typeof target === 'function' ? target() : target
 }
@@ -1351,19 +1540,14 @@ var BUTTON_HEIGHT = 150
 var listeners = [
   'DOM:OFF_PRELOADING',
   'DOM:SWITCH_VIEW',
-  'DOM:UPDATE_VIEW',
-  'DOM:ON_DETAIL',
   'DOM:OFF_DETAIL',
   'DOM:ON_DRIFTING',
+  'DOM:LAG_DRIFTING',
   'DOM:OFF_DRIFTING'
 ]
 
 var LigureMobile = (function(_Component) {
   inherits(LigureMobile, _Component)
-
-  // sides: Array<React$Element>
-  // backgroundImage: string
-  // css: string
 
   function LigureMobile(props) {
     classCallCheck(this, LigureMobile)
@@ -1422,38 +1606,38 @@ var LigureMobile = (function(_Component) {
     {
       key: 'tree',
       value: function tree() {
-        var head = this.createHead()
-        var main = this.createMain()
         var veil = this.createVeil()
-        var buttons = this.createButtons()
-        var sides = this.sides
 
         var drifting = this.state.drifting
+
+        var transform =
+          !drifting || drifting === 'lag'
+            ? 'translateX(0px)'
+            : 'translateX(' + -SIDE_WIDTH + 'px)'
+        var transition = !drifting || drifting === 'lag' ? '0.6s' : '0.72s'
 
         return React__default.createElement(
           'div',
           a('ROOT'),
           React__default.createElement(
             'div',
-            a('HEAD_AND_MAIN', {
-              style: {
-                transform: 'translateX(' + (drifting ? -SIDE_WIDTH : 0) + 'px)'
-              }
-            }),
-            head,
-            main,
+            a('HEAD_AND_MAIN', { style: { transform: transform } }),
+            this.createHead(),
+            this.createMain(),
             veil
           ),
-          React__default.createElement('nav', a('BUTTONS'), buttons, veil),
+          React__default.createElement(
+            'nav',
+            a('BUTTONS'),
+            this.createButtons(),
+            veil
+          ),
           React__default.createElement(
             'aside',
             a('SIDES', {
-              style: {
-                transform: 'translateX(' + (drifting ? -SIDE_WIDTH : 0) + 'px)',
-                transition: (drifting ? 0.72 : 0.6) + 's'
-              }
+              style: { transform: transform, transition: transition }
             }),
-            sides
+            this.sides
           )
         )
       }
@@ -1464,8 +1648,6 @@ var LigureMobile = (function(_Component) {
         if (this.preloader && !this.state.preloading) {
           this.preloader = null
         }
-
-        orph.dispatch('REACT:DID_UPDATE')
       }
 
       /*----------------------- create -----------------------*/
@@ -1483,31 +1665,41 @@ var LigureMobile = (function(_Component) {
     {
       key: 'createHead',
       value: function createHead() {
-        return React__default.createElement(Head, {
-          height: HEAD_HEIGHT,
-          word: this.props.views[this.state.index].head,
-          onTouchEnd: this.listeners['DOM:ON_DRIFTING']
-        })
+        return React__default.createElement(
+          Head,
+          {
+            height: HEAD_HEIGHT,
+            word: this.props.views[this.state.index].head,
+            onTouchEnd: this.listeners['DOM:ON_DRIFTING']
+          },
+          React__default.createElement(Burger, null)
+        )
       }
     },
     {
       key: 'createMain',
       value: function createMain() {
-        return React__default.createElement(Main, {
-          height: window.innerHeight - (HEAD_HEIGHT + BUTTON_HEIGHT),
-          backgroundStyle: this.props.exhibitBgStyle,
-          exhibit: this.state.exhibit,
-          detail: this.state.detail
-        })
-      }
-    },
-    {
-      key: 'createVeil',
-      value: function createVeil() {
-        return React__default.createElement(Veil, {
-          drifting: this.state.drifting,
-          onTouchEnd: this.listeners['DOM:OFF_DRIFTING']
-        })
+        var _state = this.state,
+          exhibit = _state.exhibit,
+          detail = _state.detail
+
+        return React__default.createElement(
+          Main,
+          {
+            height: window.innerHeight - (HEAD_HEIGHT + BUTTON_HEIGHT),
+            backgroundStyle: this.props.exhibitBgStyle
+          },
+          React__default.createElement(Exhibit, {
+            detail: detail,
+            children: exhibit
+          }),
+          detail &&
+            React__default.createElement(Detail, {
+              mountWithShut: detail.mountWithShut,
+              children: detail.elements,
+              onQuit: this.listeners['DOM:OFF_DETAIL']
+            })
+        )
       }
     },
     {
@@ -1544,6 +1736,16 @@ var LigureMobile = (function(_Component) {
             descriptionText: descriptionText,
             descriptionStyle: descriptionStyle
           })
+        })
+      }
+    },
+    {
+      key: 'createVeil',
+      value: function createVeil() {
+        return React__default.createElement(Veil, {
+          drifting: this.state.drifting,
+          onTouchEnd: this.listeners['DOM:LAG_DRIFTING'],
+          onTransitionEnd: this.listeners['DOM:OFF_DRIFTING']
         })
       }
     }
@@ -1585,6 +1787,12 @@ var a = Atra({
     }
   }
 })
+
+// 'DOM:UPDATE_VIEW',
+// 'DOM:ON_DETAIL',
+// sides: Array<React$Element>
+// backgroundImage: string
+// css: string
 
 var Desktop = Guardian(App)
 var Mobile = Guardian(LigureMobile)

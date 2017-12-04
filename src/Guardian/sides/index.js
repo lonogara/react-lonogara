@@ -23,12 +23,14 @@ export default ({ sides }) => {
         }
         side.href = href
       }
+
       if (buttonImage) {
         if (!isString(buttonImage)) {
           typerror(``)
         }
         side.buttonImage = `url(${buttonImage})`
       }
+
       if (coverColor) {
         if (!isString(coverColor)) {
           typerror(``)

@@ -15,21 +15,21 @@ export default ({ views }) => {
       typerror(``)
     }
 
-    views.forEach(({ head, Button, factory }) => {
+    views.forEach(({ head, Button, create }) => {
       if (!isString(head)) {
         typerror(``)
       }
       if (!isObjectPure(Button) && !isFunction(Button)) {
         typerror(``)
       }
-      if (!factory) {
-        error(`view.factory is required`)
+      if (!create) {
+        error(`view.create is required`)
       }
-      if (!isFunction(factory)) {
-        typerror(`view factory must be "function" but ${typeof factory}`)
+      if (!isFunction(create)) {
+        typerror(`view create must be "function" but ${typeof create}`)
       }
 
-      result.push({ head, Button, factory })
+      result.push({ head, Button, create })
     })
   }
 

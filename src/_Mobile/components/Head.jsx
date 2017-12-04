@@ -1,19 +1,18 @@
 import React from 'react'
 import Atra from 'atra'
-import Burger from './Burger'
 
-export default ({ height, word, onTouchEnd }) => (
+export default ({
+  height,
+  word,
+  onTouchEnd,
+  children
+}) => (
   <header {...a('HEAD_ROOT', { style: { height } })}>
     <span {...a('HEAD_WORD', { style: { marginTop: height - 105 } })}>
       {word}
     </span>
-    <span
-      {...a('HEAD_BUTTON', {
-        style: { padding: `${(height - 100) / 2}px 25px` },
-        onTouchEnd
-      })}
-    >
-      <Burger />
+    <span {...a('HEAD_BUTTON', { onTouchEnd, style: { padding: `${(height - 100) / 2}px 25px` } })}>
+      {children}
     </span>
   </header>
 )

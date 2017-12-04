@@ -1,8 +1,11 @@
-import Veil from './Veil'
-import Side from './Side'
-import Preload from './Preload'
-import Main from './Main'
-import Head from './Head'
-import Button from './Button'
+import Burger from './Burger.jsx'
+import Button from './Button.jsx'
+import Detail from './Detail.jsx'
+import Exhibit from './Exhibit.jsx'
+import Head from './Head.jsx'
+import Main from './Main.jsx'
+import Preload from './Preload.jsx'
+import Side from './Side.jsx'
+import Veil from './Veil.jsx'
 
-export { Veil, Side, Preload, Main, Head, Button }
+export { Burger, Button, Detail, Exhibit, Head, Main, Preload, Side, Veil }

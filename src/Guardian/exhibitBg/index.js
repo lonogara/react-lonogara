@@ -11,7 +11,7 @@ export default ({ exhibitBg }) => {
       const url = exhibitBg
 
       result.exhibitBgURL = url
-      result.exhibitBgStyle = { backgroundImage: `url(${url})` }
+      result.exhibitBgStyle.backgroundImage = `url(${url})`
     } else if (isArray(exhibitBg)) {
       const [url, style] = exhibitBg
 
@@ -23,9 +23,10 @@ export default ({ exhibitBg }) => {
       }
 
       result.exhibitBgURL = url
-      result.exhibitBgStyle = Object.assign(style, {
-        backgroundImage: `url(${url})`
+      Object.entries(style).forEach(([key, value]) => {
+        result.exhibitBgStyle[key] = value
       })
+      result.exhibitBgStyle.backgroundImage = `url(${url})`
     } else {
       typerror(``)
     }
