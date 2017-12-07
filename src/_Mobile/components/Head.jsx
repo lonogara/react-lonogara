@@ -9,7 +9,7 @@ export default ({
   word,
   onTouchEnd,
   children
-}) => (
+}) =>
   <header {...a('HEAD_ROOT', { style: { height } })}>
     <span {...a('HEAD_WORD', { style: { marginTop: height - 105 } })}>
       {word}
@@ -18,7 +18,6 @@ export default ({
       {burger}
     </span>
   </header>
-)
 
 const a = Atra({
   HEAD_ROOT: {

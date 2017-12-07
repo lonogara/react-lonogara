@@ -2,31 +2,33 @@
 import React, { Component } from 'react'
 import Atra from 'atra'
 import orph from './orph'
+import { winnerWidth, winnerHeight, windowOnListener } from './util.js'
 import {
   Button,
-  Detail,
-  Exhibit,
   Head,
-  Main,
+  Middle,
+  Popdown,
   Preload,
   Side,
   Veil
 } from './components'
 
-const valued = target => (typeof target === 'function' ? target() : target)
-
 const SIDE_WIDTH = 370
-const HEAD_HEIGHT = 170
+const HEAD_HEIGHT = 190
 const BUTTON_HEIGHT = 150
 
 const listeners = [
-  'RENDER:OFF_PRELOADING',
-  'DOM:SWITCH_VIEW',
-  'DOM:OFF_DETAIL',
-  'RENDER:ON_DRIFTING',
-  'RENDER:LAG_DRIFTING',
-  'DOM:OFF_DRIFTING'
+  'WINDOW:RESIZE_FORCE_UPDATE',
+  'RENDER:PRELOADING_OFF',
+  'DOM:VIEW_SWITCH',
+  'DOM:DETAIL_OFF',
+  'RENDER:DRIFTING_ON',
+  'RENDER:DRIFTING_LAG',
+  'RENDER:DRIFTING_OFF',
+  'RENDER:POPDOWN_OFF'
 ]
+
+const jsx = (Component, props) => typeof Component === "function" && <Component {...props} />
 
 export default class LigureMobile extends Component {
 
@@ -35,10 +37,11 @@ export default class LigureMobile extends Component {
     this.state = {
       preloading: true,
       drifting: false,
-      index: undefined,
-      exhibit: undefined,
-      detail: undefined,
-      buttonUnitIndex: 0
+      index: null,
+      exhibit: {},
+      detail: {},
+      popdown: {},
+      informs: [0, 0, 0, 0]
     }
   }
 
@@ -46,32 +49,33 @@ export default class LigureMobile extends Component {
     orph.attach(this)
     this.listeners = {}
     listeners.forEach(NAME => { this.listeners[NAME] = orph.create(NAME) })
-
     this.sides = this.createSides()
-    this.preloader = valued(this.props.Preloader)
   }
 
   render() {
     return <div>
       {typeof this.state.index === 'number' && this.tree()}
+      {this.state.popdown.src && this.createPopdown()}
       {this.state.preloading && this.createPreload()}
     </div>
   }
 
-  componentDidMount() { orph.dispatch('REACT:DID_MOUNT') }
+  componentDidMount() {
+    windowOnListener("resize", this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
+    orph.dispatch('REACT:DID_MOUNT')
+  }
 
   tree() {
-    const veil = this.createVeil()
-
     const { drifting } = this.state
-    const transform = (!drifting || drifting === "lag") ? `translateX(0px)` : `translateX(${-SIDE_WIDTH}px)`
-    const transition = (!drifting || drifting === "lag") ? "0.6s" : "0.72s"
+    const transform = (!drifting || drifting === 'lag') ? `translateX(0px)` : `translateX(${-SIDE_WIDTH}px)`
+    const transition = (!drifting || drifting === 'lag') ? '0.6s' : '0.72s'
+    const veil = this.createVeil()
 
     return (
       <div {...a('ROOT')}>
-        <div {...a('HEAD_AND_MAIN', { style: { transform } })}>
+        <div {...a('HEAD_AND_MIDDLE', { style: { transform } })}>
           {this.createHead()}
-          {this.createMain()}
+          {this.createMiddle()}
           {veil}
         </div>
         <nav {...a('BUTTONS')}>
@@ -85,63 +89,7 @@ export default class LigureMobile extends Component {
     )
   }
 
-  componentDidUpdate() {
-    if (this.preloader && !this.state.preloading) {
-      this.preloader = null
-    }
-  }
-
   /*----------------------- create -----------------------*/
-
-  createPreload() {
-    return <Preload {...{
-      vanish: typeof this.state.index === 'number',
-      onTransitionEnd: this.listeners['RENDER:OFF_PRELOADING'],
-      children: this.preloader
-    }} />
-  }
-
-  createHead() {
-    return <Head {...{
-      height: HEAD_HEIGHT,
-      word: this.props.views[this.state.index].head,
-      onTouchEnd: this.listeners['RENDER:ON_DRIFTING']
-    }} />
-  }
-
-  createMain() {
-
-    const { exhibit, detail } = this.state
-
-    return (
-      <Main {...{
-        height: window.innerHeight - (HEAD_HEIGHT + BUTTON_HEIGHT),
-        backgroundStyle: this.props.exhibitBgStyle
-      }}>
-      
-        <Exhibit {...{ detail, children: exhibit }} />
-
-        {detail && <Detail {...{
-          onQuit: this.listeners['DOM:OFF_DETAIL'],
-          mountWithShut: detail.mountWithShut,
-          children: detail.elements
-        }} />}
-
-      </Main>
-    )
-  }
-
-  createButtons() {
-    return this.props.views.map((view, index) => (
-      <Button {...{
-        key: index,
-        buttonIndex: index,
-        onTouchStart: this.listeners['DOM:SWITCH_VIEW'],
-        inform: 0,
-        children: view.Button({ choised: index === this.state.index })
-      }} />
-    ))
-  }
 
   createSides() {
     return this.props.sides.map(
@@ -158,12 +106,67 @@ export default class LigureMobile extends Component {
     )
   }
 
+  createPopdown() {
+    return <Popdown {...{
+      src: this.state.popdown.src,
+      vertically: this.state.popdown.vertically,
+      onQuit: this.listeners['RENDER:POPDOWN_OFF']
+    }} />
+  }
+
+  createPreload() {
+    return <Preload {...{
+      vanish: typeof this.state.index === 'number',
+      onTransitionEnd: this.listeners['RENDER:PRELOADING_OFF'],
+      children: jsx(this.props.Preloader)
+    }} />
+  }
+
   createVeil() {
     return <Veil {...{
       drifting: this.state.drifting,
-      onTouchEnd: this.listeners['RENDER:LAG_DRIFTING'],
-      onTransitionEnd: this.listeners['DOM:OFF_DRIFTING']
+      onTouchEnd: this.listeners['RENDER:DRIFTING_LAG'],
+      onTransitionEnd: this.listeners['RENDER:DRIFTING_OFF']
     }} />
+  }
+
+  createHead() {
+    return <Head {...{
+      height: HEAD_HEIGHT,
+      word: this.props.views[this.state.index].head,
+      onTouchEnd: this.listeners['RENDER:DRIFTING_ON']
+    }} />
+  }
+
+  createMiddle() {
+    const { exhibitBgStyle } = this.props
+    const height = winnerHeight() - (HEAD_HEIGHT + BUTTON_HEIGHT)
+    const rootStyle = Object.assign({}, exhibitBgStyle, { height })
+    const withBgImg = Boolean(exhibitBgStyle.backgroundImage)
+
+    const { exhibit, detail } = this.state
+
+    return <Middle {...{
+      rootStyle,
+      withBgImg,
+      exhibit: jsx(exhibit.Component),
+      detail: detail.Component && jsx(detail.Component, detail.props),
+      mountWithShut: detail.mountWithShut,
+      onQuit: this.listeners['DOM:DETAIL_OFF']
+    }} />
+  }
+
+  createButtons() {
+    return this.props.views.map((view, index, views) =>
+      <Button {...{
+        key: index,
+        width: winnerWidth() / views.length,
+        buttonIndex: index,
+        onTouchStart: this.listeners['DOM:VIEW_SWITCH'],
+        inform: this.state.informs[index],
+        children: jsx(view.Button, { choised: index === this.state.index })
+      }} />
+    )
   }
 }
 
@@ -175,7 +178,7 @@ const a = Atra({
     }
   },
 
-  HEAD_AND_MAIN: {
+  HEAD_AND_MIDDLE: {
     style: {
       transition: '0.6s'
     }
@@ -193,15 +196,17 @@ const a = Atra({
   },
 
   SIDES: {
+    id: 'sideScrollElement',
     style: {
       position: 'fixed',
       top: 0,
-      left: window.innerWidth,
+      left: winnerWidth(),
       bottom: BUTTON_HEIGHT,
       width: SIDE_WIDTH,
       fontSize: 34,
       color: '#fff',
       overflowScrolling: 'touch',
+      WebkitOverflowScrolling:'touch',
       overflowY: 'scroll'
     }
   }

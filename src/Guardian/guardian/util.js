@@ -1,6 +1,6 @@
+// @flow
 export const isArray = Array.isArray
-export const isObjectPure = target =>
-  typeof target === 'object' && !isArray(target)
+export const isObjectPure = target => typeof target === 'object' && !isArray(target)
 export const isString = target => typeof target === 'string'
 export const isNumber = target => typeof target === 'number'
 export const isFunction = target => typeof target === 'function'

@@ -1,4 +1,5 @@
-import { isString, isArray, isObjectPure, typerror } from '../util.js'
+// @flow
+import { isString, isArray, isObjectPure, typerror } from './util.js'
 
 export default ({ exhibitBg }) => {
   const result = {

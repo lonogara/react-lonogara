@@ -1,7 +1,11 @@
 import React from 'react'
 import Atra from 'atra'
 
-export default ({ drifting, onTouchEnd, onTransitionEnd }) => (
+export default ({
+  drifting,
+  onTouchEnd,
+  onTransitionEnd
+}) =>
   <div {...a('VEIL', {
     onTouchEnd,
     onTransitionEnd,
@@ -12,7 +16,6 @@ export default ({ drifting, onTouchEnd, onTransitionEnd }) => (
         : 'rgba(0, 0, 0, 0.8)'
     }
   })} />
-)
 
 const a = Atra({
   VEIL: {

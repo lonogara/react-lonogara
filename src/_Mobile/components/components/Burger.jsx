@@ -1,7 +1,7 @@
 import React from 'react'
 import Atra from 'atra'
 
-export default () => (
+export default () =>
   <svg {...a('SVG')}>
     <g {...a('G')}>
       <path {...a('PATH_0')} />
@@ -9,7 +9,6 @@ export default () => (
       <path {...a('PATH_2')} />
     </g>
   </svg>
-)
 
 const a = Atra({
   SVG: {

@@ -1,37 +1,36 @@
 import React from 'react'
 import Atra from 'atra'
 
-export default ({ inform, buttonIndex, onTouchStart, children }) => (
-  <div {...a('ROOT')}>
-    <span {...a('CHILDREN_WRAP')}>{children}</span>
-    {inform > 0 && <div {...a('INFORM')}>{inform}</div>}
-    <div {...a('CLICK_COVER', { 'data-index': buttonIndex, onTouchStart })} />
+export default ({
+  width,
+  inform,
+  buttonIndex,
+  onTouchStart,
+  children
+}) =>
+  <div {...a('ROOT', { style: { width } })}>
+    <span {...a('WRAP')}>
+      {children}
+      {inform > 0 && <div {...a('INFORM')}>{inform}</div>}
+    </span>
+    <div {...a('CLICK_COVER', { onTouchStart, 'data-index': buttonIndex })} />
   </div>
-)
 
 const a = Atra({
   ROOT: {
     style: {
       display: 'inline-block',
-      width: '25%',
       height: '100%',
       position: 'relative'
     }
   },
-  CHILDREN_WRAP: {
+  WRAP: {
+    className: "ligure_button", // for svg { height: 100%; }
     style: {
       display: 'inline-block',
-      color: 'white',
-      objectFit: 'contain',
       position: 'relative',
-      // height: '50%',
-      // width: '42%',
-      width: '40%',
-      // top: '23%',
-      // top: '18%'
-      top: '17%'
-      // strokeLinecap: 'round',
-      // strokeLinejoin: 'round'
+      top: '18%',
+      height: '66%'
     }
   },
   INFORM: {
@@ -43,14 +42,13 @@ const a = Atra({
       height: 34,
       borderRadius: 50,
       background: '#ff4444',
-      top: 14,
-      right: '20%',
+      top: "-20%",
+      right: "-18%",
       color: '#fff',
       lineHeight: 1.29
     }
   },
   CLICK_COVER: {
-    className: 'for_view_change',
     style: {
       position: 'absolute',
       top: 0,

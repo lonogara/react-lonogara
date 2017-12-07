@@ -1,7 +1,6 @@
 # ligure
 
-[![Build Status]()]()
-[![Coverage Status]()]()
+[![Build Status]()]() [![Coverage Status]()]()
 
 * **Local figures gathered**
 

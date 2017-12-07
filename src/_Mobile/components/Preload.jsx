@@ -1,5 +1,6 @@
 import React from 'react'
 import Atra from 'atra'
+import { winnerHeight, raf } from '../util.js'
 
 export default class Preload extends React.Component {
   constructor(props){
@@ -20,13 +21,13 @@ export default class Preload extends React.Component {
 
   componentDidMount(){
     this.nowWrapHeight = this.wrapHeight()
-    window.requestAnimationFrame(() => this.forceUpdate())
+    raf(() => this.forceUpdate())
   }
 
   wrapStyle(){
     const { nowWrapHeight } = this
     return typeof nowWrapHeight === "number"
-      ? { top: (window.innerHeight - nowWrapHeight) / 2 - 100 }
+      ? { top: (winnerHeight() - nowWrapHeight) / 2 - 100 }
       : { visibility: "hidden" }
   }
 }

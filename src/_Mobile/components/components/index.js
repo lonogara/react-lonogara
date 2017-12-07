@@ -1,4 +1,5 @@
 import Burger from './Burger.jsx'
-import Quit from './Quit.jsx'
+import QuitDetail from './QuitDetail.jsx'
+import QuitPopdown from './QuitPopdown.jsx'
 
-export { Burger, Quit }
+export { Burger, QuitDetail, QuitPopdown }

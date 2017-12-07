@@ -10,13 +10,13 @@ type Props = {
 }
 
 export default ({
-  size,
   href,
+  size,
   buttonImage,
   coverColor,
   descriptionText,
   descriptionStyle
-}) => (
+}) =>
   <div {...a('ROOT')}>
     <span {...a('WRAP', {
       onTouchStart,
@@ -40,8 +40,6 @@ export default ({
       )}
     </span>
   </div>
-)
-// style: { background: coverColor || 'rgba(0, 29, 36, 0.48)' }
 
 const a = Atra({
   ROOT: {
@@ -56,8 +54,6 @@ const a = Atra({
       backgroundSize: 'contain',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      // width: 176,
-      // height: 176,
       display: 'inline-block',
       borderRadius: '100%',
       verticalAlign: 'middle',

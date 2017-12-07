@@ -1,4 +1,5 @@
-import { isArray, isString, isObjectPure, typerror } from '../util.js'
+// @flow
+import { isArray, isString, isObjectPure, typerror } from './util.js'
 
 export default ({ sides }) => {
   const result = []

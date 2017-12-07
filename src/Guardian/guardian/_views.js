@@ -1,11 +1,5 @@
-import {
-  isArray,
-  isString,
-  isObjectPure,
-  isFunction,
-  typerror,
-  error
-} from '../util.js'
+// @flow
+import { isArray, isString, isFunction, typerror, error } from './util.js'
 
 export default ({ views }) => {
   const result = []
@@ -15,18 +9,22 @@ export default ({ views }) => {
       typerror(``)
     }
 
+    if(views.length > 7) {
+      error('')
+    }
+
     views.forEach(({ head, Button, create }) => {
       if (!isString(head)) {
         typerror(``)
       }
-      if (!isObjectPure(Button) && !isFunction(Button)) {
+      if (!isFunction(Button)) {
         typerror(``)
       }
       if (!create) {
         error(`view.create is required`)
       }
       if (!isFunction(create)) {
-        typerror(`view create must be "function" but ${typeof create}`)
+        typerror(`view.create must be "function" but ${typeof create}`)
       }
 
       result.push({ head, Button, create })
