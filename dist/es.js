@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Atra from 'atra'
 import Orph from 'orph'
+import _regeneratorRuntime from 'babel-runtime/regenerator'
 import { ShutFromLeft, ShutFromTop } from 'react-shut'
 
 var _typeof =
@@ -16,6 +17,38 @@ var _typeof =
           ? 'symbol'
           : typeof obj
       }
+
+var asyncToGenerator = function(fn) {
+  return function() {
+    var gen = fn.apply(this, arguments)
+    return new Promise(function(resolve, reject) {
+      function step(key, arg) {
+        try {
+          var info = gen[key](arg)
+          var value = info.value
+        } catch (error) {
+          reject(error)
+          return
+        }
+
+        if (info.done) {
+          resolve(value)
+        } else {
+          return Promise.resolve(value).then(
+            function(value) {
+              step('next', value)
+            },
+            function(err) {
+              step('throw', err)
+            }
+          )
+        }
+      }
+
+      return step('next')
+    })
+  }
+}
 
 var classCallCheck = function(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -677,6 +710,8 @@ var RENDER = Object.freeze({
   INFORM_CHANGE: INFORM_CHANGE
 })
 
+var _this = undefined
+
 //
 var WINDOW = {
   RESIZE_FORCE_UPDATE: function RESIZE_FORCE_UPDATE(n, _ref) {
@@ -714,54 +749,89 @@ var REACT = {
       var props = _ref3.props,
         dispatch = _ref3.dispatch
       return Promise.all(
-        props().views.map(async function(_ref4, index) {
-          var create = _ref4.create
+        props().views.map(
+          (function() {
+            var _ref4 = asyncToGenerator(
+              /*#__PURE__*/ _regeneratorRuntime.mark(function _callee(
+                _ref5,
+                index
+              ) {
+                var create = _ref5.create
+                var Components
+                return _regeneratorRuntime.wrap(
+                  function _callee$(_context) {
+                    while (1) {
+                      switch ((_context.prev = _context.next)) {
+                        case 0:
+                          _context.next = 2
+                          return dispatch('STORE:INIT', index)
 
-          await dispatch('STORE:INIT', index)
+                        case 2:
+                          _context.next = 4
+                          return create({
+                            renderDetail: function renderDetail(data) {
+                              return dispatch('PASS:DETAIL_ON', data)
+                            },
+                            setPopdown: function setPopdown(src) {
+                              return dispatch('PASS:POPDOWN_ON', src)
+                            },
+                            setInform: function setInform(inform) {
+                              return dispatch('PASS:INFORM_ON', {
+                                index: index,
+                                inform: inform
+                              })
+                            }
+                          })
 
-          var Components = await create({
-            renderDetail: function renderDetail(data) {
-              return dispatch('PASS:DETAIL_ON', data)
-            },
-            setPopdown: function setPopdown(src) {
-              return dispatch('PASS:POPDOWN_ON', src)
-            },
-            setInform: function setInform(inform) {
-              return dispatch('PASS:INFORM_ON', {
-                index: index,
-                inform: inform
+                        case 4:
+                          Components = _context.sent
+                          _context.next = 7
+                          return dispatch('STORE:SET_COMPONENT', {
+                            index: index,
+                            componentName: 'Exhibit',
+                            Component: Components['Exhibit']
+                          }).then(function() {
+                            return dispatch('STORE:SET_DATA', {
+                              index: index,
+                              dataName: 'exhibitScrollTop',
+                              value: 0
+                            })
+                          })
+
+                        case 7:
+                          _context.next = 9
+                          return dispatch('STORE:SET_COMPONENT', {
+                            index: index,
+                            componentName: 'Detail',
+                            Component: Components['Detail']
+                          }).then(function() {
+                            return dispatch('STORE:SET_DATA', {
+                              index: index,
+                              dataName: 'detailProps',
+                              value: false
+                            })
+                          })
+
+                        case 9:
+                          return _context.abrupt('return')
+
+                        case 10:
+                        case 'end':
+                          return _context.stop()
+                      }
+                    }
+                  },
+                  _callee,
+                  _this
+                )
               })
+            )
+
+            return function(_x, _x2) {
+              return _ref4.apply(this, arguments)
             }
-          })
-
-          // Exhibit
-          await dispatch('STORE:SET_COMPONENT', {
-            index: index,
-            componentName: 'Exhibit',
-            Component: Components['Exhibit']
-          }).then(function() {
-            return dispatch('STORE:SET_DATA', {
-              index: index,
-              dataName: 'exhibitScrollTop',
-              value: 0
-            })
-          })
-
-          // Detail
-          await dispatch('STORE:SET_COMPONENT', {
-            index: index,
-            componentName: 'Detail',
-            Component: Components['Detail']
-          }).then(function() {
-            return dispatch('STORE:SET_DATA', {
-              index: index,
-              dataName: 'detailProps',
-              value: false
-            })
-          })
-
-          return
-        })
+          })()
+        )
       )
     }
   ],
@@ -770,25 +840,52 @@ var REACT = {
     {
       dispatches: ['STORE:GET_COMPONENT', 'RENDER:BY_REACT_DIDMOUNT']
     },
-    async function(n, _ref5) {
-      var props = _ref5.props,
-        dispatch = _ref5.dispatch
+    (function() {
+      var _ref6 = asyncToGenerator(
+        /*#__PURE__*/ _regeneratorRuntime.mark(function _callee2(n, _ref7) {
+          var props = _ref7.props,
+            dispatch = _ref7.dispatch
 
-      var index = props().firstIndex
+          var index, componentName, _ref8, Component$$1
 
-      var componentName = 'Exhibit'
+          return _regeneratorRuntime.wrap(
+            function _callee2$(_context2) {
+              while (1) {
+                switch ((_context2.prev = _context2.next)) {
+                  case 0:
+                    index = props().firstIndex
+                    componentName = 'Exhibit'
+                    _context2.next = 4
+                    return dispatch('STORE:GET_COMPONENT', {
+                      index: index,
+                      componentName: componentName
+                    })
 
-      var _ref6 = await dispatch('STORE:GET_COMPONENT', {
-          index: index,
-          componentName: componentName
-        }),
-        Component$$1 = _ref6.Component
+                  case 4:
+                    _ref8 = _context2.sent
+                    Component$$1 = _ref8.Component
 
-      dispatch('RENDER:BY_REACT_DIDMOUNT', {
-        index: index,
-        Component: Component$$1
-      })
-    }
+                    dispatch('RENDER:BY_REACT_DIDMOUNT', {
+                      index: index,
+                      Component: Component$$1
+                    })
+
+                  case 7:
+                  case 'end':
+                    return _context2.stop()
+                }
+              }
+            },
+            _callee2,
+            _this
+          )
+        })
+      )
+
+      return function(_x3, _x4) {
+        return _ref6.apply(this, arguments)
+      }
+    })()
   ]
 }
 
@@ -801,52 +898,87 @@ var DOM = {
         'RENDER:BY_DOM_VIEW_SWITCH'
       ]
     },
-    async function(e, _ref7) {
-      var state = _ref7.state,
-        dispatch = _ref7.dispatch
+    (function() {
+      var _ref9 = asyncToGenerator(
+        /*#__PURE__*/ _regeneratorRuntime.mark(function _callee3(e, _ref10) {
+          var state = _ref10.state,
+            dispatch = _ref10.dispatch
+          var nowIndex, nextIndex, exhibits, details
+          return _regeneratorRuntime.wrap(
+            function _callee3$(_context3) {
+              while (1) {
+                switch ((_context3.prev = _context3.next)) {
+                  case 0:
+                    nowIndex = state().index
+                    nextIndex = +e.target.dataset.index
 
-      var nowIndex = state().index
-      var nextIndex = +e.target.dataset.index
+                    if (!(nowIndex === nextIndex)) {
+                      _context3.next = 4
+                      break
+                    }
 
-      if (nowIndex === nextIndex) return
+                    return _context3.abrupt('return')
 
-      // SET NOW SCROLLTOP STORE
-      await dispatch('STORE:SET_DATA', {
-        index: nowIndex,
-        dataName: 'exhibitScrollTop',
-        value: exhibitScrollDOM().scrollTop
-      })
+                  case 4:
+                    _context3.next = 6
+                    return dispatch('STORE:SET_DATA', {
+                      index: nowIndex,
+                      dataName: 'exhibitScrollTop',
+                      value: exhibitScrollDOM().scrollTop
+                    })
 
-      // GET exhibits
-      var exhibits = await dispatch('STORE:GET_COMPONENT', {
-        index: nextIndex,
-        componentName: 'Exhibit',
-        dataName: 'exhibitScrollTop'
-      })
+                  case 6:
+                    _context3.next = 8
+                    return dispatch('STORE:GET_COMPONENT', {
+                      index: nextIndex,
+                      componentName: 'Exhibit',
+                      dataName: 'exhibitScrollTop'
+                    })
 
-      // GET details
-      var details = await dispatch('STORE:GET_COMPONENT', {
-        index: nextIndex,
-        componentName: 'Detail',
-        dataName: 'detailProps'
-      })
+                  case 8:
+                    exhibits = _context3.sent
+                    _context3.next = 11
+                    return dispatch('STORE:GET_COMPONENT', {
+                      index: nextIndex,
+                      componentName: 'Detail',
+                      dataName: 'detailProps'
+                    })
 
-      // RENDER
-      dispatch('RENDER:BY_DOM_VIEW_SWITCH', {
-        index: nextIndex,
-        exhibits: exhibits,
-        details: details
-      })
-    }
+                  case 11:
+                    details = _context3.sent
+
+                    // RENDER
+                    dispatch('RENDER:BY_DOM_VIEW_SWITCH', {
+                      index: nextIndex,
+                      exhibits: exhibits,
+                      details: details
+                    })
+
+                  case 13:
+                  case 'end':
+                    return _context3.stop()
+                }
+              }
+            },
+            _callee3,
+            _this
+          )
+        })
+      )
+
+      return function(_x5, _x6) {
+        return _ref9.apply(this, arguments)
+      }
+    })()
   ],
 
   DETAIL_OFF: [
     {
       dispatches: ['STORE:SET_DATA', 'RENDER:DETAIL_OFF']
     },
-    function(n, _ref8) {
-      var state = _ref8.state,
-        dispatch = _ref8.dispatch
+    function(n, _ref11) {
+      var state = _ref11.state,
+        dispatch = _ref11.dispatch
 
       dispatch('STORE:SET_DATA', {
         index: state().index,
@@ -864,9 +996,9 @@ var PASS = {
     {
       dispatches: ['STORE:SET_DATA', 'STORE:GET_COMPONENT', 'RENDER:DETAIL_ON']
     },
-    function(data, _ref9) {
-      var state = _ref9.state,
-        dispatch = _ref9.dispatch
+    function(data, _ref12) {
+      var state = _ref12.state,
+        dispatch = _ref12.dispatch
 
       var _state = state(),
         index = _state.index
@@ -893,8 +1025,8 @@ var PASS = {
     {
       dispatches: ['RENDER:POPDOWN_ON']
     },
-    function(arg, _ref10) {
-      var dispatch = _ref10.dispatch
+    function(arg, _ref13) {
+      var dispatch = _ref13.dispatch
 
       if (
         (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) ===
@@ -910,8 +1042,8 @@ var PASS = {
     {
       dispatches: ['RENDER:INFORM_CHANGE']
     },
-    function(arg, _ref11) {
-      var dispatch = _ref11.dispatch
+    function(arg, _ref14) {
+      var dispatch = _ref14.dispatch
 
       var inform = +arg.inform
       if (inform || inform === 0) {
