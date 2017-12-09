@@ -1805,7 +1805,7 @@ var LigureMobile = (function(_Component) {
         return this.props.views.map(function(view, index, views) {
           return React.createElement(Button, {
             key: index,
-            width: winnerWidth() / views.length,
+            width: winnerWidth() / views.length - 0.5,
             buttonIndex: index,
             onTouchStart: _this3.listeners['DOM:VIEW_SWITCH'],
             inform: _this3.state.informs[index],

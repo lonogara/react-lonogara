@@ -160,7 +160,7 @@ export default class LigureMobile extends Component {
     return this.props.views.map((view, index, views) =>
       <Button {...{
         key: index,
-        width: winnerWidth() / views.length,
+        width: (winnerWidth() / views.length) - 0.5,
         buttonIndex: index,
         onTouchStart: this.listeners['DOM:VIEW_SWITCH'],
         inform: this.state.informs[index],
