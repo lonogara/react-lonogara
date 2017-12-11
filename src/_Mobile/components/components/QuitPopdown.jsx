@@ -2,35 +2,45 @@ import React from "react";
 import Atra from "atra";
 
 export default ({ fn }) =>
-  <span {...a("ROOT")}>
-    <svg {...a("SVG")}>
-      <path {...a("PATH")} />
-    </svg>
-    <span {...a("COVER", { onTouchEnd: (e) => { e.stopPropagation(); fn(); } })} />
-  </span>
+  <div{...a("ROOT")}>
+    <span {...a("WRAP")}>
+      <svg {...a("SVG")}>
+        <path {...a("PATH")} />
+      </svg>
+      <span {...a("COVER", { onTouchEnd: (e) => { e.stopPropagation(); fn(); } })} />
+    </span>
+  </div>
 
 const a = Atra({
 
   ROOT: {
     style: {
       zIndex: 1000,
-      width: 120,
-      height: 110,
       position: "absolute",
-      right: 20,
-      bottom : 10
+      bottom : 17,
+      left: '0',
+      width: '100%',
+      textAlign: 'center'
+    }
+  },
+
+  WRAP: {
+    style: {
+      position: 'relative',
+      width: '32%',
+      display: 'inline-block'
     }
   },
 
   SVG:{
-    viewBox:"0 0 300 300",
+    viewBox:"0 0 1200 260"
   },
 
   PATH: {
-    d: "M 257.79497,203.6703 149.99999,96.462235 42.205019,203.6703",
+    d: "M 33.028507,241.96285 600.001,18.109642 1166.9735,241.96285",
     style: {
       fill: "none",
-      stroke: "rgb(38, 38, 38)",
+      stroke: "rgb(46, 46, 46)",
       strokeWidth: 42,
       strokeLinejoin: "round",
       strokeLinecap:"round",
@@ -38,6 +48,7 @@ const a = Atra({
   },
 
   COVER: {
+    onTouchStartCapture: (e) => e.stopPropagation(),
     style: {
       position: "absolute",
       top: -10,

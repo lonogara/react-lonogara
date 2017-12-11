@@ -13,9 +13,9 @@ import {
   Veil
 } from './components'
 
-const SIDE_WIDTH = 370
 const HEAD_HEIGHT = 190
-const BUTTON_HEIGHT = 150
+const BUTTON_HEIGHT = 160
+const SIDE_WIDTH = 370
 
 const listeners = [
   'WINDOW:RESIZE_FORCE_UPDATE',
@@ -110,7 +110,7 @@ export default class LigureMobile extends Component {
     return <Popdown {...{
       src: this.state.popdown.src,
       vertically: this.state.popdown.vertically,
-      onQuit: this.listeners['RENDER:POPDOWN_OFF']
+      onQuitEnd: this.listeners['RENDER:POPDOWN_OFF']
     }} />
   }
 
@@ -152,7 +152,8 @@ export default class LigureMobile extends Component {
       exhibit: jsx(exhibit.Component),
       detail: detail.Component && jsx(detail.Component, detail.props),
       mountWithShut: detail.mountWithShut,
-      onQuit: this.listeners['DOM:DETAIL_OFF']
+      notScroll: Boolean(this.state.popdown.src),
+      onQuitEnd: this.listeners['DOM:DETAIL_OFF']
     }} />
   }
 

@@ -29,7 +29,7 @@ const a = Atra({
     style: {
       display: 'inline-block',
       position: 'relative',
-      top: '18%',
+      top: '20%',
       height: '66%'
     }
   },

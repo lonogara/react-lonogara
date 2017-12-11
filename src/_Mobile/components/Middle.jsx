@@ -21,14 +21,15 @@ export default ({
   exhibit,
   detail,
   mountWithShut,
-  onQuit
+  notScroll,
+  onQuitEnd
 }: Props ) =>
   <main {...{ style: rootStyle }}>
     <div {...a('WRAP', { style: { backgroundColor: withBgImg ? WITH_IMG_COLOR : NO_IMG_COLOR } })}>
       <div {...a("WRAP_EXHIBIT", { style: { overflowY: !detail ? "scroll" : "hidden" } })}>
         {exhibit}
       </div>
-      {detail && <Shut {...{ mountWithShut, onQuit, Quit }}>
+      {detail && <Shut {...{ mountWithShut, notScroll, onQuitEnd, Quit }}>
         <div {...a('WRAP_DETAIL')}>
           {detail}
         </div>

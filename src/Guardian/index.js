@@ -21,6 +21,8 @@ export default Component => props => {
         }
         body {
           margin: 0px;
+          overflowY: hidden;
+          font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;
         }
         .ligure_button svg {
           height: 100%;

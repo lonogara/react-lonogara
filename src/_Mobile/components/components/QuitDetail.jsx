@@ -6,7 +6,11 @@ export default ({ fn }) =>
     <svg {...a("SVG")}>
       <path {...a("PATH")} />
     </svg>
-    <span {...a("COVER", { onTouchEnd: (e) => { e.stopPropagation(); fn(); } })} />
+    <span {...a("COVER", { onTouchEndCapture: (e) => {
+      e.stopPropagation()
+      e.preventDefault()
+      fn()
+    } })} />
   </span>
 
 const a = Atra({
@@ -40,10 +44,10 @@ const a = Atra({
   COVER: {
     style: {
       position: "absolute",
-      top: -10,
-      bottom: -10,
-      left: -10,
-      right: -10
+      top: -20,
+      bottom: -20,
+      left: -20,
+      right: -20
     }
   }
 })

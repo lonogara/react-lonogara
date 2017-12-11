@@ -445,7 +445,7 @@ var Guardian = function(Component$$1) {
           subColor +
           ';\n          --side-color: ' +
           sideColor +
-          ';\n        }\n        body {\n          margin: 0px;\n        }\n        .ligure_button svg {\n          height: 100%;\n        }\n      '
+          ';\n        }\n        body {\n          margin: 0px;\n          overflowY: hidden;\n          font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;\n        }\n        .ligure_button svg {\n          height: 100%;\n        }\n      '
       ),
       React__default.createElement(Component$$1, {
         firstIndex: firstIndex,
@@ -1165,7 +1165,7 @@ var a$1 = Atra({
     style: {
       display: 'inline-block',
       position: 'relative',
-      top: '18%',
+      top: '20%',
       height: '66%'
     }
   },
@@ -1246,8 +1246,9 @@ var Quit = function(_ref) {
     React__default.createElement(
       'span',
       a$4('COVER', {
-        onTouchEnd: function onTouchEnd(e) {
+        onTouchEndCapture: function onTouchEndCapture(e) {
           e.stopPropagation()
+          e.preventDefault()
           fn()
         }
       })
@@ -1286,10 +1287,10 @@ var a$4 = Atra({
   COVER: {
     style: {
       position: 'absolute',
-      top: -10,
-      bottom: -10,
-      left: -10,
-      right: -10
+      top: -20,
+      bottom: -20,
+      left: -20,
+      right: -20
     }
   }
 })
@@ -1297,21 +1298,25 @@ var a$4 = Atra({
 var Quit$1 = function(_ref) {
   var fn = _ref.fn
   return React__default.createElement(
-    'span',
+    'div',
     a$5('ROOT'),
     React__default.createElement(
-      'svg',
-      a$5('SVG'),
-      React__default.createElement('path', a$5('PATH'))
-    ),
-    React__default.createElement(
       'span',
-      a$5('COVER', {
-        onTouchEnd: function onTouchEnd(e) {
-          e.stopPropagation()
-          fn()
-        }
-      })
+      a$5('WRAP'),
+      React__default.createElement(
+        'svg',
+        a$5('SVG'),
+        React__default.createElement('path', a$5('PATH'))
+      ),
+      React__default.createElement(
+        'span',
+        a$5('COVER', {
+          onTouchEnd: function onTouchEnd(e) {
+            e.stopPropagation()
+            fn()
+          }
+        })
+      )
     )
   )
 }
@@ -1320,23 +1325,31 @@ var a$5 = Atra({
   ROOT: {
     style: {
       zIndex: 1000,
-      width: 120,
-      height: 110,
       position: 'absolute',
-      right: 20,
-      bottom: 10
+      bottom: 17,
+      left: '0',
+      width: '100%',
+      textAlign: 'center'
+    }
+  },
+
+  WRAP: {
+    style: {
+      position: 'relative',
+      width: '32%',
+      display: 'inline-block'
     }
   },
 
   SVG: {
-    viewBox: '0 0 300 300'
+    viewBox: '0 0 1200 260'
   },
 
   PATH: {
-    d: 'M 257.79497,203.6703 149.99999,96.462235 42.205019,203.6703',
+    d: 'M 33.028507,241.96285 600.001,18.109642 1166.9735,241.96285',
     style: {
       fill: 'none',
-      stroke: 'rgb(38, 38, 38)',
+      stroke: 'rgb(46, 46, 46)',
       strokeWidth: 42,
       strokeLinejoin: 'round',
       strokeLinecap: 'round'
@@ -1344,6 +1357,9 @@ var a$5 = Atra({
   },
 
   COVER: {
+    onTouchStartCapture: function onTouchStartCapture(e) {
+      return e.stopPropagation()
+    },
     style: {
       position: 'absolute',
       top: -10,
@@ -1418,7 +1434,8 @@ var Middle = function(_ref) {
     exhibit = _ref.exhibit,
     detail = _ref.detail,
     mountWithShut = _ref.mountWithShut,
-    onQuit = _ref.onQuit
+    notScroll = _ref.notScroll,
+    onQuitEnd = _ref.onQuitEnd
   return React__default.createElement(
     'main',
     { style: rootStyle },
@@ -1437,7 +1454,12 @@ var Middle = function(_ref) {
       detail &&
         React__default.createElement(
           reactShut.ShutFromLeft,
-          { mountWithShut: mountWithShut, onQuit: onQuit, Quit: Quit },
+          {
+            mountWithShut: mountWithShut,
+            notScroll: notScroll,
+            onQuitEnd: onQuitEnd,
+            Quit: Quit
+          },
           React__default.createElement('div', a$6('WRAP_DETAIL'), detail)
         )
     )
@@ -1473,22 +1495,24 @@ var a$6 = Atra({
 
 var mountWithShut = true
 var background = 'rgba(17, 17, 17, 0.98)'
+var touchRatio = 0.08
 
 var Popdown = function(_ref) {
   var src = _ref.src,
     vertically = _ref.vertically,
-    onQuit = _ref.onQuit
+    onQuitEnd = _ref.onQuitEnd
   return React__default.createElement(
     reactShut.ShutFromTop,
     {
-      onQuit: onQuit,
+      onQuitEnd: onQuitEnd,
       mountWithShut: mountWithShut,
       background: background,
+      touchRatio: touchRatio,
       Quit: Quit$1
     },
     React__default.createElement(
       'div',
-      a$7('ROOT', { style: { top: vertically && '3%' } }),
+      a$7('ROOT', { style: { top: vertically && '4%' } }),
       React__default.createElement('img', a$7('IMG', { src: src }))
     )
   )
@@ -1499,7 +1523,7 @@ var a$7 = Atra({
     style: {
       position: 'relative',
       width: '96%',
-      height: '89%',
+      height: '87%',
       margin: 'auto'
     }
   },
@@ -1741,9 +1765,9 @@ var a$9 = Atra({
 })
 
 //
-var SIDE_WIDTH = 370
 var HEAD_HEIGHT = 190
-var BUTTON_HEIGHT = 150
+var BUTTON_HEIGHT = 160
+var SIDE_WIDTH = 370
 
 var listeners = [
   'WINDOW:RESIZE_FORCE_UPDATE',
@@ -1889,7 +1913,7 @@ var LigureMobile = (function(_Component) {
         return React__default.createElement(Popdown, {
           src: this.state.popdown.src,
           vertically: this.state.popdown.vertically,
-          onQuit: this.listeners['RENDER:POPDOWN_OFF']
+          onQuitEnd: this.listeners['RENDER:POPDOWN_OFF']
         })
       }
     },
@@ -1942,7 +1966,8 @@ var LigureMobile = (function(_Component) {
           exhibit: jsx$1(exhibit.Component),
           detail: detail.Component && jsx$1(detail.Component, detail.props),
           mountWithShut: detail.mountWithShut,
-          onQuit: this.listeners['DOM:DETAIL_OFF']
+          notScroll: Boolean(this.state.popdown.src),
+          onQuitEnd: this.listeners['DOM:DETAIL_OFF']
         })
       }
     },

@@ -5,14 +5,15 @@ import { QuitPopdown as Quit } from "./components"
 
 const mountWithShut = true
 const background = 'rgba(17, 17, 17, 0.98)'
+const touchRatio = 0.08
 
 export default ({
   src,
   vertically,
-  onQuit
+  onQuitEnd
 }) =>
-  <Shut {...{ onQuit, mountWithShut, background, Quit }}>
-    <div {...a("ROOT", { style: { top: vertically && "3%" } })}>
+  <Shut {...{ onQuitEnd, mountWithShut, background, touchRatio, Quit }}>
+    <div {...a("ROOT", { style: { top: vertically && "4%" } })}>
       <img {...a("IMG", { src })} />
     </div>
   </Shut>
@@ -22,7 +23,7 @@ const a = Atra({
     style: {
       position: "relative",
       width: "96%",
-      height: "89%",
+      height: "87%",
       margin: "auto"
     }
   },
