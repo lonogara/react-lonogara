@@ -1,12 +1,14 @@
 # ligure
 
-[![Build Status]()]() [![Coverage Status]()]()
+[![Build Status]()]()
+[![Coverage Status]()]()
 
+## ?catchphrase?
 * **Local figures gathered**
 
 * **ローカルの形があつまった**
 
-* **view the local's real.**
+* **view the local.**
 
 ## usage
 

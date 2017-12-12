@@ -5,11 +5,11 @@ import Adapter from 'enzyme-adapter-react-16'
 import enzyme from 'enzyme'
 enzyme.configure({ adapter: new Adapter() })
 
-import Guardian from '../../src/Guardian'
+import guardian from '../../src/guardian'
 
 // console.log(Guardian);
 
-describe(``, () => {
+describe(`guardian`, () => {
   it(``, () => {})
 })
 // new Promise((resolve) => {

@@ -1,8 +1,3 @@
-import Guardian from './Guardian'
-import _Desktop from './_Desktop'
-import _Mobile from './_Mobile'
-
-const Desktop = Guardian(_Desktop)
-const Mobile = Guardian(_Mobile)
-
+import Desktop from './Desktop'
+import Mobile from './Mobile'
 export { Desktop, Mobile }

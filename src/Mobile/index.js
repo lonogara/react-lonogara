@@ -1,8 +1,9 @@
 // @flow
 import React, { Component } from 'react'
 import Atra from 'atra'
+import guardian from '../guardian'
 import orph from './orph'
-import { winnerWidth, winnerHeight, windowOnListener } from './util.js'
+import { winnerWidth, winnerHeight, windowOnListener } from '../browser.js'
 import {
   Button,
   Head,
@@ -30,7 +31,7 @@ const listeners = [
 
 const jsx = (Component, props) => typeof Component === "function" && <Component {...props} />
 
-export default class LigureMobile extends Component {
+class LigureMobile extends Component {
 
   constructor(props) {
     super(props)
@@ -212,3 +213,5 @@ const a = Atra({
     }
   }
 })
+
+export default guardian(LigureMobile)

@@ -1,21 +1,13 @@
-import Orph from 'orph'
-import * as STORE from './STORE.js'
-import * as RENDER from './RENDER.js'
-import { WINDOW, REACT, DOM, PASS } from './INTERFACE.js'
+// @flow
 
-const orph = new Orph()
+export const isNum = target => typeof target === 'number'
 
-add(STORE, 'STORE')
-add(RENDER, 'RENDER')
-add(WINDOW, 'WINDOW')
-add(REACT, 'REACT')
-add(DOM, 'DOM')
-add(PASS, 'PASS')
+export const isFn = target => typeof target === 'function'
 
-export default orph
+export const isPureObject = target => typeof target === 'object' && !Array.isArray(target)
 
-function add(_import, prefix) {
-  Object.entries(_import)
+export const add = (orph, imports, prefix) =>
+  Object.entries(imports)
     .filter(([name]) => name !== 'default')
     .forEach(([name, value]) => {
       const addedName = `${prefix}:${name}`
@@ -35,4 +27,3 @@ function add(_import, prefix) {
 
       orph.add(addedName, listener, { states, dispatches })
     })
-}

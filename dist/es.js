@@ -402,18 +402,18 @@ var _views = function(_ref) {
 }
 
 //
-var Guardian = function(Component$$1) {
+var guardian = function(Component$$1) {
   return function(props) {
     var firstIndex = _firstIndex(props)
 
-    var _guardian$colors = _colors(props),
-      baseColor = _guardian$colors.baseColor,
-      subColor = _guardian$colors.subColor,
-      sideColor = _guardian$colors.sideColor
+    var _format$colors = _colors(props),
+      baseColor = _format$colors.baseColor,
+      subColor = _format$colors.subColor,
+      sideColor = _format$colors.sideColor
 
-    var _guardian$exhibitBg = _exhibitBg(props),
-      exhibitBgURL = _guardian$exhibitBg.exhibitBgURL,
-      exhibitBgStyle = _guardian$exhibitBg.exhibitBgStyle
+    var _format$exhibitBg = _exhibitBg(props),
+      exhibitBgURL = _format$exhibitBg.exhibitBgURL,
+      exhibitBgStyle = _format$exhibitBg.exhibitBgStyle
 
     var Preloader = _preloader(props)
     var sides = _sides(props)
@@ -433,7 +433,7 @@ var Guardian = function(Component$$1) {
           subColor +
           ';\n          --side-color: ' +
           sideColor +
-          ';\n        }\n        body {\n          margin: 0px;\n          overflowY: hidden;\n          font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;\n        }\n        .ligure_button svg {\n          height: 100%;\n        }\n      '
+          ';\n        }\n        body {\n          margin: 0px;\n          font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;\n        }\n        .ligure_button svg {\n          height: 100%;\n        }\n      '
       ),
       React.createElement(Component$$1, {
         firstIndex: firstIndex,
@@ -445,28 +445,6 @@ var Guardian = function(Component$$1) {
     )
   }
 }
-
-var App = (function(_Component) {
-  inherits(App, _Component)
-
-  function App(props) {
-    classCallCheck(this, App)
-    return possibleConstructorReturn(
-      this,
-      (App.__proto__ || Object.getPrototypeOf(App)).call(this, props)
-    )
-  }
-
-  createClass(App, [
-    {
-      key: 'render',
-      value: function render() {
-        return React.createElement('div', null, 'desktop')
-      }
-    }
-  ])
-  return App
-})(Component)
 
 //
 
@@ -549,6 +527,97 @@ var STORE = Object.freeze({
   SET_DATA: SET_DATA,
   GET_COMPONENT: GET_COMPONENT
 })
+
+//
+
+var add = function add(orph, imports, prefix) {
+  return Object.entries(imports)
+    .filter(function(_ref) {
+      var _ref2 = slicedToArray(_ref, 1),
+        name = _ref2[0]
+
+      return name !== 'default'
+    })
+    .forEach(function(_ref3) {
+      var _ref4 = slicedToArray(_ref3, 2),
+        name = _ref4[0],
+        value = _ref4[1]
+
+      var addedName = prefix + ':' + name
+
+      var listener = void 0,
+        states = void 0,
+        dispatches = void 0
+
+      if (Array.isArray(value)) {
+        var _value = slicedToArray(value, 2),
+          opts = _value[0],
+          fn = _value[1]
+
+        states = opts.states || []
+        dispatches = opts.dispatches || []
+        listener = fn
+      } else {
+        states = []
+        dispatches = []
+        listener = value
+      }
+
+      orph.add(addedName, listener, { states: states, dispatches: dispatches })
+    })
+}
+
+//
+
+var RENDER = Object.freeze({})
+
+//
+
+var WINDOW = {}
+
+var REACT = {}
+
+var DOM = {}
+
+var PASS = {}
+
+var orph = new Orph()
+add(orph, STORE, 'STORE')
+add(orph, RENDER, 'RENDER')
+add(orph, WINDOW, 'WINDOW')
+add(orph, REACT, 'REACT')
+add(orph, DOM, 'DOM')
+add(orph, PASS, 'PASS')
+
+//
+var LigureDesktop = (function(_Component) {
+  inherits(LigureDesktop, _Component)
+
+  function LigureDesktop(props) {
+    classCallCheck(this, LigureDesktop)
+
+    console.log(orph.list())
+    return possibleConstructorReturn(
+      this,
+      (LigureDesktop.__proto__ || Object.getPrototypeOf(LigureDesktop)).call(
+        this,
+        props
+      )
+    )
+  }
+
+  createClass(LigureDesktop, [
+    {
+      key: 'render',
+      value: function render() {
+        return React.createElement('div', null, 'desktop')
+      }
+    }
+  ])
+  return LigureDesktop
+})(Component)
+
+var index = guardian(LigureDesktop)
 
 //
 var exhibitScrollDOM = function exhibitScrollDOM() {
@@ -696,7 +765,7 @@ var INFORM_CHANGE = [
   }
 ]
 
-var RENDER = Object.freeze({
+var RENDER$1 = Object.freeze({
   PRELOADING_OFF: PRELOADING_OFF,
   DRIFTING_ON: DRIFTING_ON,
   DRIFTING_LAG: DRIFTING_LAG,
@@ -713,14 +782,14 @@ var RENDER = Object.freeze({
 var _this = undefined
 
 //
-var WINDOW = {
+var WINDOW$1 = {
   RESIZE_FORCE_UPDATE: function RESIZE_FORCE_UPDATE(n, _ref) {
     var update = _ref.update
     return update()
   }
 }
 
-var REACT = {
+var REACT$1 = {
   DID_MOUNT: [
     {
       dispatches: ['REACT:DID_MOUNT_FIRST', 'REACT:DID_MOUNT_SECOND']
@@ -889,7 +958,7 @@ var REACT = {
   ]
 }
 
-var DOM = {
+var DOM$1 = {
   VIEW_SWITCH: [
     {
       dispatches: [
@@ -991,7 +1060,7 @@ var DOM = {
   ]
 }
 
-var PASS = {
+var PASS$1 = {
   DETAIL_ON: [
     {
       dispatches: ['STORE:SET_DATA', 'STORE:GET_COMPONENT', 'RENDER:DETAIL_ON']
@@ -1055,51 +1124,13 @@ var PASS = {
   ]
 }
 
-var orph = new Orph()
-
-add(STORE, 'STORE')
-add(RENDER, 'RENDER')
-add(WINDOW, 'WINDOW')
-add(REACT, 'REACT')
-add(DOM, 'DOM')
-add(PASS, 'PASS')
-
-function add(_import, prefix) {
-  Object.entries(_import)
-    .filter(function(_ref) {
-      var _ref2 = slicedToArray(_ref, 1),
-        name = _ref2[0]
-
-      return name !== 'default'
-    })
-    .forEach(function(_ref3) {
-      var _ref4 = slicedToArray(_ref3, 2),
-        name = _ref4[0],
-        value = _ref4[1]
-
-      var addedName = prefix + ':' + name
-
-      var listener = void 0,
-        states = void 0,
-        dispatches = void 0
-
-      if (Array.isArray(value)) {
-        var _value = slicedToArray(value, 2),
-          opts = _value[0],
-          fn = _value[1]
-
-        states = opts.states || []
-        dispatches = opts.dispatches || []
-        listener = fn
-      } else {
-        states = []
-        dispatches = []
-        listener = value
-      }
-
-      orph.add(addedName, listener, { states: states, dispatches: dispatches })
-    })
-}
+var orph$2 = new Orph()
+add(orph$2, STORE, 'STORE')
+add(orph$2, RENDER$1, 'RENDER')
+add(orph$2, WINDOW$1, 'WINDOW')
+add(orph$2, REACT$1, 'REACT')
+add(orph$2, DOM$1, 'DOM')
+add(orph$2, PASS$1, 'PASS')
 
 //
 var winnerWidth = function winnerWidth() {
@@ -1807,10 +1838,10 @@ var LigureMobile = (function(_Component) {
       value: function componentWillMount() {
         var _this2 = this
 
-        orph.attach(this)
+        orph$2.attach(this)
         this.listeners = {}
         listeners.forEach(function(NAME) {
-          _this2.listeners[NAME] = orph.create(NAME)
+          _this2.listeners[NAME] = orph$2.create(NAME)
         })
         this.sides = this.createSides()
       }
@@ -1831,7 +1862,7 @@ var LigureMobile = (function(_Component) {
       key: 'componentDidMount',
       value: function componentDidMount() {
         windowOnListener('resize', this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
-        orph.dispatch('REACT:DID_MOUNT')
+        orph$2.dispatch('REACT:DID_MOUNT')
       }
     },
     {
@@ -2018,7 +2049,6 @@ var a = Atra({
   }
 })
 
-var Desktop = Guardian(App)
-var Mobile = Guardian(LigureMobile)
+var index$1 = guardian(LigureMobile)
 
-export { Desktop, Mobile }
+export { index as Desktop, index$1 as Mobile }

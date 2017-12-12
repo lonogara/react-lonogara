@@ -1,6 +1,6 @@
 import React from 'react'
 import Atra from 'atra'
-import { winnerHeight, raf } from '../util.js'
+import { winnerHeight, raf } from '../../browser.js'
 
 export default class Preload extends React.Component {
   constructor(props){

@@ -1,14 +1,14 @@
 // @flow
 import React from 'react'
-import * as guardian from './guardian'
+import * as format from './format'
 
 export default Component => props => {
-  const firstIndex = guardian.firstIndex(props)
-  const { baseColor, subColor, sideColor } = guardian.colors(props)
-  const { exhibitBgURL, exhibitBgStyle } = guardian.exhibitBg(props)
-  const Preloader = guardian.preloader(props)
-  const sides = guardian.sides(props)
-  const views = guardian.views(props)
+  const firstIndex = format.firstIndex(props)
+  const { baseColor, subColor, sideColor } = format.colors(props)
+  const { exhibitBgURL, exhibitBgStyle } = format.exhibitBg(props)
+  const Preloader = format.preloader(props)
+  const sides = format.sides(props)
+  const views = format.views(props)
 
   return (
     <div>
@@ -21,7 +21,6 @@ export default Component => props => {
         }
         body {
           margin: 0px;
-          overflowY: hidden;
           font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;
         }
         .ligure_button svg {

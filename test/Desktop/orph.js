@@ -5,4 +5,8 @@ import Adapter from 'enzyme-adapter-react-16'
 import enzyme from 'enzyme'
 enzyme.configure({ adapter: new Adapter() })
 
-import Desktop from '../../src/_Desktop'
+import orph from '../../src/Desktop/orph'
+
+describe(`Desktop:orph`, () => {
+  it(``, () => {})
+})
