@@ -1,9 +1,10 @@
-# ligure
+# lonogara
 
 [![Build Status]()]()
 [![Coverage Status]()]()
 
 ## ?catchphrase?
+
 * **Local figures gathered**
 
 * **ローカルの形があつまった**
@@ -15,7 +16,7 @@
 ```js
 import React from 'react'
 import { render } from 'react-dom'
-import { Desktop, Mobile } from 'ligure'
+import { Desktop, Mobile } from 'lonogara'
 import props from './props'
 
 render(
@@ -35,10 +36,6 @@ type Props = {
     side: string
   },
   exhibitBackground: string | [string, { [key: string]: string }],
-  detailStyle: {
-    rootClassName: string,
-    cssString: string
-  },
   views: Array<View>,
   sides: Array<Side>
 }
@@ -46,28 +43,25 @@ type Props = {
 type View = {
   head: string,
   Button: ButtonComponent,
-  create: Factory$Create
+  create: Create
 }
 
-type ButtonComponent = (props: Button$Props) => React$Element
-type Button$Props = { choised: boolean }
+type ButtonComponent = (props: { choised: boolean }) => React$Element
 
-type Factory$Create = () => Factory
-interface Factory = {
-  init(): Promise<void>
-  Exhibit(props: Factory$Props): React$Element
-  Detail(index: number): React$Element
-  update(): Promise<void>
+type Create = (options: Create$Opts) => Promise<{ Exhibit, Detail }>
+type Data = any
+type Create$Opts = {
+  renderDetail(Data)
+  setPopdown({ src, vertically })
+  setInform(number)
 }
-type Factory$Props = {
-  dispatchDetail: () => void,
-  dispatchUpdate: () => void
-}
+type Exhibit = React$Component<>
+type Detail = React$Component<{ data: Data }>
 
 type Side = {
   href: string,
-  buttonBackground: string,
-  coverBackground: string,
+  buttonImage: string,
+  coverColor: string,
   description: string | [string, { [key: string]: string}]
 }
 ```

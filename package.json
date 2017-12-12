@@ -1,11 +1,11 @@
 {
-  "name": "ligure",
+  "name": "lonogara",
   "version": "0.0.0",
   "private": true,
   "main": "dist/cjs.js",
   "jsnext:main": "dist/es.js",
   "module": "dist/es.js",
-  "repository": "kthjm/ligure",
+  "repository": "kthjm/lonogara",
   "author": "kthjm <toxictoxer@gmail.com>",
   "prettier": {
     "tabWidth": 2,

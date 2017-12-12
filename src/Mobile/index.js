@@ -31,7 +31,7 @@ const listeners = [
 
 const jsx = (Component, props) => typeof Component === "function" && <Component {...props} />
 
-class LigureMobile extends Component {
+class LonogaraMobile extends Component {
 
   constructor(props) {
     super(props)
@@ -214,4 +214,4 @@ const a = Atra({
   }
 })
 
-export default guardian(LigureMobile)
+export default guardian(LonogaraMobile)

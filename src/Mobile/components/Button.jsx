@@ -25,7 +25,7 @@ const a = Atra({
     }
   },
   WRAP: {
-    className: "ligure_button", // for svg { height: 100%; }
+    className: "lonogara_button", // for svg { height: 100%; }
     style: {
       display: 'inline-block',
       position: 'relative',

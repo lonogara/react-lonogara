@@ -4,7 +4,7 @@ import Atra from 'atra'
 import guardian from '../guardian'
 import orph from './orph'
 
-class LigureDesktop extends Component {
+class LonogaraDesktop extends Component {
   constructor(props) {
     console.log(orph.list());
     super(props)
@@ -15,4 +15,4 @@ class LigureDesktop extends Component {
   }
 }
 
-export default guardian(LigureDesktop)
+export default guardian(LonogaraDesktop)

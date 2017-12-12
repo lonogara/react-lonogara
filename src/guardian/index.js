@@ -23,7 +23,7 @@ export default Component => props => {
           margin: 0px;
           font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;
         }
-        .ligure_button svg {
+        .lonogara_button svg {
           height: 100%;
         }
       `}</style>

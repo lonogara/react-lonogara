@@ -433,7 +433,7 @@ var guardian = function(Component$$1) {
           subColor +
           ';\n          --side-color: ' +
           sideColor +
-          ';\n        }\n        body {\n          margin: 0px;\n          font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;\n        }\n        .ligure_button svg {\n          height: 100%;\n        }\n      '
+          ';\n        }\n        body {\n          margin: 0px;\n          font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;\n        }\n        .lonogara_button svg {\n          height: 100%;\n        }\n      '
       ),
       React.createElement(Component$$1, {
         firstIndex: firstIndex,
@@ -590,23 +590,22 @@ add(orph, DOM, 'DOM')
 add(orph, PASS, 'PASS')
 
 //
-var LigureDesktop = (function(_Component) {
-  inherits(LigureDesktop, _Component)
+var LonogaraDesktop = (function(_Component) {
+  inherits(LonogaraDesktop, _Component)
 
-  function LigureDesktop(props) {
-    classCallCheck(this, LigureDesktop)
+  function LonogaraDesktop(props) {
+    classCallCheck(this, LonogaraDesktop)
 
     console.log(orph.list())
     return possibleConstructorReturn(
       this,
-      (LigureDesktop.__proto__ || Object.getPrototypeOf(LigureDesktop)).call(
-        this,
-        props
-      )
+      (
+        LonogaraDesktop.__proto__ || Object.getPrototypeOf(LonogaraDesktop)
+      ).call(this, props)
     )
   }
 
-  createClass(LigureDesktop, [
+  createClass(LonogaraDesktop, [
     {
       key: 'render',
       value: function render() {
@@ -614,10 +613,10 @@ var LigureDesktop = (function(_Component) {
       }
     }
   ])
-  return LigureDesktop
+  return LonogaraDesktop
 })(Component)
 
-var index = guardian(LigureDesktop)
+var index = guardian(LonogaraDesktop)
 
 //
 var exhibitScrollDOM = function exhibitScrollDOM() {
@@ -1180,7 +1179,7 @@ var a$1 = Atra({
     }
   },
   WRAP: {
-    className: 'ligure_button', // for svg { height: 100%; }
+    className: 'lonogara_button', // for svg { height: 100%; }
     style: {
       display: 'inline-block',
       position: 'relative',
@@ -1806,15 +1805,15 @@ var jsx$1 = function jsx$$1(Component$$1, props) {
   )
 }
 
-var LigureMobile = (function(_Component) {
-  inherits(LigureMobile, _Component)
+var LonogaraMobile = (function(_Component) {
+  inherits(LonogaraMobile, _Component)
 
-  function LigureMobile(props) {
-    classCallCheck(this, LigureMobile)
+  function LonogaraMobile(props) {
+    classCallCheck(this, LonogaraMobile)
 
     var _this = possibleConstructorReturn(
       this,
-      (LigureMobile.__proto__ || Object.getPrototypeOf(LigureMobile)).call(
+      (LonogaraMobile.__proto__ || Object.getPrototypeOf(LonogaraMobile)).call(
         this,
         props
       )
@@ -1832,7 +1831,7 @@ var LigureMobile = (function(_Component) {
     return _this
   }
 
-  createClass(LigureMobile, [
+  createClass(LonogaraMobile, [
     {
       key: 'componentWillMount',
       value: function componentWillMount() {
@@ -2005,7 +2004,7 @@ var LigureMobile = (function(_Component) {
       }
     }
   ])
-  return LigureMobile
+  return LonogaraMobile
 })(Component)
 
 var a = Atra({
@@ -2049,6 +2048,6 @@ var a = Atra({
   }
 })
 
-var index$1 = guardian(LigureMobile)
+var index$1 = guardian(LonogaraMobile)
 
 export { index as Desktop, index$1 as Mobile }
