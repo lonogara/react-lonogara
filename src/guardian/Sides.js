@@ -1,11 +1,11 @@
 // @flow
-import { isArray, isString, isObjectPure, typerror } from './util.js'
+import { isArr, isStr, isObj, typerror } from '../util.js'
 
 export default ({ sides }) => {
   const result = []
 
   if (sides) {
-    if (!isArray(sides)) {
+    if (!isArr(sides)) {
       typerror(``)
     }
 
@@ -19,35 +19,35 @@ export default ({ sides }) => {
       }
 
       if (href) {
-        if (!isString(href)) {
+        if (!isStr(href)) {
           typerror(``)
         }
         side.href = href
       }
 
       if (buttonImage) {
-        if (!isString(buttonImage)) {
+        if (!isStr(buttonImage)) {
           typerror(``)
         }
         side.buttonImage = `url(${buttonImage})`
       }
 
       if (coverColor) {
-        if (!isString(coverColor)) {
+        if (!isStr(coverColor)) {
           typerror(``)
         }
         side.coverColor = coverColor
       }
 
       if (description) {
-        if (isString(description)) {
+        if (isStr(description)) {
           side.descriptionText = description
-        } else if (isArray(description)) {
+        } else if (isArr(description)) {
           const [text, style] = description
-          if (!isString(text)) {
+          if (!isStr(text)) {
             typerror(``)
           }
-          if (!isObjectPure(style)) {
+          if (!isObj(style)) {
             typerror(``)
           }
 

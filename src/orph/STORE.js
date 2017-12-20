@@ -31,5 +31,8 @@ export const SET_COMPONENT = ({ index, componentName, Component }): void =>
 export const SET_DATA = ({ index, dataName, value }): void =>
   views.get(index).setData({ dataName, value })
 
-export const GET_COMPONENT = ({ index, componentName, dataName }) =>
-  views.get(index).getComponent({ componentName, dataName })
+export const GET_COMPONENT = ({ index, componentName, dataName }) => {
+  const view = views.get(index)
+  return view ? view.getComponent({ componentName, dataName }) : {}
+}
+

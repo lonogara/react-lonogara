@@ -1,12 +1,9 @@
 // @flow
+import { isArr } from '../util.js'
 
-export const isNum = target => typeof target === 'number'
+export const exhibitScrollDOM = () => document.getElementById('exhibitScrollElement')
 
-export const isFn = target => typeof target === 'function'
-
-export const isPureObject = target => typeof target === 'object' && !Array.isArray(target)
-
-export const add = (orph, imports, prefix) =>
+export const add = (orph, prefix, imports) =>
   Object.entries(imports)
     .filter(([name]) => name !== 'default')
     .forEach(([name, value]) => {
@@ -14,15 +11,15 @@ export const add = (orph, imports, prefix) =>
 
       let listener, states, dispatches
 
-      if (Array.isArray(value)) {
+      if (isArr(value)) {
         const [opts, fn] = value
+        listener = fn
         states = opts.states || []
         dispatches = opts.dispatches || []
-        listener = fn
       } else {
+        listener = value
         states = []
         dispatches = []
-        listener = value
       }
 
       orph.add(addedName, listener, { states, dispatches })

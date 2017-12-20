@@ -1,23 +1,9 @@
 // @flow
-import { exhibitScrollDOM, sideScrollDOM } from './util.js'
+import { exhibitScrollDOM } from './util.js'
 
 export const PRELOADING_OFF = [
   { states: ['preloading'] },
   (n, { render }): void => render({ preloading: false })]
-
-export const DRIFTING_ON = [
-  { states: ['drifting'] },
-  (n, { render }): void => render({ drifting: true })]
-
-export const DRIFTING_LAG = [
-  { states: ['drifting'] },
-  (n, { render }): void => render({ drifting: 'lag' })]
-
-export const DRIFTING_OFF = [
-  { states: ['drifting'] },
-  (n, { state, render }): void =>
-    state().drifting === 'lag' &&
-    render({ drifting: false }, () => { sideScrollDOM().scrollTop = 0 })]
 
 export const POPDOWN_ON = [
   { states: ['popdown'] },

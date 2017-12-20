@@ -1,4 +1,5 @@
 // @flow
+import { isObj } from '../util.js'
 import { exhibitScrollDOM } from './util.js'
 
 const WINDOW = {
@@ -35,11 +36,11 @@ const REACT = {
 
         await dispatch('STORE:INIT', index)
 
-        const Components = await create({
-          renderDetail: data => dispatch('PASS:DETAIL_ON', data),
-          setPopdown: src => dispatch('PASS:POPDOWN_ON', src),
-          setInform: inform => dispatch('PASS:INFORM_ON', { index, inform })
-        })
+        const renderDetail = data => dispatch('PASS:DETAIL_ON', data)
+        const setPopdown = src => dispatch('PASS:POPDOWN_ON', src)
+        const setInform = inform => dispatch('PASS:INFORM_ON', { index, inform })
+
+        const Components = await create({ renderDetail, setPopdown, setInform }) || {}
 
         // Exhibit
         await dispatch('STORE:SET_COMPONENT', {
@@ -85,65 +86,6 @@ const REACT = {
   }]
 }
 
-const DOM = {
-
-  VIEW_SWITCH: [{
-    dispatches: [
-      'STORE:SET_DATA',
-      'STORE:GET_COMPONENT',
-      'RENDER:BY_DOM_VIEW_SWITCH'
-    ]
-  },
-  async (e, { state, dispatch }): void => {
-    const nowIndex = state().index
-    const nextIndex = +e.target.dataset.index
-
-    if (nowIndex === nextIndex) return
-
-    // SET NOW SCROLLTOP STORE
-    await dispatch('STORE:SET_DATA', {
-      index: nowIndex,
-      dataName: 'exhibitScrollTop',
-      value: exhibitScrollDOM().scrollTop
-    })
-
-    // GET exhibits
-    const exhibits = await dispatch('STORE:GET_COMPONENT', {
-      index: nextIndex,
-      componentName: 'Exhibit',
-      dataName: 'exhibitScrollTop'
-    })
-
-    // GET details
-    const details = await dispatch('STORE:GET_COMPONENT', {
-      index: nextIndex,
-      componentName: 'Detail',
-      dataName: 'detailProps'
-    })
-
-    // RENDER
-    dispatch('RENDER:BY_DOM_VIEW_SWITCH', {
-      index: nextIndex,
-      exhibits,
-      details
-    })
-  }],
-
-  DETAIL_OFF: [{
-    dispatches: [
-      'STORE:SET_DATA',
-      'RENDER:DETAIL_OFF'
-    ]
-  },
-  (n, { state, dispatch }): void => {
-    dispatch('STORE:SET_DATA', {
-      index: state().index,
-      dataName: 'detailProps',
-      value: false
-    }).then(() => dispatch('RENDER:DETAIL_OFF'))
-  }]
-}
-
 const PASS = {
 
   DETAIL_ON: [{
@@ -168,15 +110,15 @@ const PASS = {
         dataName: 'detailProps'
       })
     )
-    .then(details =>
-      dispatch('RENDER:DETAIL_ON', details))
+    .then(details => dispatch('RENDER:DETAIL_ON', details))
+
   }],
 
   POPDOWN_ON: [{
     dispatches: ['RENDER:POPDOWN_ON']
   },
   (arg, { dispatch }): void => {
-    if (typeof arg === 'object' && arg.src) {
+    if (isObj(arg) && arg.src) {
       dispatch('RENDER:POPDOWN_ON', arg)
     }
   }],
@@ -191,7 +133,65 @@ const PASS = {
       dispatch(`RENDER:INFORM_CHANGE`, { index, inform })
     }
   }]
-  
 }
 
-export { WINDOW, REACT, DOM, PASS }
+const DOM = {
+
+  VIEW_SWITCH: [{
+    dispatches: [
+      'STORE:SET_DATA',
+      'STORE:GET_COMPONENT',
+      'RENDER:BY_DOM_VIEW_SWITCH'
+    ]
+  },
+  async (e, { state, dispatch }): void => {
+    const nowIndex = state().index
+    const nextIndex = +e.target.dataset.index
+
+    if (nowIndex === nextIndex) return
+
+    // SET NOW SCROLLTOP STORE
+    await dispatch('STORE:SET_DATA', {
+      index: nowIndex,
+      dataName: 'exhibitScrollTop',
+      value: exhibitScrollDOM().scrollTop
+    })
+
+    const index = nextIndex
+
+    // GET exhibits
+    const exhibits = await dispatch('STORE:GET_COMPONENT', {
+      index,
+      componentName: 'Exhibit',
+      dataName: 'exhibitScrollTop'
+    })
+
+    // GET details
+    const details = await dispatch('STORE:GET_COMPONENT', {
+      index,
+      componentName: 'Detail',
+      dataName: 'detailProps'
+    })
+
+    // RENDER
+    dispatch('RENDER:BY_DOM_VIEW_SWITCH', { index, exhibits, details })
+    
+  }],
+
+  DETAIL_OFF: [{
+    dispatches: [
+      'STORE:SET_DATA',
+      'RENDER:DETAIL_OFF'
+    ]
+  },
+  (n, { state, dispatch }): void => {
+    dispatch('STORE:SET_DATA', {
+      index: state().index,
+      dataName: 'detailProps',
+      value: false
+    }).then(() => dispatch('RENDER:DETAIL_OFF'))
+  }]
+
+}
+
+export { WINDOW, REACT, PASS, DOM }

@@ -83,20 +83,21 @@ var createClass = (function() {
   }
 })()
 
-var defineProperty = function(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    })
-  } else {
-    obj[key] = value
-  }
+var _extends =
+  Object.assign ||
+  function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i]
 
-  return obj
-}
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key]
+        }
+      }
+    }
+
+    return target
+  }
 
 var inherits = function(subClass, superClass) {
   if (typeof superClass !== 'function' && superClass !== null) {
@@ -177,288 +178,6 @@ var slicedToArray = (function() {
 })()
 
 //
-var isArray = Array.isArray
-var isObjectPure = function isObjectPure(target) {
-  return (
-    (typeof target === 'undefined' ? 'undefined' : _typeof(target)) ===
-      'object' && !isArray(target)
-  )
-}
-var isString = function isString(target) {
-  return typeof target === 'string'
-}
-var isNumber = function isNumber(target) {
-  return typeof target === 'number'
-}
-var isFunction = function isFunction(target) {
-  return typeof target === 'function'
-}
-var error = function error(message) {
-  throw new Error(message)
-}
-var typerror = function typerror(message) {
-  throw new TypeError(message)
-}
-
-//
-var values = Object.values
-
-var BASE_COLOR = '#181823'
-var SUB_COLOR = '#ffffff'
-var SIDE_COLOR = '#dde3e6'
-
-var _colors = function(_ref) {
-  var colors = _ref.colors
-
-  var result = {
-    baseColor: BASE_COLOR,
-    subColor: SUB_COLOR,
-    sideColor: SIDE_COLOR
-  }
-
-  if (colors) {
-    if (!isObjectPure(colors)) {
-      typerror('props.colors must be "pure object"')
-    }
-    if (
-      !values(colors).every(function(value) {
-        return isString(value)
-      })
-    ) {
-      typerror('props.colors contain invalied value')
-    }
-
-    result.baseColor = colors.base || BASE_COLOR
-    result.subColor = colors.sub || SUB_COLOR
-    result.sideColor = colors.side || SIDE_COLOR
-  }
-
-  return result
-}
-
-//
-var _exhibitBg = function(_ref) {
-  var exhibitBg = _ref.exhibitBg
-
-  var result = {
-    exhibitBgURL: undefined,
-    exhibitBgStyle: {}
-  }
-
-  if (exhibitBg) {
-    if (isString(exhibitBg)) {
-      var url = exhibitBg
-
-      result.exhibitBgURL = url
-      result.exhibitBgStyle.backgroundImage = 'url(' + url + ')'
-    } else if (isArray(exhibitBg)) {
-      var _exhibitBg = slicedToArray(exhibitBg, 2),
-        _url = _exhibitBg[0],
-        style = _exhibitBg[1]
-
-      if (!isString(_url)) {
-        typerror('')
-      }
-      if (!isObjectPure(style)) {
-        typerror('')
-      }
-
-      result.exhibitBgURL = _url
-      Object.entries(style).forEach(function(_ref2) {
-        var _ref3 = slicedToArray(_ref2, 2),
-          key = _ref3[0],
-          value = _ref3[1]
-
-        result.exhibitBgStyle[key] = value
-      })
-      result.exhibitBgStyle.backgroundImage = 'url(' + _url + ')'
-    } else {
-      typerror('')
-    }
-  }
-
-  return result
-}
-
-//
-var _firstIndex = function(_ref) {
-  var firstIndex = _ref.firstIndex
-  return isNumber(firstIndex) ? firstIndex : 0
-}
-
-//
-var _preloader = function(_ref) {
-  var Preloader = _ref.Preloader
-  return isFunction(Preloader) && Preloader
-}
-
-//
-var _sides = function(_ref) {
-  var sides = _ref.sides
-
-  var result = []
-
-  if (sides) {
-    if (!isArray(sides)) {
-      typerror('')
-    }
-
-    sides.forEach(function(_ref2) {
-      var href = _ref2.href,
-        buttonImage = _ref2.buttonImage,
-        coverColor = _ref2.coverColor,
-        description = _ref2.description
-
-      var side = {
-        href: undefined,
-        buttonImage: undefined,
-        coverColor: undefined,
-        descriptionText: undefined,
-        descriptionStyle: {}
-      }
-
-      if (href) {
-        if (!isString(href)) {
-          typerror('')
-        }
-        side.href = href
-      }
-
-      if (buttonImage) {
-        if (!isString(buttonImage)) {
-          typerror('')
-        }
-        side.buttonImage = 'url(' + buttonImage + ')'
-      }
-
-      if (coverColor) {
-        if (!isString(coverColor)) {
-          typerror('')
-        }
-        side.coverColor = coverColor
-      }
-
-      if (description) {
-        if (isString(description)) {
-          side.descriptionText = description
-        } else if (isArray(description)) {
-          var _description = slicedToArray(description, 2),
-            text = _description[0],
-            style = _description[1]
-
-          if (!isString(text)) {
-            typerror('')
-          }
-          if (!isObjectPure(style)) {
-            typerror('')
-          }
-
-          side.descriptionText = text
-          side.descriptionStyle = style
-        } else {
-          typerror('')
-        }
-      }
-
-      result.push(side)
-    })
-  }
-
-  return result
-}
-
-//
-var _views = function(_ref) {
-  var views = _ref.views
-
-  var result = []
-
-  if (views) {
-    if (!isArray(views)) {
-      typerror('')
-    }
-
-    if (views.length > 7) {
-      error('')
-    }
-
-    views.forEach(function(_ref2) {
-      var head = _ref2.head,
-        Button = _ref2.Button,
-        create = _ref2.create
-
-      if (!isString(head)) {
-        typerror('')
-      }
-      if (!isFunction(Button)) {
-        typerror('')
-      }
-      if (!create) {
-        error('view.create is required')
-      }
-      if (!isFunction(create)) {
-        typerror(
-          'view.create must be "function" but ' +
-            (typeof create === 'undefined' ? 'undefined' : _typeof(create))
-        )
-      }
-
-      result.push({ head: head, Button: Button, create: create })
-    })
-  }
-
-  return result
-}
-
-//
-var guardian = function(Component$$1) {
-  return function(props) {
-    var firstIndex = _firstIndex(props)
-
-    var _format$colors = _colors(props),
-      baseColor = _format$colors.baseColor,
-      subColor = _format$colors.subColor,
-      sideColor = _format$colors.sideColor
-
-    var _format$exhibitBg = _exhibitBg(props),
-      exhibitBgURL = _format$exhibitBg.exhibitBgURL,
-      exhibitBgStyle = _format$exhibitBg.exhibitBgStyle
-
-    var Preloader = _preloader(props)
-    var sides = _sides(props)
-    var views = _views(props)
-
-    return React__default.createElement(
-      'div',
-      null,
-      exhibitBgURL &&
-        React__default.createElement('link', {
-          rel: 'prefetch',
-          href: exhibitBgURL
-        }),
-      React__default.createElement(
-        'style',
-        { type: 'text/css' },
-        '\n        :root {\n          --base-color: ' +
-          baseColor +
-          ';\n          --sub-color: ' +
-          subColor +
-          ';\n          --side-color: ' +
-          sideColor +
-          ';\n        }\n        body {\n          margin: 0px;\n          font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;\n        }\n        .lonogara_button svg {\n          height: 100%;\n        }\n      '
-      ),
-      React__default.createElement(Component$$1, {
-        firstIndex: firstIndex,
-        exhibitBgStyle: exhibitBgStyle,
-        Preloader: Preloader,
-        sides: sides,
-        views: views
-      })
-    )
-  }
-}
-
-//
 
 var views = new Map()
 
@@ -528,9 +247,11 @@ var GET_COMPONENT = function GET_COMPONENT(_ref6) {
   var index = _ref6.index,
     componentName = _ref6.componentName,
     dataName = _ref6.dataName
-  return views
-    .get(index)
-    .getComponent({ componentName: componentName, dataName: dataName })
+
+  var view = views.get(index)
+  return view
+    ? view.getComponent({ componentName: componentName, dataName: dataName })
+    : {}
 }
 
 var STORE = Object.freeze({
@@ -541,8 +262,72 @@ var STORE = Object.freeze({
 })
 
 //
+var isArr = Array.isArray
+var isObj = function isObj(target) {
+  return (
+    (typeof target === 'undefined' ? 'undefined' : _typeof(target)) ===
+      'object' && !isArr(target)
+  )
+}
+var isStr = function isStr(target) {
+  return typeof target === 'string'
+}
+var isNum = function isNum(target) {
+  return typeof target === 'number'
+}
+var isFnc = function isFnc(target) {
+  return typeof target === 'function'
+}
 
-var add = function add(orph, imports, prefix) {
+var error = function error(message) {
+  throw new Error(message)
+}
+var typerror = function typerror(message) {
+  throw new TypeError(message)
+}
+
+var winnerWidth = function winnerWidth() {
+  return window.innerWidth
+}
+var winnerHeight = function winnerHeight() {
+  return window.innerHeight
+}
+var raf = function raf(callback) {
+  return window.requestAnimationFrame(callback)
+}
+var caf = function caf(callback) {
+  return window.cancelAnimationFrame(callback)
+}
+var windowOn = function windowOn(type, fn, opts) {
+  return window.addEventListener(type, fn, opts)
+}
+
+var jsx$1 = function jsx$$1(Component$$1, props) {
+  return (
+    isFnc(Component$$1) && React__default.createElement(Component$$1, props)
+  )
+}
+
+var createClickA = function createClickA(href) {
+  return function() {
+    return (
+      href &&
+      setTimeout(function() {
+        var a = document.createElement('a')
+        a.href = href
+        a.target = href.includes('tel') ? '' : '_blank'
+        a.click()
+      }, 50)
+    )
+  }
+}
+
+//
+var exhibitScrollDOM = function exhibitScrollDOM() {
+  return document.getElementById('exhibitScrollElement')
+}
+
+var add = function add(orph, prefix, imports) {
   return Object.entries(imports)
     .filter(function(_ref) {
       var _ref2 = slicedToArray(_ref, 1),
@@ -561,81 +346,22 @@ var add = function add(orph, imports, prefix) {
         states = void 0,
         dispatches = void 0
 
-      if (Array.isArray(value)) {
+      if (isArr(value)) {
         var _value = slicedToArray(value, 2),
           opts = _value[0],
           fn = _value[1]
 
+        listener = fn
         states = opts.states || []
         dispatches = opts.dispatches || []
-        listener = fn
       } else {
+        listener = value
         states = []
         dispatches = []
-        listener = value
       }
 
       orph.add(addedName, listener, { states: states, dispatches: dispatches })
     })
-}
-
-//
-
-var RENDER = Object.freeze({})
-
-//
-
-var WINDOW = {}
-
-var REACT = {}
-
-var DOM = {}
-
-var PASS = {}
-
-var orph = new Orph()
-add(orph, STORE, 'STORE')
-add(orph, RENDER, 'RENDER')
-add(orph, WINDOW, 'WINDOW')
-add(orph, REACT, 'REACT')
-add(orph, DOM, 'DOM')
-add(orph, PASS, 'PASS')
-
-//
-var LonogaraDesktop = (function(_Component) {
-  inherits(LonogaraDesktop, _Component)
-
-  function LonogaraDesktop(props) {
-    classCallCheck(this, LonogaraDesktop)
-
-    console.log(orph.list())
-    return possibleConstructorReturn(
-      this,
-      (
-        LonogaraDesktop.__proto__ || Object.getPrototypeOf(LonogaraDesktop)
-      ).call(this, props)
-    )
-  }
-
-  createClass(LonogaraDesktop, [
-    {
-      key: 'render',
-      value: function render() {
-        return React__default.createElement('div', null, 'desktop')
-      }
-    }
-  ])
-  return LonogaraDesktop
-})(React.Component)
-
-var index = guardian(LonogaraDesktop)
-
-//
-var exhibitScrollDOM = function exhibitScrollDOM() {
-  return document.getElementById('exhibitScrollElement')
-}
-var sideScrollDOM = function sideScrollDOM() {
-  return document.getElementById('sideScrollElement')
 }
 
 //
@@ -647,60 +373,30 @@ var PRELOADING_OFF = [
   }
 ]
 
-var DRIFTING_ON = [
-  { states: ['drifting'] },
-  function(n, _ref2) {
-    var render = _ref2.render
-    return render({ drifting: true })
-  }
-]
-
-var DRIFTING_LAG = [
-  { states: ['drifting'] },
-  function(n, _ref3) {
-    var render = _ref3.render
-    return render({ drifting: 'lag' })
-  }
-]
-
-var DRIFTING_OFF = [
-  { states: ['drifting'] },
-  function(n, _ref4) {
-    var state = _ref4.state,
-      render = _ref4.render
-    return (
-      state().drifting === 'lag' &&
-      render({ drifting: false }, function() {
-        sideScrollDOM().scrollTop = 0
-      })
-    )
-  }
-]
-
 var POPDOWN_ON = [
   { states: ['popdown'] },
-  function(_ref5, _ref6) {
-    var src = _ref5.src,
-      vertically = _ref5.vertically
-    var render = _ref6.render
+  function(_ref2, _ref3) {
+    var src = _ref2.src,
+      vertically = _ref2.vertically
+    var render = _ref3.render
     return render({ popdown: { src: src, vertically: vertically } })
   }
 ]
 
 var POPDOWN_OFF = [
   { states: ['popdown'] },
-  function(n, _ref7) {
-    var render = _ref7.render
+  function(n, _ref4) {
+    var render = _ref4.render
     return render({ popdown: {} })
   }
 ]
 
 var DETAIL_ON = [
   { states: ['detail'] },
-  function(_ref8, _ref9) {
-    var Component$$1 = _ref8.Component,
-      data = _ref8.data
-    var render = _ref9.render
+  function(_ref5, _ref6) {
+    var Component$$1 = _ref5.Component,
+      data = _ref5.data
+    var render = _ref6.render
     return render({
       detail: {
         Component: Component$$1,
@@ -713,18 +409,18 @@ var DETAIL_ON = [
 
 var DETAIL_OFF = [
   { states: ['detail'] },
-  function(n, _ref10) {
-    var render = _ref10.render
+  function(n, _ref7) {
+    var render = _ref7.render
     return render({ detail: {} })
   }
 ]
 
 var BY_REACT_DIDMOUNT = [
   { states: ['index', 'exhibit'] },
-  function(_ref11, _ref12) {
-    var index = _ref11.index,
-      Component$$1 = _ref11.Component
-    var render = _ref12.render
+  function(_ref8, _ref9) {
+    var index = _ref8.index,
+      Component$$1 = _ref8.Component
+    var render = _ref9.render
     return render({
       index: index,
       exhibit: {
@@ -736,11 +432,11 @@ var BY_REACT_DIDMOUNT = [
 
 var BY_DOM_VIEW_SWITCH = [
   { states: ['index', 'exhibit', 'detail'] },
-  function(_ref13, _ref14) {
-    var index = _ref13.index,
-      exhibits = _ref13.exhibits,
-      details = _ref13.details
-    var render = _ref14.render
+  function(_ref10, _ref11) {
+    var index = _ref10.index,
+      exhibits = _ref10.exhibits,
+      details = _ref10.details
+    var render = _ref11.render
 
     var exhibit = {
       Component: exhibits.Component
@@ -762,11 +458,11 @@ var BY_DOM_VIEW_SWITCH = [
 
 var INFORM_CHANGE = [
   { states: ['informs'] },
-  function(_ref15, _ref16) {
-    var index = _ref15.index,
-      inform = _ref15.inform
-    var state = _ref16.state,
-      render = _ref16.render
+  function(_ref12, _ref13) {
+    var index = _ref12.index,
+      inform = _ref12.inform
+    var state = _ref13.state,
+      render = _ref13.render
 
     var _state = state(),
       informs = _state.informs
@@ -776,11 +472,8 @@ var INFORM_CHANGE = [
   }
 ]
 
-var RENDER$1 = Object.freeze({
+var RENDER = Object.freeze({
   PRELOADING_OFF: PRELOADING_OFF,
-  DRIFTING_ON: DRIFTING_ON,
-  DRIFTING_LAG: DRIFTING_LAG,
-  DRIFTING_OFF: DRIFTING_OFF,
   POPDOWN_ON: POPDOWN_ON,
   POPDOWN_OFF: POPDOWN_OFF,
   DETAIL_ON: DETAIL_ON,
@@ -793,14 +486,14 @@ var RENDER$1 = Object.freeze({
 var _this = undefined
 
 //
-var WINDOW$1 = {
+var WINDOW = {
   RESIZE_FORCE_UPDATE: function RESIZE_FORCE_UPDATE(n, _ref) {
     var update = _ref.update
     return update()
   }
 }
 
-var REACT$1 = {
+var REACT = {
   DID_MOUNT: [
     {
       dispatches: ['REACT:DID_MOUNT_FIRST', 'REACT:DID_MOUNT_SECOND']
@@ -837,7 +530,7 @@ var REACT$1 = {
                 index
               ) {
                 var create = _ref5.create
-                var Components
+                var renderDetail, setPopdown, setInform, Components
                 return _regeneratorRuntime.wrap(
                   function _callee$(_context) {
                     while (1) {
@@ -847,25 +540,41 @@ var REACT$1 = {
                           return dispatch('STORE:INIT', index)
 
                         case 2:
-                          _context.next = 4
+                          renderDetail = function renderDetail(data) {
+                            return dispatch('PASS:DETAIL_ON', data)
+                          }
+
+                          setPopdown = function setPopdown(src) {
+                            return dispatch('PASS:POPDOWN_ON', src)
+                          }
+
+                          setInform = function setInform(inform) {
+                            return dispatch('PASS:INFORM_ON', {
+                              index: index,
+                              inform: inform
+                            })
+                          }
+
+                          _context.next = 7
                           return create({
-                            renderDetail: function renderDetail(data) {
-                              return dispatch('PASS:DETAIL_ON', data)
-                            },
-                            setPopdown: function setPopdown(src) {
-                              return dispatch('PASS:POPDOWN_ON', src)
-                            },
-                            setInform: function setInform(inform) {
-                              return dispatch('PASS:INFORM_ON', {
-                                index: index,
-                                inform: inform
-                              })
-                            }
+                            renderDetail: renderDetail,
+                            setPopdown: setPopdown,
+                            setInform: setInform
                           })
 
-                        case 4:
-                          Components = _context.sent
-                          _context.next = 7
+                        case 7:
+                          _context.t0 = _context.sent
+
+                          if (_context.t0) {
+                            _context.next = 10
+                            break
+                          }
+
+                          _context.t0 = {}
+
+                        case 10:
+                          Components = _context.t0
+                          _context.next = 13
                           return dispatch('STORE:SET_COMPONENT', {
                             index: index,
                             componentName: 'Exhibit',
@@ -878,8 +587,8 @@ var REACT$1 = {
                             })
                           })
 
-                        case 7:
-                          _context.next = 9
+                        case 13:
+                          _context.next = 15
                           return dispatch('STORE:SET_COMPONENT', {
                             index: index,
                             componentName: 'Detail',
@@ -892,10 +601,10 @@ var REACT$1 = {
                             })
                           })
 
-                        case 9:
+                        case 15:
                           return _context.abrupt('return')
 
-                        case 10:
+                        case 16:
                         case 'end':
                           return _context.stop()
                       }
@@ -969,116 +678,14 @@ var REACT$1 = {
   ]
 }
 
-var DOM$1 = {
-  VIEW_SWITCH: [
-    {
-      dispatches: [
-        'STORE:SET_DATA',
-        'STORE:GET_COMPONENT',
-        'RENDER:BY_DOM_VIEW_SWITCH'
-      ]
-    },
-    (function() {
-      var _ref9 = asyncToGenerator(
-        /*#__PURE__*/ _regeneratorRuntime.mark(function _callee3(e, _ref10) {
-          var state = _ref10.state,
-            dispatch = _ref10.dispatch
-          var nowIndex, nextIndex, exhibits, details
-          return _regeneratorRuntime.wrap(
-            function _callee3$(_context3) {
-              while (1) {
-                switch ((_context3.prev = _context3.next)) {
-                  case 0:
-                    nowIndex = state().index
-                    nextIndex = +e.target.dataset.index
-
-                    if (!(nowIndex === nextIndex)) {
-                      _context3.next = 4
-                      break
-                    }
-
-                    return _context3.abrupt('return')
-
-                  case 4:
-                    _context3.next = 6
-                    return dispatch('STORE:SET_DATA', {
-                      index: nowIndex,
-                      dataName: 'exhibitScrollTop',
-                      value: exhibitScrollDOM().scrollTop
-                    })
-
-                  case 6:
-                    _context3.next = 8
-                    return dispatch('STORE:GET_COMPONENT', {
-                      index: nextIndex,
-                      componentName: 'Exhibit',
-                      dataName: 'exhibitScrollTop'
-                    })
-
-                  case 8:
-                    exhibits = _context3.sent
-                    _context3.next = 11
-                    return dispatch('STORE:GET_COMPONENT', {
-                      index: nextIndex,
-                      componentName: 'Detail',
-                      dataName: 'detailProps'
-                    })
-
-                  case 11:
-                    details = _context3.sent
-
-                    // RENDER
-                    dispatch('RENDER:BY_DOM_VIEW_SWITCH', {
-                      index: nextIndex,
-                      exhibits: exhibits,
-                      details: details
-                    })
-
-                  case 13:
-                  case 'end':
-                    return _context3.stop()
-                }
-              }
-            },
-            _callee3,
-            _this
-          )
-        })
-      )
-
-      return function(_x5, _x6) {
-        return _ref9.apply(this, arguments)
-      }
-    })()
-  ],
-
-  DETAIL_OFF: [
-    {
-      dispatches: ['STORE:SET_DATA', 'RENDER:DETAIL_OFF']
-    },
-    function(n, _ref11) {
-      var state = _ref11.state,
-        dispatch = _ref11.dispatch
-
-      dispatch('STORE:SET_DATA', {
-        index: state().index,
-        dataName: 'detailProps',
-        value: false
-      }).then(function() {
-        return dispatch('RENDER:DETAIL_OFF')
-      })
-    }
-  ]
-}
-
-var PASS$1 = {
+var PASS = {
   DETAIL_ON: [
     {
       dispatches: ['STORE:SET_DATA', 'STORE:GET_COMPONENT', 'RENDER:DETAIL_ON']
     },
-    function(data, _ref12) {
-      var state = _ref12.state,
-        dispatch = _ref12.dispatch
+    function(data, _ref9) {
+      var state = _ref9.state,
+        dispatch = _ref9.dispatch
 
       var _state = state(),
         index = _state.index
@@ -1105,14 +712,10 @@ var PASS$1 = {
     {
       dispatches: ['RENDER:POPDOWN_ON']
     },
-    function(arg, _ref13) {
-      var dispatch = _ref13.dispatch
+    function(arg, _ref10) {
+      var dispatch = _ref10.dispatch
 
-      if (
-        (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) ===
-          'object' &&
-        arg.src
-      ) {
+      if (isObj(arg) && arg.src) {
         dispatch('RENDER:POPDOWN_ON', arg)
       }
     }
@@ -1122,8 +725,8 @@ var PASS$1 = {
     {
       dispatches: ['RENDER:INFORM_CHANGE']
     },
-    function(arg, _ref14) {
-      var dispatch = _ref14.dispatch
+    function(arg, _ref11) {
+      var dispatch = _ref11.dispatch
 
       var inform = +arg.inform
       if (inform || inform === 0) {
@@ -1135,470 +738,218 @@ var PASS$1 = {
   ]
 }
 
-var orph$2 = new Orph()
-add(orph$2, STORE, 'STORE')
-add(orph$2, RENDER$1, 'RENDER')
-add(orph$2, WINDOW$1, 'WINDOW')
-add(orph$2, REACT$1, 'REACT')
-add(orph$2, DOM$1, 'DOM')
-add(orph$2, PASS$1, 'PASS')
+var DOM = {
+  VIEW_SWITCH: [
+    {
+      dispatches: [
+        'STORE:SET_DATA',
+        'STORE:GET_COMPONENT',
+        'RENDER:BY_DOM_VIEW_SWITCH'
+      ]
+    },
+    (function() {
+      var _ref12 = asyncToGenerator(
+        /*#__PURE__*/ _regeneratorRuntime.mark(function _callee3(e, _ref13) {
+          var state = _ref13.state,
+            dispatch = _ref13.dispatch
+          var nowIndex, nextIndex, index, exhibits, details
+          return _regeneratorRuntime.wrap(
+            function _callee3$(_context3) {
+              while (1) {
+                switch ((_context3.prev = _context3.next)) {
+                  case 0:
+                    nowIndex = state().index
+                    nextIndex = +e.target.dataset.index
 
-//
-var winnerWidth = function winnerWidth() {
-  return window.innerWidth
-}
-var winnerHeight = function winnerHeight() {
-  return window.innerHeight
-}
-var raf = function raf(callback) {
-  return window.requestAnimationFrame(callback)
-}
-var windowOnListener = function windowOnListener(type, fn, opts) {
-  return window.addEventListener(type, fn, opts)
-}
+                    if (!(nowIndex === nextIndex)) {
+                      _context3.next = 4
+                      break
+                    }
 
-var Button = function(_ref) {
-  var width = _ref.width,
-    inform = _ref.inform,
-    buttonIndex = _ref.buttonIndex,
-    onTouchStart = _ref.onTouchStart,
-    children = _ref.children
-  return React__default.createElement(
-    'div',
-    a$1('ROOT', { style: { width: width } }),
-    React__default.createElement(
-      'span',
-      a$1('WRAP'),
-      children,
-      inform > 0 && React__default.createElement('div', a$1('INFORM'), inform)
-    ),
-    React__default.createElement(
-      'div',
-      a$1('CLICK_COVER', {
-        onTouchStart: onTouchStart,
-        'data-index': buttonIndex
-      })
-    )
-  )
-}
+                    return _context3.abrupt('return')
 
-var a$1 = Atra({
-  ROOT: {
-    style: {
-      display: 'inline-block',
-      height: '100%',
-      position: 'relative'
-    }
-  },
-  WRAP: {
-    className: 'lonogara_button', // for svg { height: 100%; }
-    style: {
-      display: 'inline-block',
-      position: 'relative',
-      top: '20%',
-      height: '66%'
-    }
-  },
-  INFORM: {
-    style: {
-      position: 'absolute',
-      fontSize: 27,
-      display: 'inline-block',
-      width: 34,
-      height: 34,
-      borderRadius: 50,
-      background: '#ff4444',
-      top: '-20%',
-      right: '-18%',
-      color: '#fff',
-      lineHeight: 1.29
-    }
-  },
-  CLICK_COVER: {
-    style: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%'
-    }
-  }
-})
+                  case 4:
+                    _context3.next = 6
+                    return dispatch('STORE:SET_DATA', {
+                      index: nowIndex,
+                      dataName: 'exhibitScrollTop',
+                      value: exhibitScrollDOM().scrollTop
+                    })
 
-var Burger = function() {
-  return React__default.createElement(
-    'svg',
-    a$3('SVG'),
-    React__default.createElement(
-      'g',
-      a$3('G'),
-      React__default.createElement('path', a$3('PATH_0')),
-      React__default.createElement('path', a$3('PATH_1')),
-      React__default.createElement('path', a$3('PATH_2'))
-    )
-  )
-}
+                  case 6:
+                    index = nextIndex
 
-var a$3 = Atra({
-  SVG: {
-    viewBox: '0 0 300 300',
-    style: {
-      height: '100%'
-    }
-  },
-  G: {
-    style: {
-      stroke: 'var(--sub-color)',
-      strokeWidth: 26
-    }
-  },
-  PATH_0: {
-    d: 'm 40,224.5 220,0'
-  },
-  PATH_1: {
-    d: 'm 40,149.49959 220,0'
-  },
-  PATH_2: {
-    d: 'm 40,74.499594 220,0'
-  }
-})
+                    // GET exhibits
 
-var Quit = function(_ref) {
-  var fn = _ref.fn
-  return React__default.createElement(
-    'span',
-    a$4('ROOT'),
-    React__default.createElement(
-      'svg',
-      a$4('SVG'),
-      React__default.createElement('path', a$4('PATH'))
-    ),
-    React__default.createElement(
-      'span',
-      a$4('COVER', {
-        onTouchEndCapture: function onTouchEndCapture(e) {
-          e.stopPropagation()
-          e.preventDefault()
-          fn()
-        }
-      })
-    )
-  )
-}
+                    _context3.next = 9
+                    return dispatch('STORE:GET_COMPONENT', {
+                      index: index,
+                      componentName: 'Exhibit',
+                      dataName: 'exhibitScrollTop'
+                    })
 
-var a$4 = Atra({
-  ROOT: {
-    style: {
-      zIndex: 1000,
-      width: 100,
-      height: 100,
-      position: 'absolute',
-      right: 24,
-      top: 20
-    }
-  },
+                  case 9:
+                    exhibits = _context3.sent
+                    _context3.next = 12
+                    return dispatch('STORE:GET_COMPONENT', {
+                      index: index,
+                      componentName: 'Detail',
+                      dataName: 'detailProps'
+                    })
 
-  SVG: {
-    viewBox: '0 0 300 300'
-  },
+                  case 12:
+                    details = _context3.sent
 
-  PATH: {
-    d:
-      'M 189.50288,42.205033 41.07742,150.00001 189.50288,257.79499 m -25.8155,-107.79498 95.59992,0',
-    style: {
-      fill: 'none',
-      stroke: 'var(--base-color)',
-      strokeWidth: 42,
-      strokeLinejoin: 'round',
-      strokeLinecap: 'round'
-    }
-  },
+                    // RENDER
+                    dispatch('RENDER:BY_DOM_VIEW_SWITCH', {
+                      index: index,
+                      exhibits: exhibits,
+                      details: details
+                    })
 
-  COVER: {
-    style: {
-      position: 'absolute',
-      top: -20,
-      bottom: -20,
-      left: -20,
-      right: -20
-    }
-  }
-})
-
-var Quit$1 = function(_ref) {
-  var fn = _ref.fn
-  return React__default.createElement(
-    'div',
-    a$5('ROOT'),
-    React__default.createElement(
-      'span',
-      a$5('WRAP'),
-      React__default.createElement(
-        'svg',
-        a$5('SVG'),
-        React__default.createElement('path', a$5('PATH'))
-      ),
-      React__default.createElement(
-        'span',
-        a$5('COVER', {
-          onTouchEnd: function onTouchEnd(e) {
-            e.stopPropagation()
-            fn()
-          }
+                  case 14:
+                  case 'end':
+                    return _context3.stop()
+                }
+              }
+            },
+            _callee3,
+            _this
+          )
         })
       )
-    )
-  )
-}
 
-var a$5 = Atra({
-  ROOT: {
-    style: {
-      zIndex: 1000,
-      position: 'absolute',
-      bottom: 17,
-      left: '0',
-      width: '100%',
-      textAlign: 'center'
-    }
-  },
+      return function(_x5, _x6) {
+        return _ref12.apply(this, arguments)
+      }
+    })()
+  ],
 
-  WRAP: {
-    style: {
-      position: 'relative',
-      width: '32%',
-      display: 'inline-block'
-    }
-  },
-
-  SVG: {
-    viewBox: '0 0 1200 260'
-  },
-
-  PATH: {
-    d: 'M 33.028507,241.96285 600.001,18.109642 1166.9735,241.96285',
-    style: {
-      fill: 'none',
-      stroke: 'rgb(46, 46, 46)',
-      strokeWidth: 42,
-      strokeLinejoin: 'round',
-      strokeLinecap: 'round'
-    }
-  },
-
-  COVER: {
-    onTouchStartCapture: function onTouchStartCapture(e) {
-      return e.stopPropagation()
-    },
-    style: {
-      position: 'absolute',
-      top: -10,
-      bottom: -10,
-      left: -10,
-      right: -10
-    }
-  }
-})
-
-var burger = React__default.createElement(Burger, null)
-
-var Head = function(_ref) {
-  var height = _ref.height,
-    word = _ref.word,
-    onTouchEnd = _ref.onTouchEnd,
-    children = _ref.children
-  return React__default.createElement(
-    'header',
-    a$2('HEAD_ROOT', { style: { height: height } }),
-    React__default.createElement(
-      'span',
-      a$2('HEAD_WORD', { style: { marginTop: height - 105 } }),
-      word
-    ),
-    React__default.createElement(
-      'span',
-      a$2('HEAD_BUTTON', {
-        onTouchEnd: onTouchEnd,
-        style: { padding: (height - 100) / 2 + 'px 25px' }
-      }),
-      burger
-    )
-  )
-}
-
-var a$2 = Atra({
-  HEAD_ROOT: {
-    style: {
-      backgroundColor: 'var(--base-color)',
-      position: 'relative',
-      textAlign: 'center'
-    }
-  },
-  HEAD_WORD: {
-    style: {
-      color: 'var(--sub-color)',
-      fontSize: '2.5em',
-      fontWeight: 'bold',
-      letterSpacing: 2,
-      display: 'inline-block'
-    }
-  },
-  HEAD_BUTTON: {
-    style: {
-      height: 100,
-      position: 'absolute',
-      right: 0,
-      top: 0,
-      display: 'inline-block',
-      textAlign: 'center'
-    }
-  }
-})
-
-var WITH_IMG_COLOR = 'rgba(255, 255, 255, 0.83)'
-var NO_IMG_COLOR = 'rgb(245, 245, 245)'
-
-var Middle = function(_ref) {
-  var rootStyle = _ref.rootStyle,
-    withBgImg = _ref.withBgImg,
-    exhibit = _ref.exhibit,
-    detail = _ref.detail,
-    mountWithShut = _ref.mountWithShut,
-    notScroll = _ref.notScroll,
-    onQuitEnd = _ref.onQuitEnd
-  return React__default.createElement(
-    'main',
-    { style: rootStyle },
-    React__default.createElement(
-      'div',
-      a$6('WRAP', {
-        style: { backgroundColor: withBgImg ? WITH_IMG_COLOR : NO_IMG_COLOR }
-      }),
-      React__default.createElement(
-        'div',
-        a$6('WRAP_EXHIBIT', {
-          style: { overflowY: !detail ? 'scroll' : 'hidden' }
-        }),
-        exhibit
-      ),
-      detail &&
-        React__default.createElement(
-          reactShut.ShutFromLeft,
-          {
-            mountWithShut: mountWithShut,
-            notScroll: notScroll,
-            onQuitEnd: onQuitEnd,
-            Quit: Quit
-          },
-          React__default.createElement('div', a$6('WRAP_DETAIL'), detail)
-        )
-    )
-  )
-}
-
-var a$6 = Atra({
-  WRAP: {
-    style: {
-      outline: 'none',
-      position: 'relative',
-      height: '100%'
-    }
-  },
-
-  WRAP_EXHIBIT: {
-    id: 'exhibitScrollElement',
-    style: {
-      position: 'relative',
-      height: '100%',
-      overflowScrolling: 'touch',
-      WebkitOverflowScrolling: 'touch',
-      overflowX: 'hidden'
-    }
-  },
-
-  WRAP_DETAIL: {
-    style: {
-      overflowX: 'hidden'
-    }
-  }
-})
-
-var mountWithShut = true
-var background = 'rgba(17, 17, 17, 0.98)'
-var touchRatio = 0.08
-
-var Popdown = function(_ref) {
-  var src = _ref.src,
-    vertically = _ref.vertically,
-    onQuitEnd = _ref.onQuitEnd
-  return React__default.createElement(
-    reactShut.ShutFromTop,
+  DETAIL_OFF: [
     {
-      onQuitEnd: onQuitEnd,
-      mountWithShut: mountWithShut,
-      background: background,
-      touchRatio: touchRatio,
-      Quit: Quit$1
+      dispatches: ['STORE:SET_DATA', 'RENDER:DETAIL_OFF']
     },
-    React__default.createElement(
-      'div',
-      a$7('ROOT', { style: { top: vertically && '4%' } }),
-      React__default.createElement('img', a$7('IMG', { src: src }))
-    )
-  )
+    function(n, _ref14) {
+      var state = _ref14.state,
+        dispatch = _ref14.dispatch
+
+      dispatch('STORE:SET_DATA', {
+        index: state().index,
+        dataName: 'detailProps',
+        value: false
+      }).then(function() {
+        return dispatch('RENDER:DETAIL_OFF')
+      })
+    }
+  ]
 }
 
-var a$7 = Atra({
-  ROOT: {
-    style: {
-      position: 'relative',
-      width: '96%',
-      height: '87%',
-      margin: 'auto'
-    }
-  },
-  IMG: {
-    style: {
-      width: '100%',
-      height: '100%',
-      objectFit: 'contain',
-      objectPosition: 'center'
+//
+var DIMMING_ON = [
+  { states: ['dimming'] },
+  function(n, _ref) {
+    var render = _ref.render
+    return render({ dimming: true })
+  }
+]
+var DIMMING_OFF = [
+  { states: ['dimming'] },
+  function(n, _ref2) {
+    var render = _ref2.render
+    return render({ dimming: false })
+  }
+]
+
+var DIM_SWITCH = [
+  { dispatches: ['RENDER:DIMMING_ON', 'RENDER:DIMMING_OFF'] },
+  function(e, _ref3) {
+    var state = _ref3.state,
+      dispatch = _ref3.dispatch
+
+    dispatch(!state().dimming ? 'RENDER:DIMMING_ON' : 'RENDER:DIMMING_OFF')
+  }
+]
+
+var orph = new Orph()
+add(orph, 'STORE', STORE)
+add(
+  orph,
+  'RENDER',
+  Object.assign({}, RENDER, {
+    DIMMING_ON: DIMMING_ON,
+    DIMMING_OFF: DIMMING_OFF
+  })
+)
+add(orph, 'WINDOW', WINDOW)
+add(orph, 'REACT', REACT)
+add(orph, 'DOM', Object.assign({}, DOM, { DIM_SWITCH: DIM_SWITCH }))
+add(orph, 'PASS', PASS)
+
+var assign = Object.assign
+
+var lag = function lag() {
+  var time =
+    arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0
+  return new Promise(function(resolve) {
+    return setTimeout(resolve, time)
+  })
+}
+
+function ref(target) {
+  if (target && !this.getBothHeight) {
+    this.getBothHeight = function() {
+      return {
+        targetHeight: target.clientHeight,
+        parentHeight: target.parentNode.clientHeight
+      }
     }
   }
-})
+}
 
-var Preload = (function(_React$Component) {
-  inherits(Preload, _React$Component)
+var Certicall = (function(_React$Component) {
+  inherits(Certicall, _React$Component)
 
-  function Preload(props) {
-    classCallCheck(this, Preload)
+  function Certicall(props) {
+    classCallCheck(this, Certicall)
 
     var _this = possibleConstructorReturn(
       this,
-      (Preload.__proto__ || Object.getPrototypeOf(Preload)).call(this, props)
+      (Certicall.__proto__ || Object.getPrototypeOf(Certicall)).call(
+        this,
+        props
+      )
     )
 
-    _this.a = A({
-      onTransitionEnd: props.onTransitionEnd,
-      ref: wrapRef.bind(_this)
-    })
+    _this.ref = ref.bind(_this)
+    _this.state = { targetHeight: undefined, parentHeight: undefined }
     return _this
   }
 
-  createClass(Preload, [
+  createClass(Certicall, [
     {
       key: 'render',
       value: function render() {
-        var a = this.a
+        var attribute = assign({}, this.props, {
+          style: assign({}, this.props.style)
+        })
+        var style = attribute.style,
+          addition = attribute.addition
+        var _state = this.state,
+          targetHeight = _state.targetHeight,
+          parentHeight = _state.parentHeight
+
+        if (!isNum(targetHeight) || !isNum(parentHeight)) {
+          style.visibility = 'hidden'
+        } else {
+          style.position = 'relative'
+          style.top = (parentHeight - targetHeight) / 2 + (addition || 0)
+        }
+
+        attribute.addition = undefined
 
         return React__default.createElement(
           'div',
-          a('ROOT', { style: { opacity: this.props.vanish ? 0 : 1 } }),
-          React__default.createElement(
-            'span',
-            a('WRAP', { style: this.wrapStyle() }),
-            this.props.children
-          )
+          _extends({ ref: this.ref }, attribute)
         )
       }
     },
@@ -1607,40 +958,404 @@ var Preload = (function(_React$Component) {
       value: function componentDidMount() {
         var _this2 = this
 
-        this.nowWrapHeight = this.wrapHeight()
-        raf(function() {
-          return _this2.forceUpdate()
+        lag().then(function() {
+          var heights = _this2.getBothHeight()
+          return _this2.rafSetState(heights)
         })
       }
     },
     {
-      key: 'wrapStyle',
-      value: function wrapStyle() {
-        var nowWrapHeight = this.nowWrapHeight
+      key: 'componentDidUpdate',
+      value: function componentDidUpdate() {
+        var _this3 = this
 
-        return typeof nowWrapHeight === 'number'
-          ? { top: (winnerHeight() - nowWrapHeight) / 2 - 100 }
-          : { visibility: 'hidden' }
+        lag().then(function() {
+          var heights = _this3.getBothHeight()
+          return _this3.isSetState(heights) && _this3.rafSetState(heights)
+        })
+      }
+    },
+    {
+      key: 'isSetState',
+      value: function isSetState(_ref) {
+        var targetHeight = _ref.targetHeight,
+          parentHeight = _ref.parentHeight
+        var state = this.state
+
+        return (
+          targetHeight !== state.targetHeight ||
+          parentHeight !== state.parentHeight
+        )
+      }
+    },
+    {
+      key: 'rafSetState',
+      value: function rafSetState(_ref2) {
+        var _this4 = this
+
+        var targetHeight = _ref2.targetHeight,
+          parentHeight = _ref2.parentHeight
+
+        this.requestId = raf(function() {
+          return _this4.setState({
+            targetHeight: targetHeight,
+            parentHeight: parentHeight
+          })
+        })
+      }
+    },
+    {
+      key: 'componentWillUnmount',
+      value: function componentWillUnmount() {
+        caf(this.requestId)
       }
     }
   ])
-  return Preload
+  return Certicall
 })(React__default.Component)
 
-function wrapRef(target) {
-  this.wrapHeight = !this.wrapHeight
-    ? function() {
-        return target.clientHeight
-      }
-    : null
+var assign$1 = Object.assign
+
+var SCROLL_BAR = 17
+var pushBar = function pushBar(value) {
+  return value + SCROLL_BAR
 }
 
-var A = function A(_ref) {
-  var onTransitionEnd = _ref.onTransitionEnd,
-    ref = _ref.ref
+function ref$1(target) {
+  var _ref = target || {},
+    parentNode = _ref.parentNode
+
+  if (parentNode && !this.getParentSize) {
+    this.getParentSize = function() {
+      return {
+        parentWidth: parentNode.offsetWidth,
+        parentHeight: parentNode.offsetHeight
+      }
+    }
+  }
+}
+
+var Secretroll = (function(_Component) {
+  inherits(Secretroll, _Component)
+
+  function Secretroll(props) {
+    classCallCheck(this, Secretroll)
+
+    var _this = possibleConstructorReturn(
+      this,
+      (Secretroll.__proto__ || Object.getPrototypeOf(Secretroll)).call(
+        this,
+        props
+      )
+    )
+
+    _this.ref = ref$1.bind(_this)
+    _this.state = { parentWidth: undefined, parentHeight: undefined }
+    return _this
+  }
+
+  createClass(Secretroll, [
+    {
+      key: 'render',
+      value: function render() {
+        var attribute = assign$1({}, this.props, {
+          style: assign$1({}, this.props.style)
+        })
+        var style = attribute.style
+        var _state = this.state,
+          parentWidth = _state.parentWidth,
+          parentHeight = _state.parentHeight
+
+        if (!isNum(parentWidth) || !isNum(parentHeight)) {
+          style.visibility = 'hidden'
+        } else {
+          var overflow = style.overflow,
+            overflowY = style.overflowY,
+            overflowX = style.overflowX
+
+          if (overflow === 'scroll' || overflowY === 'scroll') {
+            style.width = pushBar(parentWidth)
+          }
+          if (overflow === 'scroll' || overflowX === 'scroll') {
+            style.height = pushBar(parentHeight)
+          }
+        }
+
+        return React__default.createElement(
+          'div',
+          _extends({ ref: this.ref }, attribute)
+        )
+      }
+    },
+    {
+      key: 'componentDidMount',
+      value: function componentDidMount() {
+        var size = this.getParentSize()
+        return this.rafSetState(size)
+      }
+    },
+    {
+      key: 'componentDidUpdate',
+      value: function componentDidUpdate() {
+        var size = this.getParentSize()
+        return this.isSetState(size) && this.rafSetState(size)
+      }
+    },
+    {
+      key: 'isSetState',
+      value: function isSetState(_ref2) {
+        var parentWidth = _ref2.parentWidth,
+          parentHeight = _ref2.parentHeight
+        var state = this.state
+
+        return (
+          parentWidth !== state.parentWidth ||
+          parentHeight !== state.parentHeight
+        )
+      }
+    },
+    {
+      key: 'rafSetState',
+      value: function rafSetState(_ref3) {
+        var _this2 = this
+
+        var parentWidth = _ref3.parentWidth,
+          parentHeight = _ref3.parentHeight
+
+        this.requestId = raf(function() {
+          return _this2.setState({
+            parentWidth: parentWidth,
+            parentHeight: parentHeight
+          })
+        })
+      }
+    },
+    {
+      key: 'componentWillUnmount',
+      value: function componentWillUnmount() {
+        caf(this.requestId)
+      }
+    }
+  ])
+  return Secretroll
+})(React.Component)
+
+//
+var Button = (function(a) {
+  return function(_ref) {
+    var width = _ref.width,
+      borderBottomColor = _ref.borderBottomColor,
+      inform = _ref.inform,
+      svg = _ref.svg,
+      children = _ref.children
+    return React__default.createElement(
+      'div',
+      a('ROOT', {
+        style: { width: width, borderBottomColor: borderBottomColor }
+      }),
+      React__default.createElement(
+        'span',
+        a('WRAP'),
+        svg,
+        inform > 0 && React__default.createElement('div', a('INFORM'), inform)
+      ),
+      children
+    )
+  }
+})(
+  Atra({
+    ROOT: {
+      style: {
+        display: 'inline-block',
+        height: '94%',
+        position: 'relative',
+        textAlign: 'center',
+        borderBottomStyle: 'solid'
+      }
+    },
+    WRAP: {
+      className: 'lonogara_button', // for svg { height: 100%; }
+      style: {
+        display: 'inline-block',
+        position: 'relative',
+        top: '34%',
+        height: '44%'
+      }
+    },
+    INFORM: {
+      style: {
+        position: 'absolute',
+        top: '-28%',
+        right: '-24%',
+        display: 'inline-block',
+        width: 24,
+        height: 24,
+        borderRadius: '100%',
+        background: '#ff4444',
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+        lineHeight: 1.5
+      }
+    }
+  })
+)
+
+var DimItem = (function(a) {
+  return function(_ref2) {
+    var size = _ref2.size,
+      buttonImage = _ref2.buttonImage,
+      coverColor = _ref2.coverColor,
+      descriptionText = _ref2.descriptionText,
+      descriptionStyle = _ref2.descriptionStyle,
+      children = _ref2.children
+    return React__default.createElement(
+      'div',
+      a('ROOT'),
+      React__default.createElement(
+        'span',
+        a('WRAP', {
+          style: { width: size, height: size, backgroundImage: buttonImage }
+        }),
+        coverColor &&
+          React__default.createElement(
+            'span',
+            a('COVER', { style: { backgroundColor: coverColor } })
+          ),
+        descriptionText &&
+          React__default.createElement(
+            'span',
+            { style: descriptionStyle },
+            descriptionText
+          ),
+        children
+      )
+    )
+  }
+})(
+  Atra({
+    ROOT: {
+      style: {
+        display: 'inline-block',
+        textAlign: 'center',
+        padding: 28
+      }
+    },
+    WRAP: {
+      onMouseDown: function onMouseDown(e) {
+        e.currentTarget.style.borderStyle = 'inset'
+      },
+      onMouseUp: function onMouseUp(e) {
+        e.currentTarget.style.borderStyle = 'outset'
+      },
+      style: {
+        position: 'relative',
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        display: 'inline-block',
+        border: '6px outset rgb(236, 236, 236)',
+        borderRadius: '100%',
+        verticalAlign: 'middle'
+      }
+    },
+    COVER: {
+      style: {
+        display: 'inline-block',
+        width: '100%',
+        height: '100%',
+        borderRadius: '100%'
+      }
+    }
+  })
+)
+
+var DimBoard = (function(a) {
+  return function(_ref3) {
+    var children = _ref3.children
+    return React__default.createElement('div', a('ROOT'), children)
+  }
+})(
+  Atra({
+    ROOT: {
+      style: {
+        position: 'absolute',
+        top: 0,
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+        background: 'rgba(28, 28, 28, 0.9)'
+      }
+    }
+  })
+)
+
+var DimSwitch = (function(createA) {
+  var transform = -12
+  var a = createA({ transform: transform })
+
+  return function(_ref4) {
+    var children = _ref4.children
+    return React__default.createElement(
+      'div',
+      a('ROOT'),
+      React__default.createElement('span', a('WRAP'), children)
+    )
+  }
+})(function(_ref5) {
+  var transform = _ref5.transform
   return Atra({
     ROOT: {
-      onTransitionEnd: onTransitionEnd,
+      style: {
+        position: 'absolute',
+        right: 0,
+        bottom: -62,
+        width: 60,
+        height: 60,
+        overflowY: 'hidden'
+      }
+    },
+    WRAP: {
+      onMouseDown: function onMouseDown(e) {
+        var style = e.currentTarget.style
+
+        style.transitionDuration = '0.1s'
+        style.transform = 'translateY(0px)'
+      },
+      onMouseUp: function onMouseUp(e) {
+        var style = e.currentTarget.style
+
+        style.transitionDuration = '0.4s'
+        style.transform = 'translateY(' + transform + 'px)'
+      },
+      style: {
+        display: 'inline-block',
+        height: '100%',
+        position: 'relative',
+        transform: 'translateY(' + transform + 'px)'
+      }
+    }
+  })
+})
+
+var Preload = (function(a) {
+  return function(_ref6) {
+    var onTransitionEnd = _ref6.onTransitionEnd,
+      backgroundColor = _ref6.backgroundColor,
+      opacity = _ref6.opacity,
+      children = _ref6.children
+    return React__default.createElement(
+      'div',
+      a('ROOT', {
+        onTransitionEnd: onTransitionEnd,
+        style: { backgroundColor: backgroundColor, opacity: opacity }
+      }),
+      children
+    )
+  }
+})(
+  Atra({
+    ROOT: {
       style: {
         position: 'absolute',
         top: 0,
@@ -1648,158 +1363,1434 @@ var A = function A(_ref) {
         left: 0,
         right: 0,
         textAlign: 'center',
-        background: '#eeeeee',
-        transition: '0.4s'
+        transitionDuration: '0.4s',
+        transitionProperty: 'opacity'
+      }
+    }
+  })
+)
+
+var QuitDetail = (function(a) {
+  return function(_ref7) {
+    var children = _ref7.children
+    return React__default.createElement('span', a('ROOT'), children)
+  }
+})(
+  Atra({
+    ROOT: {
+      style: {
+        zIndex: 1000,
+        width: 50,
+        height: 50,
+        position: 'absolute',
+        top: 8,
+        right: 8
+      }
+    }
+  })
+)
+
+var QuitPopdown = (function(a) {
+  return function(_ref8) {
+    var children = _ref8.children
+    return React__default.createElement(
+      'div',
+      a('ROOT'),
+      React__default.createElement('span', a('WRAP'), children)
+    )
+  }
+})(
+  Atra({
+    ROOT: {
+      style: {
+        zIndex: 1000,
+        position: 'absolute',
+        bottom: 17,
+        left: 0,
+        width: '100%',
+        textAlign: 'center'
       }
     },
     WRAP: {
-      ref: ref,
       style: {
         position: 'relative',
+        width: 200,
         display: 'inline-block'
       }
     }
   })
-}
+)
 
-var _style
+//
+var Listen = (function(a) {
+  var specifies = ['type', 'listener', 'positionValue']
+  var reposition = function reposition(value) {
+    return {
+      top: value,
+      bottom: value,
+      left: value,
+      right: value
+    }
+  }
 
-var Side = function(_ref) {
-  var href = _ref.href,
-    size = _ref.size,
-    buttonImage = _ref.buttonImage,
-    coverColor = _ref.coverColor,
-    descriptionText = _ref.descriptionText,
-    descriptionStyle = _ref.descriptionStyle
+  return function(props) {
+    var type = props.type,
+      listener = props.listener,
+      positionValue = props.positionValue
+
+    var reprops = {}
+    reprops[type] = listener
+    reprops.style = isNum(positionValue) ? reposition(positionValue) : {}
+    Object.keys(props)
+      .filter(function(key) {
+        return !specifies.includes(key)
+      })
+      .forEach(function(key) {
+        reprops[key] = props[key]
+      })
+
+    return React__default.createElement('span', a('EL', reprops))
+  }
+})(
+  Atra({
+    EL: {
+      style: {
+        display: 'inline-block',
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0
+      }
+    }
+  })
+)
+
+var Background = (function(a) {
+  return function(props) {
+    return React__default.createElement(
+      'div',
+      a('EL', Object.assign({}, props))
+    )
+  }
+})(
+  Atra({
+    EL: {
+      style: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%'
+      }
+    }
+  })
+)
+
+var ArrowLeft = (function(a) {
+  return function(_ref) {
+    var stroke = _ref.stroke
+    return React__default.createElement(
+      'svg',
+      a('SVG'),
+      React__default.createElement(
+        'path',
+        a('PATH', { style: { stroke: stroke } })
+      )
+    )
+  }
+})(
+  Atra({
+    SVG: {
+      viewBox: '0 0 300 300'
+    },
+    PATH: {
+      d:
+        'M 189.50288,42.205033 41.07742,150.00001 189.50288,257.79499 m -25.8155,-107.79498 95.59992,0',
+      style: {
+        fill: 'none',
+        strokeWidth: 42,
+        strokeLinejoin: 'round',
+        strokeLinecap: 'round'
+      }
+    }
+  })
+)
+
+var ArrowWideUp = (function(a) {
+  return function() {
+    return React__default.createElement(
+      'svg',
+      a('SVG'),
+      React__default.createElement('path', a('PATH'))
+    )
+  }
+})(
+  Atra({
+    SVG: {
+      viewBox: '0 0 1200 260'
+    },
+    PATH: {
+      d: 'M 33.028507,241.96285 600.001,18.109642 1166.9735,241.96285',
+      style: {
+        fill: 'none',
+        stroke: 'rgb(46, 46, 46)',
+        strokeWidth: 42,
+        strokeLinejoin: 'round',
+        strokeLinecap: 'round'
+      }
+    }
+  })
+)
+
+//
+var Popdown = (function(a) {
+  return function(_ref) {
+    var src = _ref.src
+    return React__default.createElement(
+      'div',
+      a('ROOT'),
+      React__default.createElement('img', a('IMG', { src: src }))
+    )
+  }
+})(
+  Atra({
+    ROOT: {
+      style: {
+        position: 'relative',
+        maxWidth: 1000,
+        height: '87%',
+        top: '3%',
+        margin: 'auto',
+        padding: '0px 15px'
+      }
+    },
+    IMG: {
+      style: {
+        width: '100%',
+        height: '100%',
+        objectFit: 'contain',
+        objectPosition: 'center'
+      }
+    }
+  })
+)
+
+var ArrowUp = (function(a) {
+  return function(_ref2) {
+    var fn = _ref2.fn,
+      stroke = _ref2.stroke
+    return React__default.createElement(
+      'svg',
+      a('SVG'),
+      React__default.createElement(
+        'path',
+        a('PATH', { style: { stroke: stroke } })
+      )
+    )
+  }
+})(
+  Atra({
+    SVG: {
+      viewBox: '0 0 300 300'
+    },
+    PATH: {
+      d:
+        'M 257.79498,189.74596 150.00001,41.320493 42.205023,189.74596 m 107.794987,-25.8155 v 95.59992',
+      style: {
+        fill: 'none',
+        strokeWidth: 42,
+        strokeLinejoin: 'round',
+        strokeLinecap: 'round'
+      }
+    }
+  })
+)
+
+var Strap = (function(a) {
+  return function(_ref3) {
+    var stroke = _ref3.stroke
+    return React__default.createElement(
+      'svg',
+      a('SVG'),
+      React__default.createElement(
+        'path',
+        a('PATH_0', { style: { stroke: stroke } })
+      ),
+      React__default.createElement('path', a('PATH_1'))
+    )
+  }
+})(
+  Atra({
+    SVG: {
+      viewBox: '0 0 300 300',
+      style: {
+        height: '100%'
+      }
+    },
+    PATH_0: {
+      d: 'M 149.99811,0 150,188.403',
+      style: {
+        strokeWidth: 8,
+        strokeLinecap: 'round'
+      }
+    },
+    PATH_1: {
+      d:
+        'm 172.32747,229.01407 c 0,12.33112 -9.99635,22.32747 -22.32747,22.32747 -12.33112,0 -22.32747,-9.99635 -22.32747,-22.32747 0,-12.33112 9.99635,-22.32747 22.32747,-22.32747 12.33112,0 22.32747,9.99635 22.32747,22.32747 z',
+      style: {
+        fill: '#c30000',
+        stroke: '#780d00',
+        strokeWidth: 12
+      }
+    }
+  })
+)
+
+//
+var HEAD_HEIGHT = 90
+var BUTTON_HEIGHT = 110
+var BOTTOM_MARGIN = 40
+var MouseDown = function MouseDown(props) {
   return React__default.createElement(
-    'div',
-    a$8('ROOT'),
-    React__default.createElement(
-      'span',
-      a$8('WRAP', {
-        onTouchStart: onTouchStart,
-        onTouchEnd: HoTouchEnd(href),
-        style: {
-          width: size,
-          height: size,
-          backgroundImage: buttonImage
-        }
-      }),
-      coverColor &&
-        React__default.createElement(
-          'span',
-          a$8('COVER', {
-            style: { backgroundColor: coverColor }
-          })
-        ),
-      descriptionText &&
-        React__default.createElement(
-          'span',
-          a$8('DESCRIPTION', {
-            style: descriptionStyle,
-            children: descriptionText
+    Listen,
+    Object.assign({ type: 'onMouseDown' }, props)
+  )
+}
+var MouseUp = function MouseUp(props) {
+  return React__default.createElement(
+    Listen,
+    Object.assign({ type: 'onMouseUp' }, props)
+  )
+}
+var listeners = [
+  'WINDOW:RESIZE_FORCE_UPDATE',
+  'RENDER:PRELOADING_OFF',
+  'DOM:DETAIL_OFF',
+  'DOM:VIEW_SWITCH',
+  'DOM:DIM_SWITCH',
+  'RENDER:POPDOWN_OFF'
+]
+
+var LonogaraDesktop = (function(_Component) {
+  inherits(LonogaraDesktop, _Component)
+
+  function LonogaraDesktop(props) {
+    classCallCheck(this, LonogaraDesktop)
+
+    var _this = possibleConstructorReturn(
+      this,
+      (
+        LonogaraDesktop.__proto__ || Object.getPrototypeOf(LonogaraDesktop)
+      ).call(this, props)
+    )
+
+    _this.state = {
+      preloading: true,
+      dimming: false,
+      index: undefined,
+      exhibit: {},
+      detail: {},
+      popdown: {},
+      informs: [0, 0, 0, 0]
+    }
+    return _this
+  }
+
+  createClass(LonogaraDesktop, [
+    {
+      key: 'componentWillMount',
+      value: function componentWillMount() {
+        var _this2 = this
+
+        orph.attach(this)
+        this.listeners = {}
+        listeners.forEach(function(NAME) {
+          _this2.listeners[NAME] = orph.create(NAME)
+        })
+
+        this.noButtons = this.props.views.length < 2
+
+        this.layout = this.Layout()
+        this.detailQuit = this.DetailQuit()
+        this.popdownQuit = this.PopdownQuit()
+      }
+    },
+    {
+      key: 'render',
+      value: function render() {
+        return React__default.createElement(
+          'div',
+          null,
+          this.layout,
+          isNum(this.state.index) && this.Tree(),
+          this.state.popdown.src && this.Popdown(),
+          this.state.preloading && this.Preload()
+        )
+      }
+    },
+    {
+      key: 'componentDidMount',
+      value: function componentDidMount() {
+        windowOn('resize', this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
+        orph.dispatch('REACT:DID_MOUNT')
+      }
+    },
+    {
+      key: 'Tree',
+      value: function Tree() {
+        var noButtons = this.noButtons
+        var base = this.props.colors.base
+        var dimming = this.state.dimming
+
+        var mainHeight =
+          winnerHeight() -
+          HEAD_HEIGHT -
+          (noButtons ? 80 : BUTTON_HEIGHT) -
+          BOTTOM_MARGIN
+
+        return React__default.createElement(
+          'div',
+          a('ROOT'),
+          React__default.createElement(
+            'header',
+            a('HEAD', { style: { visibility: dimming && 'hidden' } }),
+            React__default.createElement(
+              'span',
+              a('HEAD:WORD', { style: { color: base } }),
+              this.props.views[this.state.index].head
+            )
+          ),
+          React__default.createElement(
+            'div',
+            a('MAIN', { style: { height: mainHeight, borderColor: base } }),
+            this.Middle(),
+            this.DimSwitch(),
+            dimming && this.DimBoard()
+          ),
+          !noButtons &&
+            React__default.createElement(
+              'nav',
+              a('BUTTONS', { style: { visibility: dimming && 'hidden' } }),
+              this.Buttons()
+            )
+        )
+      }
+
+      /*-----------------------  -----------------------*/
+    },
+    {
+      key: 'Layout',
+      value: function Layout() {
+        return React__default.createElement(
+          'div',
+          {
+            style: {
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0
+            }
+          },
+          React__default.createElement(Background, {
+            style: this.props.backgroundStyle
+          }),
+          React__default.createElement(Background, {
+            style: { backgroundColor: this.props.colors.background }
           })
         )
-    )
-  )
-}
+      }
+    },
+    {
+      key: 'DetailQuit',
+      value: function DetailQuit() {
+        var _this3 = this
 
-var a$8 = Atra({
+        return function(_ref) {
+          var fn = _ref.fn
+          return React__default.createElement(
+            QuitDetail,
+            null,
+            React__default.createElement(ArrowLeft, {
+              stroke: _this3.props.colors.detailQuit
+            }),
+            React__default.createElement(MouseDown, {
+              positionValue: -20,
+              listener: fn
+            })
+          )
+        }
+      }
+    },
+    {
+      key: 'PopdownQuit',
+      value: function PopdownQuit() {
+        return function(_ref2) {
+          var fn = _ref2.fn
+          return React__default.createElement(
+            QuitPopdown,
+            null,
+            React__default.createElement(ArrowWideUp, null),
+            React__default.createElement(MouseDown, {
+              positionValue: -10,
+              listener: fn
+            })
+          )
+        }
+      }
+    },
+    {
+      key: 'Preload',
+      value: function Preload$$1() {
+        var onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
+        var backgroundColor = this.props.colors.preloader
+        var opacity = isNum(this.state.index) ? 0 : 1
+        var addition = -60
+        var preloader = jsx$1(this.props.Preloader)
+
+        return React__default.createElement(
+          Preload,
+          {
+            onTransitionEnd: onTransitionEnd,
+            backgroundColor: backgroundColor,
+            opacity: opacity
+          },
+          React__default.createElement(
+            Certicall,
+            { addition: addition },
+            preloader
+          )
+        )
+      }
+    },
+    {
+      key: 'Popdown',
+      value: function Popdown$$1() {
+        var Quit = this.popdownQuit
+        var onQuitEnd = this.listeners['RENDER:POPDOWN_OFF']
+        var src = this.state.popdown.src
+
+        return React__default.createElement(
+          reactShut.ShutFromTop,
+          a('POPDOWN_SHUT', { Quit: Quit, onQuitEnd: onQuitEnd }),
+          React__default.createElement(Popdown, { src: src })
+        )
+      }
+    },
+    {
+      key: 'Middle',
+      value: function Middle() {
+        var exhibit = jsx$1(this.state.exhibit.Component)
+        return React__default.createElement(
+          'div',
+          a('MIDDLE'),
+          React__default.createElement(
+            Secretroll,
+            a('MIDDLE_WRAP:EXHIBIT'),
+            exhibit
+          ),
+          this.state.detail.Component && this.Detail()
+        )
+      }
+    },
+    {
+      key: 'Detail',
+      value: function Detail() {
+        var background = this.props.colors.detail
+        var Quit = this.detailQuit
+        var onQuitEnd = this.listeners['DOM:DETAIL_OFF']
+        var _state$detail = this.state.detail,
+          Component$$1 = _state$detail.Component,
+          props = _state$detail.props,
+          mountWithShut = _state$detail.mountWithShut
+
+        var detail = jsx$1(Component$$1, props)
+
+        return React__default.createElement(
+          reactShut.ShutFromLeft,
+          {
+            hiddenBar: true,
+            touchRatio: 0,
+            background: background,
+            Quit: Quit,
+            onQuitEnd: onQuitEnd,
+            mountWithShut: mountWithShut
+          },
+          detail
+        )
+      }
+    },
+    {
+      key: 'DimSwitch',
+      value: function DimSwitch$$1() {
+        return React__default.createElement(
+          DimSwitch,
+          null,
+          React__default.createElement(Strap, {
+            stroke: this.props.colors.base
+          }),
+          React__default.createElement(MouseDown, {
+            listener: this.listeners['DOM:DIM_SWITCH']
+          })
+        )
+      }
+    },
+    {
+      key: 'DimBoard',
+      value: function DimBoard$$1() {
+        return React__default.createElement(
+          DimBoard,
+          null,
+          React__default.createElement(
+            Secretroll,
+            { style: { overflowX: 'scroll' } },
+            React__default.createElement(
+              Certicall,
+              { addition: -24 },
+              React__default.createElement(
+                'div',
+                {
+                  style:
+                    this.props.sides.length < 5
+                      ? { textAlign: 'center' }
+                      : { display: 'flex' }
+                },
+                this.DimItems()
+              )
+            )
+          )
+        )
+      }
+    },
+    {
+      key: 'DimItems',
+      value: function DimItems() {
+        return this.props.sides.map(function(_ref3, index) {
+          var href = _ref3.href,
+            buttonImage = _ref3.buttonImage,
+            coverColor = _ref3.coverColor,
+            descriptionText = _ref3.descriptionText,
+            descriptionStyle = _ref3.descriptionStyle
+          return React__default.createElement(
+            DimItem,
+            _extends(
+              { key: index },
+              {
+                size: 130,
+                buttonImage: buttonImage,
+                coverColor: coverColor,
+                descriptionText: descriptionText,
+                descriptionStyle: descriptionStyle
+              }
+            ),
+            React__default.createElement(MouseUp, {
+              listener: createClickA(href)
+            })
+          )
+        })
+      }
+    },
+    {
+      key: 'Buttons',
+      value: function Buttons() {
+        var _this4 = this
+
+        var _props$colors = this.props.colors,
+          base = _props$colors.base,
+          sub = _props$colors.sub
+
+        return this.props.views.map(function(view, index) {
+          return React__default.createElement(
+            Button,
+            _extends(
+              { key: index },
+              {
+                width: 100,
+                borderBottomColor: base,
+                inform: _this4.state.informs[index],
+                svg: jsx$1(view.Button, {
+                  choised: index === _this4.state.index,
+                  mainColor: base,
+                  subColor: sub
+                })
+              }
+            ),
+            React__default.createElement(MouseDown, {
+              listener: _this4.listeners['DOM:VIEW_SWITCH'],
+              'data-index': index
+            })
+          )
+        })
+      }
+    }
+  ])
+  return LonogaraDesktop
+})(React.Component)
+
+var a = Atra({
   ROOT: {
     style: {
-      textAlign: 'center',
-      marginTop: 75,
-      marginBottom: 100
+      maxWidth: 960,
+      margin: 'auto',
+      padding: '0px 12px'
     }
   },
-  WRAP: {
-    style: ((_style = {
-      backgroundSize: 'contain',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      display: 'inline-block',
-      borderRadius: '100%',
-      verticalAlign: 'middle',
-      border: 'solid'
-    }),
-    defineProperty(_style, 'border', '8px outset rgb(255, 255, 255)'),
-    defineProperty(_style, 'position', 'relative'),
-    _style)
-  },
-  COVER: {
+  HEAD: {
     style: {
-      display: 'inline-block',
-      width: '100%',
-      height: '100%',
-      borderRadius: '100%'
+      height: HEAD_HEIGHT,
+      textAlign: 'center'
     }
   },
-  DESCRIPTION: {
+  'HEAD:WORD': {
+    style: {
+      fontSize: '1.2em',
+      fontWeight: 'bold',
+      letterSpacing: 2,
+      display: 'inline-block',
+      position: 'relative',
+      top: '35%'
+    }
+  },
+  MAIN: {
     style: {
       position: 'relative',
-      fontSize: '0.87em'
+      borderStyle: 'solid'
     }
-  }
-})
-
-var onTouchStart = function onTouchStart(e) {
-  e.currentTarget.style.borderStyle = 'inset'
-}
-
-var HoTouchEnd = function HoTouchEnd(href) {
-  return function(e) {
-    e.currentTarget.style.borderStyle = 'outset'
-    return (
-      href &&
-      setTimeout(function() {
-        var a = document.createElement('a')
-        a.href = href
-        a.target = href.includes('tel') ? '' : '_blank'
-        a.click()
-      }, 0)
-    )
-  }
-}
-
-var Veil = function(_ref) {
-  var drifting = _ref.drifting,
-    onTouchEnd = _ref.onTouchEnd,
-    onTransitionEnd = _ref.onTransitionEnd
-  return React__default.createElement(
-    'div',
-    a$9('VEIL', {
-      onTouchEnd: onTouchEnd,
-      onTransitionEnd: onTransitionEnd,
-      style: {
-        top: !drifting ? undefined : 0,
-        background:
-          !drifting || drifting === 'lag'
-            ? 'rgba(0, 0, 0, 0)'
-            : 'rgba(0, 0, 0, 0.8)'
-      }
-    })
-  )
-}
-
-var a$9 = Atra({
-  VEIL: {
+  },
+  MIDDLE: {
     style: {
-      position: 'absolute',
-      bottom: 0,
-      width: '100%',
-      transitionDuration: '0.6s',
-      transitionProperty: 'background-color',
-      borderRight: 'solid 0.2px #3a3a3a'
+      outline: 'none',
+      position: 'relative',
+      height: '100%',
+      overflow: 'hidden'
     }
+  },
+  'MIDDLE_WRAP:EXHIBIT': {
+    id: 'exhibitScrollElement',
+    style: {
+      overflowY: 'scroll',
+      height: '100%'
+    }
+  },
+  BUTTONS: {
+    style: {
+      height: BUTTON_HEIGHT,
+      textAlign: 'center',
+      overflowY: 'hidden'
+    }
+  },
+  POPDOWN_SHUT: {
+    mountWithShut: true,
+    background: 'rgba(17, 17, 17, 0.98)',
+    touchRatio: 0,
+    notScroll: true
   }
 })
 
 //
-var HEAD_HEIGHT = 190
-var BUTTON_HEIGHT = 160
-var SIDE_WIDTH = 370
+var background = function(_ref) {
+  var background = _ref.background
 
-var listeners = [
+  var result = {
+    backgroundURL: undefined,
+    backgroundStyle: {}
+  }
+
+  if (background) {
+    if (isStr(background)) {
+      var url = background
+
+      result.backgroundURL = url
+      result.backgroundStyle.backgroundImage = 'url(' + url + ')'
+    } else if (isArr(background)) {
+      var _background = slicedToArray(background, 2),
+        _url = _background[0],
+        style = _background[1]
+
+      if (!isStr(_url)) {
+        typerror('')
+      }
+      if (!isObj(style)) {
+        typerror('')
+      }
+
+      result.backgroundURL = _url
+      Object.entries(style).forEach(function(_ref2) {
+        var _ref3 = slicedToArray(_ref2, 2),
+          key = _ref3[0],
+          value = _ref3[1]
+
+        result.backgroundStyle[key] = value
+      })
+      result.backgroundStyle.backgroundImage = 'url(' + _url + ')'
+    } else {
+      typerror('')
+    }
+  }
+
+  return result
+}
+
+//
+var sides = function(_ref) {
+  var sides = _ref.sides
+
+  var result = []
+
+  if (sides) {
+    if (!isArr(sides)) {
+      typerror('')
+    }
+
+    sides.forEach(function(_ref2) {
+      var href = _ref2.href,
+        buttonImage = _ref2.buttonImage,
+        coverColor = _ref2.coverColor,
+        description = _ref2.description
+
+      var side = {
+        href: undefined,
+        buttonImage: undefined,
+        coverColor: undefined,
+        descriptionText: undefined,
+        descriptionStyle: {}
+      }
+
+      if (href) {
+        if (!isStr(href)) {
+          typerror('')
+        }
+        side.href = href
+      }
+
+      if (buttonImage) {
+        if (!isStr(buttonImage)) {
+          typerror('')
+        }
+        side.buttonImage = 'url(' + buttonImage + ')'
+      }
+
+      if (coverColor) {
+        if (!isStr(coverColor)) {
+          typerror('')
+        }
+        side.coverColor = coverColor
+      }
+
+      if (description) {
+        if (isStr(description)) {
+          side.descriptionText = description
+        } else if (isArr(description)) {
+          var _description = slicedToArray(description, 2),
+            text = _description[0],
+            style = _description[1]
+
+          if (!isStr(text)) {
+            typerror('')
+          }
+          if (!isObj(style)) {
+            typerror('')
+          }
+
+          side.descriptionText = text
+          side.descriptionStyle = style
+        } else {
+          typerror('')
+        }
+      }
+
+      result.push(side)
+    })
+  }
+
+  return result
+}
+
+//
+var views$1 = function(_ref) {
+  var views = _ref.views
+
+  var result = []
+
+  if (views) {
+    if (!isArr(views)) {
+      typerror('')
+    }
+
+    if (views.length > 7) {
+      error('')
+    }
+
+    views.forEach(function(_ref2) {
+      var head = _ref2.head,
+        Button = _ref2.Button,
+        create = _ref2.create
+
+      if (head && !isStr(head)) {
+        typerror('')
+      }
+      if (!isFnc(Button)) {
+        typerror('')
+      }
+      if (!create) {
+        error('view.create is required')
+      }
+      if (!isFnc(create)) {
+        typerror(
+          'view.create must be "function" but ' +
+            (typeof create === 'undefined' ? 'undefined' : _typeof(create))
+        )
+      }
+
+      result.push({ head: head, Button: Button, create: create })
+    })
+  }
+
+  return result
+}
+
+//
+var firstIndex = function firstIndex(_ref) {
+  var firstIndex = _ref.firstIndex
+  return isNum(firstIndex) ? firstIndex : 0
+}
+var preloader = function preloader(_ref2) {
+  var Preloader = _ref2.Preloader
+  return isFnc(Preloader) && Preloader
+}
+var _guardian = function() {
+  return {
+    firstIndex: firstIndex,
+    background: background,
+    preloader: preloader,
+    sides: sides,
+    views: views$1
+  }
+}
+
+var HoColors = function HoColors(Colors) {
+  return function(_ref3) {
+    var colors = _ref3.colors
+
+    var result = Colors()
+
+    if (colors) {
+      if (!isObj(colors)) {
+        typerror('props.colors must be "pure object"')
+      }
+      if (
+        !Object.values(colors).every(function(value) {
+          return isStr(value)
+        })
+      ) {
+        typerror('props.colors contain invalied value')
+      }
+
+      Object.keys(result).forEach(function(key) {
+        result[key] = colors[key] || result[key]
+      })
+    }
+
+    return result
+  }
+}
+
+var Guardian = function Guardian(_ref4) {
+  var App = _ref4.App,
+    guardian = _ref4.guardian
+  return function(props) {
+    var firstIndex = guardian.firstIndex(props)
+    var colors = guardian.colors(props)
+
+    var _guardian$background = guardian.background(props),
+      backgroundURL = _guardian$background.backgroundURL,
+      backgroundStyle = _guardian$background.backgroundStyle
+
+    var Preloader = guardian.preloader(props)
+    var sides$$1 = guardian.sides(props)
+    var views = guardian.views(props)
+
+    return React__default.createElement(
+      'div',
+      null,
+      backgroundURL &&
+        React__default.createElement('link', {
+          rel: 'prefetch',
+          href: backgroundURL
+        }),
+      React__default.createElement(
+        'style',
+        { type: 'text/css' },
+        '\n        body {\n          margin: 0px;\n          overflow: hidden;\n          font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;\n        }\n        .lonogara_button svg {\n          height: 100%;\n        }\n      '
+      ),
+      React__default.createElement(App, {
+        firstIndex: firstIndex,
+        colors: colors,
+        backgroundStyle: backgroundStyle,
+        Preloader: Preloader,
+        sides: sides$$1,
+        views: views
+      })
+    )
+  }
+}
+
+//
+var guardian = _guardian()
+
+guardian.colors = HoColors(function() {
+  return {
+    base: '#ffffff',
+    sub: 'rgb(145, 145, 145)',
+    background: 'rgba(0, 0, 0, 0.6)',
+    preloader: 'rgb(241, 241, 241)',
+    detail: 'rgb(243, 243, 243)',
+    detailQuit: 'rgb(66, 62, 89)'
+  }
+})
+
+var index = Guardian({ App: LonogaraDesktop, guardian: guardian })
+
+//
+var sideScrollDOM = function sideScrollDOM() {
+  return document.getElementById('sideScrollElement')
+}
+
+var DRIFTING_ON = [
+  { states: ['drifting'] },
+  function(n, _ref) {
+    var render = _ref.render
+    return render({ drifting: true })
+  }
+]
+var DRIFTING_LAG = [
+  { states: ['drifting'] },
+  function(n, _ref2) {
+    var render = _ref2.render
+    return render({ drifting: 'lag' })
+  }
+]
+var DRIFTING_OFF = [
+  { states: ['drifting'] },
+  function(n, _ref3) {
+    var state = _ref3.state,
+      render = _ref3.render
+    return (
+      state().drifting === 'lag' &&
+      render({ drifting: false }, function() {
+        sideScrollDOM().scrollTop = 0
+      })
+    )
+  }
+]
+
+var orph$2 = new Orph()
+add(orph$2, 'STORE', STORE)
+add(
+  orph$2,
+  'RENDER',
+  Object.assign({}, RENDER, {
+    DRIFTING_ON: DRIFTING_ON,
+    DRIFTING_LAG: DRIFTING_LAG,
+    DRIFTING_OFF: DRIFTING_OFF
+  })
+)
+add(orph$2, 'WINDOW', WINDOW)
+add(orph$2, 'REACT', REACT)
+add(orph$2, 'DOM', DOM)
+add(orph$2, 'PASS', PASS)
+
+//
+var Button$1 = (function(a) {
+  return function(_ref) {
+    var width = _ref.width,
+      inform = _ref.inform,
+      svg = _ref.svg,
+      children = _ref.children
+    return React__default.createElement(
+      'div',
+      a('ROOT', { style: { width: width } }),
+      React__default.createElement(
+        'span',
+        a('WRAP'),
+        svg,
+        inform > 0 && React__default.createElement('div', a('INFORM'), inform)
+      ),
+      children
+    )
+  }
+})(
+  Atra({
+    ROOT: {
+      style: {
+        display: 'inline-block',
+        height: '100%',
+        position: 'relative'
+      }
+    },
+    WRAP: {
+      className: 'lonogara_button', // for svg { height: 100%; }
+      style: {
+        display: 'inline-block',
+        position: 'relative',
+        top: '20%',
+        height: '62%'
+      }
+    },
+    INFORM: {
+      style: {
+        position: 'absolute',
+        fontSize: 27,
+        display: 'inline-block',
+        width: 34,
+        height: 34,
+        borderRadius: 50,
+        background: '#ff4444',
+        top: '-20%',
+        right: '-18%',
+        color: '#fff',
+        lineHeight: 1.29
+      }
+    }
+  })
+)
+
+var Head = (function(a) {
+  return function(_ref2) {
+    var height = _ref2.height,
+      backgroundColor = _ref2.backgroundColor,
+      word = _ref2.word,
+      color = _ref2.color,
+      children = _ref2.children
+    return React__default.createElement(
+      'header',
+      a('ROOT', {
+        style: { height: height, backgroundColor: backgroundColor }
+      }),
+      React__default.createElement(
+        'span',
+        a('WORD', { style: { color: color, marginTop: height - 105 } }),
+        word
+      ),
+      React__default.createElement(
+        'span',
+        a('BUTTON', { style: { padding: (height - 100) / 2 + 'px 25px' } }),
+        children
+      )
+    )
+  }
+})(
+  Atra({
+    ROOT: {
+      style: {
+        position: 'relative',
+        textAlign: 'center'
+      }
+    },
+    WORD: {
+      style: {
+        fontSize: '2.5em',
+        fontWeight: 'bold',
+        letterSpacing: 2,
+        display: 'inline-block'
+      }
+    },
+    BUTTON: {
+      style: {
+        height: 100,
+        position: 'absolute',
+        right: 0,
+        top: 0,
+        display: 'inline-block',
+        textAlign: 'center'
+      }
+    }
+  })
+)
+
+var SideItem = (function(a) {
+  return function(_ref3) {
+    var size = _ref3.size,
+      buttonImage = _ref3.buttonImage,
+      coverColor = _ref3.coverColor,
+      descriptionText = _ref3.descriptionText,
+      descriptionStyle = _ref3.descriptionStyle,
+      children = _ref3.children
+    return React__default.createElement(
+      'div',
+      a('ROOT'),
+      React__default.createElement(
+        'span',
+        a('WRAP', {
+          style: { width: size, height: size, backgroundImage: buttonImage }
+        }),
+        coverColor &&
+          React__default.createElement(
+            'span',
+            a('COVER', { style: { backgroundColor: coverColor } })
+          ),
+        descriptionText &&
+          React__default.createElement(
+            'span',
+            { style: descriptionStyle },
+            descriptionText
+          ),
+        children
+      )
+    )
+  }
+})(
+  Atra({
+    ROOT: {
+      style: {
+        textAlign: 'center',
+        marginTop: 75,
+        marginBottom: 100
+      }
+    },
+    WRAP: {
+      onTouchStart: function onTouchStart(e) {
+        e.currentTarget.style.borderStyle = 'inset'
+      },
+      onTouchEnd: function onTouchEnd(e) {
+        e.currentTarget.style.borderStyle = 'outset'
+      },
+      style: {
+        display: 'inline-block',
+        position: 'relative',
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        border: '8px outset rgb(255, 255, 255)',
+        borderRadius: '100%',
+        verticalAlign: 'middle'
+      }
+    },
+    COVER: {
+      style: {
+        display: 'inline-block',
+        width: '100%',
+        height: '100%',
+        borderRadius: '100%'
+      }
+    }
+  })
+)
+
+var Preload$1 = (function(a) {
+  return function(_ref4) {
+    var onTransitionEnd = _ref4.onTransitionEnd,
+      backgroundColor = _ref4.backgroundColor,
+      opacity = _ref4.opacity,
+      children = _ref4.children
+    return React__default.createElement(
+      'div',
+      a('ROOT', {
+        onTransitionEnd: onTransitionEnd,
+        style: { backgroundColor: backgroundColor, opacity: opacity }
+      }),
+      children
+    )
+  }
+})(
+  Atra({
+    ROOT: {
+      style: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        textAlign: 'center',
+        transitionDuration: '0.4s',
+        transitionProperty: 'opacity'
+      }
+    }
+  })
+)
+
+var Veil = (function(a) {
+  var BLACK = 'rgba(0, 0, 0, 0.8)'
+  var TRANS = 'rgba(0, 0, 0, 0)'
+
+  return function(_ref5) {
+    var onTransitionEnd = _ref5.onTransitionEnd,
+      drifting = _ref5.drifting,
+      children = _ref5.children
+    return React__default.createElement(
+      'div',
+      a('VEIL', {
+        onTransitionEnd: onTransitionEnd,
+        style: {
+          top: !drifting ? undefined : 0,
+          backgroundColor: !drifting || drifting === 'lag' ? TRANS : BLACK
+        }
+      }),
+      children
+    )
+  }
+})(
+  Atra({
+    VEIL: {
+      style: {
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        transitionDuration: '0.6s',
+        transitionProperty: 'background-color',
+        borderRight: 'solid 0.2px #3a3a3a'
+      }
+    }
+  })
+)
+
+var QuitDetail$1 = (function(a) {
+  return function(_ref6) {
+    var children = _ref6.children
+    return React__default.createElement('span', a('ROOT'), children)
+  }
+})(
+  Atra({
+    ROOT: {
+      style: {
+        zIndex: 1000,
+        position: 'absolute',
+        top: 20,
+        right: 24,
+        width: 100,
+        height: 100
+      }
+    }
+  })
+)
+
+var QuitPopdown$1 = (function(a) {
+  return function(_ref7) {
+    var children = _ref7.children
+    return React__default.createElement(
+      'div',
+      a('ROOT'),
+      React__default.createElement('span', a('WRAP'), children)
+    )
+  }
+})(
+  Atra({
+    ROOT: {
+      style: {
+        zIndex: 1000,
+        position: 'absolute',
+        bottom: 17,
+        left: 0,
+        width: '100%',
+        textAlign: 'center'
+      }
+    },
+    WRAP: {
+      style: {
+        position: 'relative',
+        width: '32%',
+        display: 'inline-block'
+      }
+    }
+  })
+)
+
+//
+var Popdown$1 = (function(a) {
+  return function(_ref) {
+    var src = _ref.src,
+      top = _ref.top
+    return React__default.createElement(
+      'div',
+      a('ROOT', { style: { top: top } }),
+      React__default.createElement('img', a('IMG', { src: src }))
+    )
+  }
+})(
+  Atra({
+    ROOT: {
+      style: {
+        position: 'relative',
+        width: '96%',
+        height: '87%',
+        margin: 'auto'
+      }
+    },
+    IMG: {
+      style: {
+        width: '100%',
+        height: '100%',
+        objectFit: 'contain',
+        objectPosition: 'center'
+      }
+    }
+  })
+)
+
+var Burger = (function(a) {
+  return function(_ref2) {
+    var stroke = _ref2.stroke
+    return React__default.createElement(
+      'svg',
+      a('SVG'),
+      React__default.createElement(
+        'g',
+        a('G', { stroke: stroke }),
+        React__default.createElement('path', a('PATH_0')),
+        React__default.createElement('path', a('PATH_1')),
+        React__default.createElement('path', a('PATH_2'))
+      )
+    )
+  }
+})(
+  Atra({
+    SVG: {
+      viewBox: '0 0 300 300',
+      style: {
+        height: '100%'
+      }
+    },
+    G: {
+      style: {
+        strokeWidth: 26
+      }
+    },
+    PATH_0: {
+      d: 'm 40,224.5 220,0'
+    },
+    PATH_1: {
+      d: 'm 40,149.49959 220,0'
+    },
+    PATH_2: {
+      d: 'm 40,74.499594 220,0'
+    }
+  })
+)
+
+//
+var HEAD_HEIGHT$1 = 190
+var BUTTON_HEIGHT$1 = 160
+var SIDE_WIDTH = 370
+var TouchStart = function TouchStart(props) {
+  return React__default.createElement(
+    Listen,
+    Object.assign({ type: 'onTouchStart' }, props)
+  )
+}
+var TouchEnd = function TouchEnd(props) {
+  return React__default.createElement(
+    Listen,
+    Object.assign({ type: 'onTouchEnd' }, props)
+  )
+}
+var TouchEndCapture = function TouchEndCapture(props) {
+  return React__default.createElement(
+    Listen,
+    Object.assign({ type: 'onTouchEndCapture' }, props)
+  )
+}
+var listeners$1 = [
   'WINDOW:RESIZE_FORCE_UPDATE',
   'RENDER:PRELOADING_OFF',
   'DOM:VIEW_SWITCH',
@@ -1810,15 +2801,11 @@ var listeners = [
   'RENDER:POPDOWN_OFF'
 ]
 
-var jsx$1 = function jsx$$1(Component$$1, props) {
-  return (
-    typeof Component$$1 === 'function' &&
-    React__default.createElement(Component$$1, props)
-  )
-}
-
 var LonogaraMobile = (function(_Component) {
   inherits(LonogaraMobile, _Component)
+
+  // listeners: { [name: string]: () => {} }
+  // sides: React$Node
 
   function LonogaraMobile(props) {
     classCallCheck(this, LonogaraMobile)
@@ -1834,7 +2821,7 @@ var LonogaraMobile = (function(_Component) {
     _this.state = {
       preloading: true,
       drifting: false,
-      index: null,
+      index: undefined,
       exhibit: {},
       detail: {},
       popdown: {},
@@ -1851,10 +2838,15 @@ var LonogaraMobile = (function(_Component) {
 
         orph$2.attach(this)
         this.listeners = {}
-        listeners.forEach(function(NAME) {
+        listeners$1.forEach(function(NAME) {
           _this2.listeners[NAME] = orph$2.create(NAME)
         })
-        this.sides = this.createSides()
+
+        this.noButtons = this.props.views.length < 2
+
+        this.sides = this.Sides()
+        this.detailQuit = this.DetailQuit()
+        this.popdownQuit = this.PopdownQuit()
       }
     },
     {
@@ -1863,22 +2855,22 @@ var LonogaraMobile = (function(_Component) {
         return React__default.createElement(
           'div',
           null,
-          typeof this.state.index === 'number' && this.tree(),
-          this.state.popdown.src && this.createPopdown(),
-          this.state.preloading && this.createPreload()
+          isNum(this.state.index) && this.Tree(),
+          this.state.popdown.src && this.Popdown(),
+          this.state.preloading && this.Preload()
         )
       }
     },
     {
       key: 'componentDidMount',
       value: function componentDidMount() {
-        windowOnListener('resize', this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
+        windowOn('resize', this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
         orph$2.dispatch('REACT:DID_MOUNT')
       }
     },
     {
-      key: 'tree',
-      value: function tree() {
+      key: 'Tree',
+      value: function Tree() {
         var drifting = this.state.drifting
 
         var transform =
@@ -1886,137 +2878,286 @@ var LonogaraMobile = (function(_Component) {
             ? 'translateX(0px)'
             : 'translateX(' + -SIDE_WIDTH + 'px)'
         var transition = !drifting || drifting === 'lag' ? '0.6s' : '0.72s'
-        var veil = this.createVeil()
+        var bottom = this.noButtons ? 0 : BUTTON_HEIGHT$1
+        var veil = this.Veil()
 
         return React__default.createElement(
           'div',
-          a('ROOT'),
+          { style: { backgroundColor: this.props.colors.side } },
           React__default.createElement(
             'div',
-            a('HEAD_AND_MIDDLE', { style: { transform: transform } }),
-            this.createHead(),
-            this.createMiddle(),
+            a$1('HEAD_AND_MIDDLE', { style: { transform: transform } }),
+            this.Head(),
+            this.Middle(),
             veil
           ),
-          React__default.createElement(
-            'nav',
-            a('BUTTONS'),
-            this.createButtons(),
-            veil
-          ),
+          !this.noButtons &&
+            React__default.createElement(
+              'nav',
+              a$1('BUTTONS'),
+              this.Buttons(),
+              veil
+            ),
           React__default.createElement(
             'aside',
-            a('SIDES', {
-              style: { transform: transform, transition: transition }
+            a$1('SIDES', {
+              style: {
+                transform: transform,
+                transition: transition,
+                bottom: bottom
+              }
             }),
             this.sides
           )
         )
       }
 
-      /*----------------------- create -----------------------*/
+      /*-----------------------  -----------------------*/
     },
     {
-      key: 'createSides',
-      value: function createSides() {
+      key: 'Sides',
+      value: function Sides() {
         return this.props.sides.map(function(_ref, index) {
           var href = _ref.href,
             buttonImage = _ref.buttonImage,
             coverColor = _ref.coverColor,
             descriptionText = _ref.descriptionText,
             descriptionStyle = _ref.descriptionStyle
-          return React__default.createElement(Side, {
-            key: index,
-            size: SIDE_WIDTH / 1.7,
-            href: href,
-            buttonImage: buttonImage,
-            coverColor: coverColor,
-            descriptionText: descriptionText,
-            descriptionStyle: descriptionStyle
-          })
+          return React__default.createElement(
+            SideItem,
+            _extends(
+              { key: index },
+              {
+                size: SIDE_WIDTH / 1.7,
+                buttonImage: buttonImage,
+                coverColor: coverColor,
+                descriptionText: descriptionText,
+                descriptionStyle: descriptionStyle
+              }
+            ),
+            React__default.createElement(TouchEnd, {
+              listener: createClickA(href)
+            })
+          )
         })
       }
     },
     {
-      key: 'createPopdown',
-      value: function createPopdown() {
-        return React__default.createElement(Popdown, {
-          src: this.state.popdown.src,
-          vertically: this.state.popdown.vertically,
-          onQuitEnd: this.listeners['RENDER:POPDOWN_OFF']
-        })
-      }
-    },
-    {
-      key: 'createPreload',
-      value: function createPreload() {
-        return React__default.createElement(Preload, {
-          vanish: typeof this.state.index === 'number',
-          onTransitionEnd: this.listeners['RENDER:PRELOADING_OFF'],
-          children: jsx$1(this.props.Preloader)
-        })
-      }
-    },
-    {
-      key: 'createVeil',
-      value: function createVeil() {
-        return React__default.createElement(Veil, {
-          drifting: this.state.drifting,
-          onTouchEnd: this.listeners['RENDER:DRIFTING_LAG'],
-          onTransitionEnd: this.listeners['RENDER:DRIFTING_OFF']
-        })
-      }
-    },
-    {
-      key: 'createHead',
-      value: function createHead() {
-        return React__default.createElement(Head, {
-          height: HEAD_HEIGHT,
-          word: this.props.views[this.state.index].head,
-          onTouchEnd: this.listeners['RENDER:DRIFTING_ON']
-        })
-      }
-    },
-    {
-      key: 'createMiddle',
-      value: function createMiddle() {
-        var exhibitBgStyle = this.props.exhibitBgStyle
-
-        var height = winnerHeight() - (HEAD_HEIGHT + BUTTON_HEIGHT)
-        var rootStyle = Object.assign({}, exhibitBgStyle, { height: height })
-        var withBgImg = Boolean(exhibitBgStyle.backgroundImage)
-
-        var _state = this.state,
-          exhibit = _state.exhibit,
-          detail = _state.detail
-
-        return React__default.createElement(Middle, {
-          rootStyle: rootStyle,
-          withBgImg: withBgImg,
-          exhibit: jsx$1(exhibit.Component),
-          detail: detail.Component && jsx$1(detail.Component, detail.props),
-          mountWithShut: detail.mountWithShut,
-          notScroll: Boolean(this.state.popdown.src),
-          onQuitEnd: this.listeners['DOM:DETAIL_OFF']
-        })
-      }
-    },
-    {
-      key: 'createButtons',
-      value: function createButtons() {
+      key: 'DetailQuit',
+      value: function DetailQuit() {
         var _this3 = this
 
-        return this.props.views.map(function(view, index, views) {
-          return React__default.createElement(Button, {
-            key: index,
-            width: winnerWidth() / views.length - 0.5,
-            buttonIndex: index,
-            onTouchStart: _this3.listeners['DOM:VIEW_SWITCH'],
-            inform: _this3.state.informs[index],
-            children: jsx$1(view.Button, {
-              choised: index === _this3.state.index
+        return function(_ref2) {
+          var fn = _ref2.fn
+          return React__default.createElement(
+            QuitDetail$1,
+            null,
+            React__default.createElement(ArrowLeft, {
+              stroke: _this3.props.colors.detailQuit
+            }),
+            React__default.createElement(TouchEndCapture, {
+              positionValue: -20,
+              listener: function listener(e) {
+                e.stopPropagation()
+                e.preventDefault()
+                fn()
+              }
             })
+          )
+        }
+      }
+    },
+    {
+      key: 'PopdownQuit',
+      value: function PopdownQuit() {
+        return function(_ref3) {
+          var fn = _ref3.fn
+          return React__default.createElement(
+            QuitPopdown$1,
+            null,
+            React__default.createElement(ArrowWideUp, null),
+            React__default.createElement(TouchEnd, {
+              onTouchStartCapture: function onTouchStartCapture(e) {
+                return e.stopPropagation()
+              },
+              positionValue: -10,
+              listener: function listener(e) {
+                e.stopPropagation()
+                fn()
+              }
+            })
+          )
+        }
+      }
+    },
+    {
+      key: 'Preload',
+      value: function Preload$$1() {
+        var onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
+        var backgroundColor = this.props.colors.preloader
+        var opacity = isNum(this.state.index) ? 0 : 1
+        var addition = -100
+
+        var preloader = jsx$1(this.props.Preloader)
+
+        return React__default.createElement(
+          Preload$1,
+          {
+            onTransitionEnd: onTransitionEnd,
+            backgroundColor: backgroundColor,
+            opacity: opacity
+          },
+          React__default.createElement(
+            Certicall,
+            { addition: addition },
+            preloader
+          )
+        )
+      }
+    },
+    {
+      key: 'Popdown',
+      value: function Popdown$$1() {
+        var Quit = this.popdownQuit
+        var onQuitEnd = this.listeners['RENDER:POPDOWN_OFF']
+        var _state$popdown = this.state.popdown,
+          src = _state$popdown.src,
+          vertically = _state$popdown.vertically
+
+        var top = vertically && '4%'
+
+        return React__default.createElement(
+          reactShut.ShutFromTop,
+          a$1('POPDOWN_SHUT', { Quit: Quit, onQuitEnd: onQuitEnd }),
+          React__default.createElement(Popdown$1, { src: src, top: top })
+        )
+      }
+    },
+    {
+      key: 'Veil',
+      value: function Veil$$1() {
+        return React__default.createElement(
+          Veil,
+          {
+            onTransitionEnd: this.listeners['RENDER:DRIFTING_OFF'],
+            drifting: this.state.drifting
+          },
+          React__default.createElement(TouchEnd, {
+            listener: this.listeners['RENDER:DRIFTING_LAG']
           })
+        )
+      }
+    },
+    {
+      key: 'Head',
+      value: function Head$$1() {
+        var _props$colors = this.props.colors,
+          base = _props$colors.base,
+          sub = _props$colors.sub
+
+        return React__default.createElement(
+          Head,
+          {
+            height: HEAD_HEIGHT$1,
+            backgroundColor: base,
+            word: this.props.views[this.state.index].head,
+            color: sub
+          },
+          React__default.createElement(Burger, { stroke: sub }),
+          React__default.createElement(TouchEnd, {
+            listener: this.listeners['RENDER:DRIFTING_ON']
+          })
+        )
+      }
+    },
+    {
+      key: 'Middle',
+      value: function Middle() {
+        var height =
+          winnerHeight() -
+          HEAD_HEIGHT$1 -
+          (this.noButtons ? 0 : BUTTON_HEIGHT$1)
+        var backgroundStyle = this.props.backgroundStyle
+        var backgroundColor = this.props.colors.background
+
+        var exhibit = jsx$1(this.state.exhibit.Component)
+
+        return React__default.createElement(
+          'div',
+          a$1('MIDDLE', { style: { height: height } }),
+          React__default.createElement(Background, { style: backgroundStyle }),
+          React__default.createElement(Background, {
+            style: { backgroundColor: backgroundColor }
+          }),
+          React__default.createElement(
+            'div',
+            a$1('MIDDLE_WRAP:BOTH'),
+            React__default.createElement(
+              'div',
+              a$1('MIDDLE_WRAP:EXHIBIT'),
+              exhibit
+            ),
+            this.state.detail.Component && this.Detail()
+          )
+        )
+      }
+    },
+    {
+      key: 'Detail',
+      value: function Detail() {
+        var background = this.props.colors.detail
+        var notScroll = Boolean(this.state.popdown.src)
+        var Quit = this.detailQuit
+        var onQuitEnd = this.listeners['DOM:DETAIL_OFF']
+
+        var _state$detail = this.state.detail,
+          Component$$1 = _state$detail.Component,
+          props = _state$detail.props,
+          mountWithShut = _state$detail.mountWithShut
+
+        var detail = jsx$1(Component$$1, props)
+
+        return React__default.createElement(
+          reactShut.ShutFromLeft,
+          {
+            background: background,
+            notScroll: notScroll,
+            Quit: Quit,
+            onQuitEnd: onQuitEnd,
+            mountWithShut: mountWithShut
+          },
+          detail
+        )
+      }
+    },
+    {
+      key: 'Buttons',
+      value: function Buttons() {
+        var _this4 = this
+
+        var mainColor = this.props.colors.base
+        var subColor = this.props.colors.sub
+
+        return this.props.views.map(function(view, index, views) {
+          return React__default.createElement(
+            Button$1,
+            _extends(
+              { key: index },
+              {
+                width: winnerWidth() / views.length - 0.5,
+                inform: _this4.state.informs[index],
+                svg: jsx$1(view.Button, {
+                  mainColor: mainColor,
+                  subColor: subColor,
+                  choised: index === _this4.state.index
+                })
+              }
+            ),
+            React__default.createElement(TouchStart, {
+              listener: _this4.listeners['DOM:VIEW_SWITCH'],
+              'data-index': index
+            })
+          )
         })
       }
     }
@@ -2024,22 +3165,43 @@ var LonogaraMobile = (function(_Component) {
   return LonogaraMobile
 })(React.Component)
 
-var a = Atra({
-  ROOT: {
-    style: {
-      backgroundColor: 'var(--side-color)'
-    }
-  },
-
+var a$1 = Atra({
   HEAD_AND_MIDDLE: {
     style: {
       transition: '0.6s'
     }
   },
-
+  MIDDLE: {
+    style: {
+      position: 'relative'
+    }
+  },
+  'MIDDLE_WRAP:BOTH': {
+    style: {
+      outline: 'none',
+      position: 'relative',
+      height: '100%'
+    }
+  },
+  'MIDDLE_WRAP:EXHIBIT': {
+    id: 'exhibitScrollElement',
+    style: {
+      position: 'relative',
+      height: '100%',
+      overflowScrolling: 'touch',
+      WebkitOverflowScrolling: 'touch',
+      overflowX: 'hidden'
+    }
+  },
+  POPDOWN_SHUT: {
+    mountWithShut: true,
+    background: 'rgba(17, 17, 17, 0.98)',
+    touchRatio: 0,
+    notScroll: true
+  },
   BUTTONS: {
     style: {
-      height: BUTTON_HEIGHT,
+      height: BUTTON_HEIGHT$1,
       fontSize: '2.4vh',
       background: '#fff',
       position: 'relative',
@@ -2047,14 +3209,12 @@ var a = Atra({
       textAlign: 'center'
     }
   },
-
   SIDES: {
     id: 'sideScrollElement',
     style: {
       position: 'fixed',
       top: 0,
       left: winnerWidth(),
-      bottom: BUTTON_HEIGHT,
       width: SIDE_WIDTH,
       fontSize: 34,
       color: '#fff',
@@ -2065,7 +3225,22 @@ var a = Atra({
   }
 })
 
-var index$1 = guardian(LonogaraMobile)
+//
+var guardian$1 = _guardian()
+
+guardian$1.colors = HoColors(function() {
+  return {
+    base: 'rgb(24, 24, 35)',
+    sub: 'rgb(255, 255, 255)',
+    background: 'rgba(242, 242, 242, 0.78)',
+    preloader: 'rgb(241, 241, 241)',
+    detail: 'rgb(243, 243, 243)',
+    detailQuit: 'rgb(24, 24, 35)',
+    side: 'rgb(77, 172, 125)'
+  }
+})
+
+var index$1 = Guardian({ App: LonogaraMobile, guardian: guardian$1 })
 
 exports.Desktop = index
 exports.Mobile = index$1

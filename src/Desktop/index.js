@@ -1,18 +1,16 @@
 // @flow
-import React, { Component } from 'react'
-import Atra from 'atra'
-import guardian from '../guardian'
-import orph from './orph'
+import App from './App.jsx'
+import _guardian, { HoColors, Guardian } from '../guardian'
 
-class LonogaraDesktop extends Component {
-  constructor(props) {
-    console.log(orph.list());
-    super(props)
-  }
+const guardian = _guardian()
 
-  render() {
-    return <div>{'desktop'}</div>
-  }
-}
+guardian.colors = HoColors(() => ({
+  base: '#ffffff',
+  sub: 'rgb(145, 145, 145)',
+  background: 'rgba(0, 0, 0, 0.6)',
+  preloader: 'rgb(241, 241, 241)',
+  detail: 'rgb(243, 243, 243)',
+  detailQuit: 'rgb(66, 62, 89)'
+}))
 
-export default guardian(LonogaraDesktop)
+export default Guardian({ App, guardian })
