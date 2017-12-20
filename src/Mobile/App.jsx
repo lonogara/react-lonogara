@@ -5,6 +5,7 @@ import orph from './orph.js'
 import {
   jsx,
   isNum,
+  isFnc,
   createClickA,
   winnerWidth,
   winnerHeight,
@@ -219,14 +220,17 @@ export default class LonogaraMobile extends Component {
     const backgroundColor = this.props.colors.background
 
     const exhibit = jsx(this.state.exhibit.Component)
+    const isDetail = isFnc(this.state.detail.Component)
 
     return (
       <div {...a('MIDDLE', { style: { height } })}>
         <Background {...{ style: backgroundStyle }} />
         <Background {...{ style: { backgroundColor } }} />
         <div {...a('MIDDLE_WRAP:BOTH')}>
-          <div {...a('MIDDLE_WRAP:EXHIBIT')}>{exhibit}</div>
-          {this.state.detail.Component && this.Detail()}
+          <div {...a('MIDDLE_WRAP:EXHIBIT', { style: { overflowY: isDetail ? 'hidden' : 'scroll' } })}>
+            {exhibit}
+          </div>
+          {isDetail && this.Detail()}
         </div>
       </div>
     )

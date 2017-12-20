@@ -3026,6 +3026,7 @@ var LonogaraMobile = (function(_Component) {
         var backgroundColor = this.props.colors.background
 
         var exhibit = jsx$1(this.state.exhibit.Component)
+        var isDetail = isFnc(this.state.detail.Component)
 
         return React.createElement(
           'div',
@@ -3037,8 +3038,14 @@ var LonogaraMobile = (function(_Component) {
           React.createElement(
             'div',
             a$1('MIDDLE_WRAP:BOTH'),
-            React.createElement('div', a$1('MIDDLE_WRAP:EXHIBIT'), exhibit),
-            this.state.detail.Component && this.Detail()
+            React.createElement(
+              'div',
+              a$1('MIDDLE_WRAP:EXHIBIT', {
+                style: { overflowY: isDetail ? 'hidden' : 'scroll' }
+              }),
+              exhibit
+            ),
+            isDetail && this.Detail()
           )
         )
       }
