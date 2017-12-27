@@ -3,6 +3,8 @@ import Atra from 'atra'
 import Orph from 'orph'
 import _regeneratorRuntime from 'babel-runtime/regenerator'
 import { ShutFromLeft, ShutFromTop } from 'react-shut'
+import Center from 'react-vertical-center'
+import Scroll from 'react-stealth-roll'
 
 var _typeof =
   typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol'
@@ -283,12 +285,7 @@ var winnerWidth = function winnerWidth() {
 var winnerHeight = function winnerHeight() {
   return window.innerHeight
 }
-var raf = function raf(callback) {
-  return window.requestAnimationFrame(callback)
-}
-var caf = function caf(callback) {
-  return window.cancelAnimationFrame(callback)
-}
+
 var windowOn = function windowOn(type, fn, opts) {
   return window.addEventListener(type, fn, opts)
 }
@@ -873,261 +870,6 @@ add(orph, 'WINDOW', WINDOW)
 add(orph, 'REACT', REACT)
 add(orph, 'DOM', Object.assign({}, DOM, { DIM_SWITCH: DIM_SWITCH }))
 add(orph, 'PASS', PASS)
-
-var assign = Object.assign
-
-var lag = function lag() {
-  var time =
-    arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0
-  return new Promise(function(resolve) {
-    return setTimeout(resolve, time)
-  })
-}
-
-function ref(target) {
-  if (target && !this.getBothHeight) {
-    this.getBothHeight = function() {
-      return {
-        targetHeight: target.clientHeight,
-        parentHeight: target.parentNode.clientHeight
-      }
-    }
-  }
-}
-
-var Certicall = (function(_React$Component) {
-  inherits(Certicall, _React$Component)
-
-  function Certicall(props) {
-    classCallCheck(this, Certicall)
-
-    var _this = possibleConstructorReturn(
-      this,
-      (Certicall.__proto__ || Object.getPrototypeOf(Certicall)).call(
-        this,
-        props
-      )
-    )
-
-    _this.ref = ref.bind(_this)
-    _this.state = { targetHeight: undefined, parentHeight: undefined }
-    return _this
-  }
-
-  createClass(Certicall, [
-    {
-      key: 'render',
-      value: function render() {
-        var attribute = assign({}, this.props, {
-          style: assign({}, this.props.style)
-        })
-        var style = attribute.style,
-          addition = attribute.addition
-        var _state = this.state,
-          targetHeight = _state.targetHeight,
-          parentHeight = _state.parentHeight
-
-        if (!isNum(targetHeight) || !isNum(parentHeight)) {
-          style.visibility = 'hidden'
-        } else {
-          style.position = 'relative'
-          style.top = (parentHeight - targetHeight) / 2 + (addition || 0)
-        }
-
-        attribute.addition = undefined
-
-        return React.createElement(
-          'div',
-          _extends({ ref: this.ref }, attribute)
-        )
-      }
-    },
-    {
-      key: 'componentDidMount',
-      value: function componentDidMount() {
-        var _this2 = this
-
-        lag().then(function() {
-          var heights = _this2.getBothHeight()
-          return _this2.rafSetState(heights)
-        })
-      }
-    },
-    {
-      key: 'componentDidUpdate',
-      value: function componentDidUpdate() {
-        var _this3 = this
-
-        lag().then(function() {
-          var heights = _this3.getBothHeight()
-          return _this3.isSetState(heights) && _this3.rafSetState(heights)
-        })
-      }
-    },
-    {
-      key: 'isSetState',
-      value: function isSetState(_ref) {
-        var targetHeight = _ref.targetHeight,
-          parentHeight = _ref.parentHeight
-        var state = this.state
-
-        return (
-          targetHeight !== state.targetHeight ||
-          parentHeight !== state.parentHeight
-        )
-      }
-    },
-    {
-      key: 'rafSetState',
-      value: function rafSetState(_ref2) {
-        var _this4 = this
-
-        var targetHeight = _ref2.targetHeight,
-          parentHeight = _ref2.parentHeight
-
-        this.requestId = raf(function() {
-          return _this4.setState({
-            targetHeight: targetHeight,
-            parentHeight: parentHeight
-          })
-        })
-      }
-    },
-    {
-      key: 'componentWillUnmount',
-      value: function componentWillUnmount() {
-        caf(this.requestId)
-      }
-    }
-  ])
-  return Certicall
-})(React.Component)
-
-var assign$1 = Object.assign
-
-var SCROLL_BAR = 17
-var pushBar = function pushBar(value) {
-  return value + SCROLL_BAR
-}
-
-function ref$1(target) {
-  var _ref = target || {},
-    parentNode = _ref.parentNode
-
-  if (parentNode && !this.getParentSize) {
-    this.getParentSize = function() {
-      return {
-        parentWidth: parentNode.offsetWidth,
-        parentHeight: parentNode.offsetHeight
-      }
-    }
-  }
-}
-
-var Secretroll = (function(_Component) {
-  inherits(Secretroll, _Component)
-
-  function Secretroll(props) {
-    classCallCheck(this, Secretroll)
-
-    var _this = possibleConstructorReturn(
-      this,
-      (Secretroll.__proto__ || Object.getPrototypeOf(Secretroll)).call(
-        this,
-        props
-      )
-    )
-
-    _this.ref = ref$1.bind(_this)
-    _this.state = { parentWidth: undefined, parentHeight: undefined }
-    return _this
-  }
-
-  createClass(Secretroll, [
-    {
-      key: 'render',
-      value: function render() {
-        var attribute = assign$1({}, this.props, {
-          style: assign$1({}, this.props.style)
-        })
-        var style = attribute.style
-        var _state = this.state,
-          parentWidth = _state.parentWidth,
-          parentHeight = _state.parentHeight
-
-        if (!isNum(parentWidth) || !isNum(parentHeight)) {
-          style.visibility = 'hidden'
-        } else {
-          var overflow = style.overflow,
-            overflowY = style.overflowY,
-            overflowX = style.overflowX
-
-          if (overflow === 'scroll' || overflowY === 'scroll') {
-            style.width = pushBar(parentWidth)
-          }
-          if (overflow === 'scroll' || overflowX === 'scroll') {
-            style.height = pushBar(parentHeight)
-          }
-        }
-
-        return React.createElement(
-          'div',
-          _extends({ ref: this.ref }, attribute)
-        )
-      }
-    },
-    {
-      key: 'componentDidMount',
-      value: function componentDidMount() {
-        var size = this.getParentSize()
-        return this.rafSetState(size)
-      }
-    },
-    {
-      key: 'componentDidUpdate',
-      value: function componentDidUpdate() {
-        var size = this.getParentSize()
-        return this.isSetState(size) && this.rafSetState(size)
-      }
-    },
-    {
-      key: 'isSetState',
-      value: function isSetState(_ref2) {
-        var parentWidth = _ref2.parentWidth,
-          parentHeight = _ref2.parentHeight
-        var state = this.state
-
-        return (
-          parentWidth !== state.parentWidth ||
-          parentHeight !== state.parentHeight
-        )
-      }
-    },
-    {
-      key: 'rafSetState',
-      value: function rafSetState(_ref3) {
-        var _this2 = this
-
-        var parentWidth = _ref3.parentWidth,
-          parentHeight = _ref3.parentHeight
-
-        this.requestId = raf(function() {
-          return _this2.setState({
-            parentWidth: parentWidth,
-            parentHeight: parentHeight
-          })
-        })
-      }
-    },
-    {
-      key: 'componentWillUnmount',
-      value: function componentWillUnmount() {
-        caf(this.requestId)
-      }
-    }
-  ])
-  return Secretroll
-})(Component)
 
 //
 var Button = (function(a) {
@@ -1817,7 +1559,7 @@ var LonogaraDesktop = (function(_Component) {
         var onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
         var backgroundColor = this.props.colors.preloader
         var opacity = isNum(this.state.index) ? 0 : 1
-        var addition = -60
+        var deduct = 60
         var preloader = jsx$1(this.props.Preloader)
 
         return React.createElement(
@@ -1827,7 +1569,7 @@ var LonogaraDesktop = (function(_Component) {
             backgroundColor: backgroundColor,
             opacity: opacity
           },
-          React.createElement(Certicall, { addition: addition }, preloader)
+          React.createElement(Center, { deduct: deduct }, preloader)
         )
       }
     },
@@ -1852,7 +1594,7 @@ var LonogaraDesktop = (function(_Component) {
         return React.createElement(
           'div',
           a('MIDDLE'),
-          React.createElement(Secretroll, a('MIDDLE_WRAP:EXHIBIT'), exhibit),
+          React.createElement(Scroll, a('MIDDLE_WRAP:EXHIBIT'), exhibit),
           this.state.detail.Component && this.Detail()
         )
       }
@@ -1904,11 +1646,11 @@ var LonogaraDesktop = (function(_Component) {
           DimBoard,
           null,
           React.createElement(
-            Secretroll,
+            Scroll,
             { style: { overflowX: 'scroll' } },
             React.createElement(
-              Certicall,
-              { addition: -24 },
+              Center,
+              { deduct: 24 },
               React.createElement(
                 'div',
                 {
@@ -2945,7 +2687,7 @@ var LonogaraMobile = (function(_Component) {
         var onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
         var backgroundColor = this.props.colors.preloader
         var opacity = isNum(this.state.index) ? 0 : 1
-        var addition = -100
+        var deduct = 100
 
         var preloader = jsx$1(this.props.Preloader)
 
@@ -2956,7 +2698,7 @@ var LonogaraMobile = (function(_Component) {
             backgroundColor: backgroundColor,
             opacity: opacity
           },
-          React.createElement(Certicall, { addition: addition }, preloader)
+          React.createElement(Center, { deduct: deduct }, preloader)
         )
       }
     },

@@ -2,9 +2,9 @@
 import React from 'react'
 import Atra from 'atra'
 import { ShutFromLeft, ShutFromTop } from "react-shut"
-import { Certicall } from '../components/Layouts'
+import Center from 'react-vertical-center'
 
-export { ShutFromLeft, ShutFromTop, Certicall }
+export { ShutFromLeft, ShutFromTop, Center }
 
 export const Button = ((a) =>
 

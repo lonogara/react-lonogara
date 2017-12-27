@@ -12,8 +12,8 @@ import {
 import {
   ShutFromLeft,
   ShutFromTop,
-  Certicall,
-  Secretroll,
+  Center,
+  Scroll,
   Button,
   DimItem,
   DimBoard,
@@ -151,12 +151,12 @@ export default class LonogaraDesktop extends Component {
     const onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
     const backgroundColor = this.props.colors.preloader
     const opacity = isNum(this.state.index) ? 0 : 1
-    const addition = -60
+    const deduct = 60
     const preloader = jsx(this.props.Preloader)
 
     return (
       <Preload {...{ onTransitionEnd, backgroundColor, opacity }}>
-        <Certicall {...{ addition }}>{preloader}</Certicall>
+        <Center {...{ deduct }}>{preloader}</Center>
       </Preload>
     )
   }
@@ -177,7 +177,7 @@ export default class LonogaraDesktop extends Component {
     const exhibit = jsx(this.state.exhibit.Component)
     return (
       <div {...a('MIDDLE')}>
-        <Secretroll {...a('MIDDLE_WRAP:EXHIBIT')}>{exhibit}</Secretroll>
+        <Scroll {...a('MIDDLE_WRAP:EXHIBIT')}>{exhibit}</Scroll>
         {this.state.detail.Component && this.Detail()}
       </div>
     )
@@ -216,13 +216,13 @@ export default class LonogaraDesktop extends Component {
   DimBoard() {
     return (
       <DimBoard>
-        <Secretroll {...{ style: { overflowX: 'scroll' } }}>
-          <Certicall {...{ addition: -24 }}>
+        <Scroll {...{ style: { overflowX: 'scroll' } }}>
+          <Center {...{ deduct: 24 }}>
             <div {...{ style: this.props.sides.length < 5 ? { textAlign: 'center' } : { display: 'flex' } }}>
               {this.DimItems()}
             </div>
-          </Certicall>
-        </Secretroll>
+          </Center>
+        </Scroll>
       </DimBoard>
     )
   }

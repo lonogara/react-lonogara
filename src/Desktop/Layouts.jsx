@@ -2,9 +2,10 @@
 import React from 'react'
 import Atra from 'atra'
 import { ShutFromLeft, ShutFromTop } from 'react-shut'
-import { Certicall, Secretroll } from '../components/Layouts'
+import Center from 'react-vertical-center'
+import Scroll from 'react-stealth-roll'
 
-export { ShutFromLeft, ShutFromTop, Certicall, Secretroll }
+export { ShutFromLeft, ShutFromTop, Center, Scroll }
 
 export const Button = ((a) =>
 

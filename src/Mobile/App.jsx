@@ -14,7 +14,7 @@ import {
 import {
   ShutFromLeft,
   ShutFromTop,
-  Certicall,
+  Center,
   Button,
   Head,
   Preload,
@@ -163,13 +163,13 @@ export default class LonogaraMobile extends Component {
     const onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
     const backgroundColor = this.props.colors.preloader
     const opacity = isNum(this.state.index) ? 0 : 1
-    const addition = -100
+    const deduct = 100
 
     const preloader = jsx(this.props.Preloader)
 
     return (
       <Preload {...{ onTransitionEnd, backgroundColor, opacity }}>
-        <Certicall {...{ addition }}>{preloader}</Certicall>
+        <Center {...{ deduct }}>{preloader}</Center>
       </Preload>
     )
   }

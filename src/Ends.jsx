@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import Atra from 'atra'
-import { isNum } from '../../util.js'
+import { isNum } from './util.js'
 
 export const Listen = (a => {
 
