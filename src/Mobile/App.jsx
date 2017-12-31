@@ -30,7 +30,7 @@ import {
   ArrowWideUp,
   Popdown,
   Burger
-} from './Ends.jsx'
+} from './Soles.jsx'
 
 const HEAD_HEIGHT = 190
 const BUTTON_HEIGHT = 160
@@ -247,6 +247,7 @@ export default class LonogaraMobile extends Component {
 
     return (
       <ShutFromLeft {...{
+        duration: 0.55,
         background,
         notScroll,
         Quit,

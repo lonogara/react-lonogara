@@ -3004,10 +3004,6 @@ react-shut@^1.1.0:
   dependencies:
     atra "^1.1.2"
 
-"react-stealth-roll@https://github.com/kthjm/react-stealth-roll":
-  version "0.0.0"
-  resolved "https://github.com/kthjm/react-stealth-roll#65ab20e19c4504196ab179aa6e3879097deefb45"
-
 react-test-renderer@^16.0.0-0, react-test-renderer@^16.2.0:
   version "16.2.0"
   resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.2.0.tgz#bddf259a6b8fcd8555f012afc8eacc238872a211"

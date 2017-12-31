@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import Atra from 'atra'
-import { Listen, Background, ArrowLeft, ArrowWideUp } from '../Ends.jsx'
+import { Listen, Background, ArrowLeft, ArrowWideUp } from '../Soles.jsx'
 
 export { Listen, Background, ArrowLeft, ArrowWideUp }
 

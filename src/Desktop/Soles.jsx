@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import Atra from 'atra'
-import { Listen, Background, ArrowLeft, ArrowWideUp } from '../Ends.jsx'
+import { Listen, Background, ArrowLeft, ArrowWideUp } from '../Soles.jsx'
 
 export { Listen, Background, ArrowLeft, ArrowWideUp }
 
@@ -81,8 +81,8 @@ export const Strap = ((a) =>
     d: 'm 172.32747,229.01407 c 0,12.33112 -9.99635,22.32747 -22.32747,22.32747 -12.33112,0 -22.32747,-9.99635 -22.32747,-22.32747 0,-12.33112 9.99635,-22.32747 22.32747,-22.32747 12.33112,0 22.32747,9.99635 22.32747,22.32747 z',
     style: {
       fill: '#c30000',
-      stroke: '#780d00',
-      strokeWidth: 12
+      // stroke: '#780d00',
+      // strokeWidth: 12
     }
   }
 }))

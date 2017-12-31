@@ -30,8 +30,10 @@ export const Button = ((a) =>
     style: {
       display: 'inline-block',
       position: 'relative',
-      top: '20%',
-      height: '62%'
+      top: '25%',
+      height: '56%'
+      // top: '20%',
+      // height: '62%'
     }
   },
   INFORM: {
@@ -61,9 +63,11 @@ export const Head = ((a) =>
     children
   }) =>
     <header {...a('ROOT', { style: { height, backgroundColor } })}>
-      <span {...a('WORD', { style: { color, marginTop: height - 105 } })}>
-        {word}
-      </span>
+      <Center deduct={-12}>
+        <span {...a('WORD', { style: { color } })}>
+          {word}
+        </span>
+      </Center>
       <span {...a('BUTTON', { style: { padding: `${(height - 100) / 2}px 25px` } })}>
         {children}
       </span>

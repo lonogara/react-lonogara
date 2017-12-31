@@ -4,7 +4,6 @@ import Orph from 'orph'
 import _regeneratorRuntime from 'babel-runtime/regenerator'
 import { ShutFromLeft, ShutFromTop } from 'react-shut'
 import Center from 'react-vertical-center'
-import Scroll from 'react-stealth-roll'
 
 var _typeof =
   typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol'
@@ -888,9 +887,9 @@ var Button = (function(a) {
         'span',
         a('WRAP'),
         svg,
-        inform > 0 && React.createElement('div', a('INFORM'), inform)
-      ),
-      children
+        inform > 0 && React.createElement('div', a('INFORM'), inform),
+        children
+      )
     )
   }
 })(
@@ -910,7 +909,8 @@ var Button = (function(a) {
         display: 'inline-block',
         position: 'relative',
         top: '34%',
-        height: '44%'
+        height: '44%',
+        cursor: 'pointer'
       }
     },
     INFORM: {
@@ -1052,18 +1052,18 @@ var DimSwitch = (function(createA) {
 
         style.transitionDuration = '0.1s'
         style.transform = 'translateY(0px)'
-      },
-      onMouseUp: function onMouseUp(e) {
-        var style = e.currentTarget.style
 
-        style.transitionDuration = '0.4s'
-        style.transform = 'translateY(' + transform + 'px)'
+        setTimeout(function() {
+          style.transitionDuration = '0.4s'
+          style.transform = 'translateY(' + transform + 'px)'
+        }, 100)
       },
       style: {
         display: 'inline-block',
         height: '100%',
         position: 'relative',
-        transform: 'translateY(' + transform + 'px)'
+        transform: 'translateY(' + transform + 'px)',
+        cursor: 'pointer'
       }
     }
   })
@@ -1115,7 +1115,8 @@ var QuitDetail = (function(a) {
         height: 50,
         position: 'absolute',
         top: 8,
-        right: 8
+        right: 20,
+        cursor: 'pointer'
       }
     }
   })
@@ -1146,7 +1147,8 @@ var QuitPopdown = (function(a) {
       style: {
         position: 'relative',
         width: 200,
-        display: 'inline-block'
+        display: 'inline-block',
+        cursor: 'pointer'
       }
     }
   })
@@ -1358,9 +1360,9 @@ var Strap = (function(a) {
       d:
         'm 172.32747,229.01407 c 0,12.33112 -9.99635,22.32747 -22.32747,22.32747 -12.33112,0 -22.32747,-9.99635 -22.32747,-22.32747 0,-12.33112 9.99635,-22.32747 22.32747,-22.32747 12.33112,0 22.32747,9.99635 22.32747,22.32747 z',
       style: {
-        fill: '#c30000',
-        stroke: '#780d00',
-        strokeWidth: 12
+        fill: '#c30000'
+        // stroke: '#780d00',
+        // strokeWidth: 12
       }
     }
   })
@@ -1594,7 +1596,7 @@ var LonogaraDesktop = (function(_Component) {
         return React.createElement(
           'div',
           a('MIDDLE'),
-          React.createElement(Scroll, a('MIDDLE_WRAP:EXHIBIT'), exhibit),
+          React.createElement('div', a('MIDDLE_WRAP:EXHIBIT'), exhibit),
           this.state.detail.Component && this.Detail()
         )
       }
@@ -1615,8 +1617,8 @@ var LonogaraDesktop = (function(_Component) {
         return React.createElement(
           ShutFromLeft,
           {
-            hiddenBar: true,
             touchRatio: 0,
+            duration: 0.55,
             background: background,
             Quit: Quit,
             onQuitEnd: onQuitEnd,
@@ -1646,8 +1648,8 @@ var LonogaraDesktop = (function(_Component) {
           DimBoard,
           null,
           React.createElement(
-            Scroll,
-            { style: { overflowX: 'scroll' } },
+            'div',
+            a('DIM_WRAP'),
             React.createElement(
               Center,
               { deduct: 24 },
@@ -1786,6 +1788,13 @@ var a = Atra({
     background: 'rgba(17, 17, 17, 0.98)',
     touchRatio: 0,
     notScroll: true
+  },
+  DIM_WRAP: {
+    style: {
+      overflowX: 'scroll',
+      height: '100%',
+      paddingBottom: 17
+    }
   }
 })
 
@@ -2132,8 +2141,10 @@ var Button$1 = (function(a) {
       style: {
         display: 'inline-block',
         position: 'relative',
-        top: '20%',
-        height: '62%'
+        top: '25%',
+        height: '56%'
+        // top: '20%',
+        // height: '62%'
       }
     },
     INFORM: {
@@ -2167,9 +2178,13 @@ var Head = (function(a) {
         style: { height: height, backgroundColor: backgroundColor }
       }),
       React.createElement(
-        'span',
-        a('WORD', { style: { color: color, marginTop: height - 105 } }),
-        word
+        Center,
+        { deduct: -12 },
+        React.createElement(
+          'span',
+          a('WORD', { style: { color: color } }),
+          word
+        )
       ),
       React.createElement(
         'span',
@@ -2810,6 +2825,7 @@ var LonogaraMobile = (function(_Component) {
         return React.createElement(
           ShutFromLeft,
           {
+            duration: 0.55,
             background: background,
             notScroll: notScroll,
             Quit: Quit,

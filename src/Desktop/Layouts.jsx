@@ -3,9 +3,8 @@ import React from 'react'
 import Atra from 'atra'
 import { ShutFromLeft, ShutFromTop } from 'react-shut'
 import Center from 'react-vertical-center'
-import Scroll from 'react-stealth-roll'
 
-export { ShutFromLeft, ShutFromTop, Center, Scroll }
+export { ShutFromLeft, ShutFromTop, Center }
 
 export const Button = ((a) =>
 
@@ -20,8 +19,8 @@ export const Button = ((a) =>
       <span {...a('WRAP')}>
         {svg}
         {inform > 0 && <div {...a('INFORM')}>{inform}</div>}
+        {children}
       </span>
-      {children}
     </div>
 
 )(Atra({
@@ -40,7 +39,8 @@ export const Button = ((a) =>
       display: 'inline-block',
       position: 'relative',
       top: '34%',
-      height: '44%'
+      height: '44%',
+      cursor: 'pointer'
     }
   },
   INFORM: {
@@ -154,19 +154,21 @@ export const DimSwitch = ((createA) => {
   WRAP: {
     onMouseDown: (e) => {
       const { style } = e.currentTarget
+
       style.transitionDuration = '0.1s'
       style.transform = 'translateY(0px)'
-    },
-    onMouseUp: (e) => {
-      const { style } = e.currentTarget
-      style.transitionDuration = '0.4s'
-      style.transform = `translateY(${transform}px)`
+
+      setTimeout(() => {
+        style.transitionDuration = '0.4s'
+        style.transform = `translateY(${transform}px)`
+      }, 100)
     },
     style: {
       display: 'inline-block',
       height: '100%',
       position: 'relative',
-      transform: `translateY(${transform}px)`
+      transform: `translateY(${transform}px)`,
+      cursor: 'pointer'
     }
   }
 }))
@@ -210,7 +212,8 @@ export const QuitDetail = ((a) =>
       height: 50,
       position: "absolute",
       top: 8,
-      right: 8
+      right: 20,
+      cursor: 'pointer'
     }
   }
 }))
@@ -239,7 +242,8 @@ export const QuitPopdown = ((a) =>
     style: {
       position: 'relative',
       width: 200,
-      display: 'inline-block'
+      display: 'inline-block',
+      cursor: 'pointer'
     }
   }
 }))

@@ -13,7 +13,6 @@ import {
   ShutFromLeft,
   ShutFromTop,
   Center,
-  Scroll,
   Button,
   DimItem,
   DimBoard,
@@ -30,7 +29,7 @@ import {
   Popdown,
   // ArrowUp,
   Strap
-} from './Ends.jsx'
+} from './Soles.jsx'
 
 const HEAD_HEIGHT = 90
 const BUTTON_HEIGHT = 110
@@ -177,7 +176,7 @@ export default class LonogaraDesktop extends Component {
     const exhibit = jsx(this.state.exhibit.Component)
     return (
       <div {...a('MIDDLE')}>
-        <Scroll {...a('MIDDLE_WRAP:EXHIBIT')}>{exhibit}</Scroll>
+        <div {...a('MIDDLE_WRAP:EXHIBIT')}>{exhibit}</div>
         {this.state.detail.Component && this.Detail()}
       </div>
     )
@@ -192,8 +191,8 @@ export default class LonogaraDesktop extends Component {
 
     return (
       <ShutFromLeft {...{
-        hiddenBar: true,
         touchRatio: 0,
+        duration: 0.55,
         background,
         Quit,
         onQuitEnd,
@@ -216,13 +215,13 @@ export default class LonogaraDesktop extends Component {
   DimBoard() {
     return (
       <DimBoard>
-        <Scroll {...{ style: { overflowX: 'scroll' } }}>
+        <div {...a('DIM_WRAP')}>
           <Center {...{ deduct: 24 }}>
             <div {...{ style: this.props.sides.length < 5 ? { textAlign: 'center' } : { display: 'flex' } }}>
               {this.DimItems()}
             </div>
           </Center>
-        </Scroll>
+        </div>
       </DimBoard>
     )
   }
@@ -318,6 +317,13 @@ const a = Atra({
     background: 'rgba(17, 17, 17, 0.98)',
     touchRatio: 0,
     notScroll: true
+  },
+  DIM_WRAP: {
+    style: {
+      overflowX: 'scroll',
+      height: '100%',
+      paddingBottom: 17
+    }
   }
 })
 
