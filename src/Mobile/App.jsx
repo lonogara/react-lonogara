@@ -76,35 +76,38 @@ export default class LonogaraMobile extends Component {
     this.sides = this.Sides()
     this.detailQuit = this.DetailQuit()
     this.popdownQuit = this.PopdownQuit()
+    // windowOn("resize", this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
   }
 
-  isReady() {
+  isTreeReady() {
     return isNum(this.state.index) && Boolean(this.props.backgroundStyle)
   }
 
   render() {
     return <div>
-      {this.isReady() && this.Tree()}
+      {this.isTreeReady() && this.Tree()}
       {this.state.popdown.src && this.Popdown()}
       {this.state.preloading && this.Preload()}
     </div>
   }
 
   componentDidMount() {
-    // windowOn("resize", this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
     orph.dispatch('REACT:DID_MOUNT')
   }
 
   Tree() {
     const { drifting } = this.state
+    const { noButtons } = this
+
     const transform = (!drifting || drifting === 'lag') ? `translateX(0px)` : `translateX(${-SIDE_WIDTH}px)`
     const transition = (!drifting || drifting === 'lag') ? '0.6s' : '0.72s'
-    const bottom = this.noButtons ? 0 : BUTTON_HEIGHT
+    const height = winnerHeight() - (noButtons ? 0 : BUTTON_HEIGHT)
+
     const veil = this.Veil()
 
     return (
       <div {...{ style: { backgroundColor: this.props.colors.side } }}>
-        <aside {...a('SIDES', { style: { transform, transition, bottom } })}>
+        <aside {...a('SIDES', { style: { transform, transition, height } })}>
           {this.sides}
         </aside>
         <div {...a('HEAD_AND_MIDDLE', { style: { transform } })}>
@@ -112,7 +115,7 @@ export default class LonogaraMobile extends Component {
           {this.Middle()}
           {veil}
         </div>
-        {!this.noButtons && <nav {...a('BUTTONS')}>
+        {!noButtons && <nav {...a('BUTTONS')}>
           {this.Buttons()}
           {veil}
         </nav>}
@@ -166,7 +169,7 @@ export default class LonogaraMobile extends Component {
   Preload() {
     const onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
     const backgroundColor = this.props.colors.preloader
-    const opacity = this.isReady() ? 0 : 1
+    const opacity = this.isTreeReady() ? 0 : 1
     const deduct = 100
     const preloader = jsx(this.props.Preloader)
 

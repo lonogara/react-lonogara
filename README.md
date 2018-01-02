@@ -1,6 +1,6 @@
-# lonogara
+# 路の柄
 
-[![Build Status]()]()
+<!-- [![Build Status]()]()
 [![Coverage Status]()]()
 
 ## ?catchphrase?
@@ -9,7 +9,7 @@
 
 * **ローカルの形があつまった**
 
-* **view the local.**
+* **view the local.** -->
 
 ## usage
 
@@ -28,45 +28,8 @@ render(
 ## props
 
 ```js
-type Props = {
-  firstIndex: number,
-  colors: {
-    base: string,
-    sub: string,
-    side: string
-  },
-  exhibitBackground: string | [string, { [key: string]: string }],
-  views: Array<View>,
-  sides: Array<Side>
-}
-
-type View = {
-  head: string,
-  Button: ButtonComponent,
-  create: Create
-}
-
-type ButtonComponent = (props: { choised: boolean }) => React$Element
-
-type Create = (options: Create$Opts) => Promise<{ Exhibit, Detail }>
-type Data = any
-type Create$Opts = {
-  renderDetail(Data)
-  setPopdown({ src, vertically })
-  setInform(number)
-}
-type Exhibit = React$Component<>
-type Detail = React$Component<{ data: Data }>
-
-type Side = {
-  href: string,
-  buttonImage: string,
-  coverColor: string,
-  description: string | [string, { [key: string]: string}]
-}
+type Props = {}
 ```
-
-<!-- ## development flow -->
 
 <!-- ## Installation
 ```shell

@@ -896,6 +896,45 @@ add(orph, 'DOM', Object.assign({}, DOM, { DIM_SWITCH: DIM_SWITCH }))
 add(orph, 'PASS', PASS)
 
 //
+var Preload = (function(a) {
+  return function(_ref) {
+    var onTransitionEnd = _ref.onTransitionEnd,
+      backgroundColor = _ref.backgroundColor,
+      opacity = _ref.opacity,
+      children = _ref.children
+    return React__default.createElement(
+      'div',
+      a('ROOT', {
+        onTransitionEnd: onTransitionEnd,
+        style: { backgroundColor: backgroundColor, opacity: opacity }
+      }),
+      React__default.createElement('div', a('RELATIVE'), children)
+    )
+  }
+})(
+  Atra({
+    ROOT: {
+      style: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        transitionDuration: '0.7s',
+        transitionProperty: 'opacity'
+      }
+    },
+    RELATIVE: {
+      style: {
+        position: 'relative',
+        height: '100%',
+        textAlign: 'center'
+      }
+    }
+  })
+)
+
+//
 var Button = (function(a) {
   return function(_ref) {
     var width = _ref.width,
@@ -1012,7 +1051,8 @@ var DimItem = (function(a) {
         display: 'inline-block',
         border: '6px outset rgb(236, 236, 236)',
         borderRadius: '100%',
-        verticalAlign: 'middle'
+        verticalAlign: 'middle',
+        cursor: 'pointer'
       }
     },
     COVER: {
@@ -1094,41 +1134,9 @@ var DimSwitch = (function(createA) {
   })
 })
 
-var Preload = (function(a) {
-  return function(_ref6) {
-    var onTransitionEnd = _ref6.onTransitionEnd,
-      backgroundColor = _ref6.backgroundColor,
-      opacity = _ref6.opacity,
-      children = _ref6.children
-    return React__default.createElement(
-      'div',
-      a('ROOT', {
-        onTransitionEnd: onTransitionEnd,
-        style: { backgroundColor: backgroundColor, opacity: opacity }
-      }),
-      children
-    )
-  }
-})(
-  Atra({
-    ROOT: {
-      style: {
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        textAlign: 'center',
-        transitionDuration: '0.4s',
-        transitionProperty: 'opacity'
-      }
-    }
-  })
-)
-
 var QuitDetail = (function(a) {
-  return function(_ref7) {
-    var children = _ref7.children
+  return function(_ref6) {
+    var children = _ref6.children
     return React__default.createElement('span', a('ROOT'), children)
   }
 })(
@@ -1148,8 +1156,8 @@ var QuitDetail = (function(a) {
 )
 
 var QuitPopdown = (function(a) {
-  return function(_ref8) {
-    var children = _ref8.children
+  return function(_ref7) {
+    var children = _ref7.children
     return React__default.createElement(
       'div',
       a('ROOT'),
@@ -2345,8 +2353,7 @@ var Head = (function(a) {
         right: 0,
         top: 0,
         display: 'inline-block',
-        textAlign: 'center',
-        cursor: 'pointer'
+        textAlign: 'center'
       }
     }
   })
@@ -2421,46 +2428,14 @@ var SideItem = (function(a) {
   })
 )
 
-var Preload$1 = (function(a) {
-  return function(_ref4) {
-    var onTransitionEnd = _ref4.onTransitionEnd,
-      backgroundColor = _ref4.backgroundColor,
-      opacity = _ref4.opacity,
-      children = _ref4.children
-    return React__default.createElement(
-      'div',
-      a('ROOT', {
-        onTransitionEnd: onTransitionEnd,
-        style: { backgroundColor: backgroundColor, opacity: opacity }
-      }),
-      children
-    )
-  }
-})(
-  Atra({
-    ROOT: {
-      style: {
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        textAlign: 'center',
-        transitionDuration: '0.4s',
-        transitionProperty: 'opacity'
-      }
-    }
-  })
-)
-
 var Veil = (function(a) {
   var BLACK = 'rgba(0, 0, 0, 0.8)'
   var TRANS = 'rgba(0, 0, 0, 0)'
 
-  return function(_ref5) {
-    var onTransitionEnd = _ref5.onTransitionEnd,
-      drifting = _ref5.drifting,
-      children = _ref5.children
+  return function(_ref4) {
+    var onTransitionEnd = _ref4.onTransitionEnd,
+      drifting = _ref4.drifting,
+      children = _ref4.children
     return React__default.createElement(
       'div',
       a('VEIL', {
@@ -2489,8 +2464,8 @@ var Veil = (function(a) {
 )
 
 var QuitDetail$1 = (function(a) {
-  return function(_ref6) {
-    var children = _ref6.children
+  return function(_ref5) {
+    var children = _ref5.children
     return React__default.createElement('span', a('ROOT'), children)
   }
 })(
@@ -2509,8 +2484,8 @@ var QuitDetail$1 = (function(a) {
 )
 
 var QuitPopdown$1 = (function(a) {
-  return function(_ref7) {
-    var children = _ref7.children
+  return function(_ref6) {
+    var children = _ref6.children
     return React__default.createElement(
       'div',
       a('ROOT'),
@@ -2690,11 +2665,12 @@ var LonogaraMobile = (function(_Component) {
         this.sides = this.Sides()
         this.detailQuit = this.DetailQuit()
         this.popdownQuit = this.PopdownQuit()
+        // windowOn("resize", this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
       }
     },
     {
-      key: 'isReady',
-      value: function isReady() {
+      key: 'isTreeReady',
+      value: function isTreeReady() {
         return isNum(this.state.index) && Boolean(this.props.backgroundStyle)
       }
     },
@@ -2704,7 +2680,7 @@ var LonogaraMobile = (function(_Component) {
         return React__default.createElement(
           'div',
           null,
-          this.isReady() && this.Tree(),
+          this.isTreeReady() && this.Tree(),
           this.state.popdown.src && this.Popdown(),
           this.state.preloading && this.Preload()
         )
@@ -2713,7 +2689,6 @@ var LonogaraMobile = (function(_Component) {
     {
       key: 'componentDidMount',
       value: function componentDidMount() {
-        // windowOn("resize", this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
         orph$2.dispatch('REACT:DID_MOUNT')
       }
     },
@@ -2721,13 +2696,15 @@ var LonogaraMobile = (function(_Component) {
       key: 'Tree',
       value: function Tree() {
         var drifting = this.state.drifting
+        var noButtons = this.noButtons
 
         var transform =
           !drifting || drifting === 'lag'
             ? 'translateX(0px)'
             : 'translateX(' + -SIDE_WIDTH + 'px)'
         var transition = !drifting || drifting === 'lag' ? '0.6s' : '0.72s'
-        var bottom = this.noButtons ? 0 : BUTTON_HEIGHT$1
+        var height = winnerHeight() - (noButtons ? 0 : BUTTON_HEIGHT$1)
+
         var veil = this.Veil()
 
         return React__default.createElement(
@@ -2739,7 +2716,7 @@ var LonogaraMobile = (function(_Component) {
               style: {
                 transform: transform,
                 transition: transition,
-                bottom: bottom
+                height: height
               }
             }),
             this.sides
@@ -2751,7 +2728,7 @@ var LonogaraMobile = (function(_Component) {
             this.Middle(),
             veil
           ),
-          !this.noButtons &&
+          !noButtons &&
             React__default.createElement(
               'nav',
               a$1('BUTTONS'),
@@ -2844,12 +2821,12 @@ var LonogaraMobile = (function(_Component) {
       value: function Preload$$1() {
         var onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
         var backgroundColor = this.props.colors.preloader
-        var opacity = this.isReady() ? 0 : 1
+        var opacity = this.isTreeReady() ? 0 : 1
         var deduct = 100
         var preloader = jsx$1(this.props.Preloader)
 
         return React__default.createElement(
-          Preload$1,
+          Preload,
           {
             onTransitionEnd: onTransitionEnd,
             backgroundColor: backgroundColor,

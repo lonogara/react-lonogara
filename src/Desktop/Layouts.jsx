@@ -3,8 +3,9 @@ import React from 'react'
 import Atra from 'atra'
 import { ShutFromLeft, ShutFromTop } from 'react-shut'
 import Center from 'react-vertical-center'
+import { Preload } from '../Layouts.jsx'
 
-export { ShutFromLeft, ShutFromTop, Center }
+export { ShutFromLeft, ShutFromTop, Center, Preload }
 
 export const Button = ((a) =>
 
@@ -98,7 +99,8 @@ export const DimItem = ((a) =>
       display: 'inline-block',
       border: '6px outset rgb(236, 236, 236)',
       borderRadius: '100%',
-      verticalAlign: 'middle'
+      verticalAlign: 'middle',
+      cursor: 'pointer'
     }
   },
   COVER: {
@@ -169,33 +171,6 @@ export const DimSwitch = ((createA) => {
       position: 'relative',
       transform: `translateY(${transform}px)`,
       cursor: 'pointer'
-    }
-  }
-}))
-
-export const Preload = ((a) =>
-
-  ({
-    onTransitionEnd,
-    backgroundColor,
-    opacity,
-    children
-  }) =>
-    <div {...a('ROOT', { onTransitionEnd, style: { backgroundColor, opacity } })}>
-      {children}
-    </div>
-
-)(Atra({
-  ROOT: {
-    style: {
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      textAlign: 'center',
-      transitionDuration: '0.4s',
-      transitionProperty: 'opacity'
     }
   }
 }))
