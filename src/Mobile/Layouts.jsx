@@ -95,7 +95,8 @@ export const Head = ((a) =>
       right: 0,
       top: 0,
       display: 'inline-block',
-      textAlign: 'center'
+      textAlign: 'center',
+      cursor: 'pointer'
     }
   }
 }))

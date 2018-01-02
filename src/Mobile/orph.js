@@ -1,7 +1,7 @@
 // @flow
 import Orph from 'orph'
 import {
-  WINDOW,
+  // WINDOW,
   REACT,
   DOM,
   PASS,
@@ -9,6 +9,9 @@ import {
   STORE,
   add
 } from '../orph'
+
+// const RESIZE_FORCE_UPDATE = (e, util) => e.preventDefault()
+// no meaning
 
 const sideScrollDOM = () => document.getElementById('sideScrollElement')
 
@@ -22,7 +25,8 @@ const DRIFTING_OFF = [{ states: ['drifting'] }, (n, { state, render }): void =>
 const orph = new Orph()
 add(orph, 'STORE', STORE)
 add(orph, 'RENDER', Object.assign({}, RENDER, { DRIFTING_ON, DRIFTING_LAG, DRIFTING_OFF }))
-add(orph, 'WINDOW', WINDOW)
+// add(orph, 'WINDOW', WINDOW)
+// add(orph, 'WINDOW', { RESIZE_FORCE_UPDATE })
 add(orph, 'REACT', REACT)
 add(orph, 'DOM', DOM)
 add(orph, 'PASS', PASS)

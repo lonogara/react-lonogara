@@ -1,7 +1,7 @@
 // @flow
 import Orph from 'orph'
 import {
-  WINDOW,
+  // WINDOW,
   REACT,
   DOM,
   PASS,
@@ -9,6 +9,8 @@ import {
   STORE,
   add
 } from '../orph'
+
+const RESIZE_FORCE_UPDATE = (e, { update }) => update()
 
 const DIMMING_ON = [{ states: ['dimming'] }, (n, { render }): void => render({ dimming: true })]
 const DIMMING_OFF = [{ states: ['dimming'] }, (n, { render }): void => render({ dimming: false })]
@@ -27,7 +29,8 @@ const DIM_SWITCH = [
 const orph = new Orph()
 add(orph, 'STORE', STORE)
 add(orph, 'RENDER', Object.assign({}, RENDER, { DIMMING_ON, DIMMING_OFF }))
-add(orph, 'WINDOW', WINDOW)
+// add(orph, 'WINDOW', WINDOW)
+add(orph, 'WINDOW', { RESIZE_FORCE_UPDATE })
 add(orph, 'REACT', REACT)
 add(orph, 'DOM', Object.assign({}, DOM, { DIM_SWITCH }))
 add(orph, 'PASS', PASS)

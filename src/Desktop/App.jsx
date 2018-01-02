@@ -67,15 +67,18 @@ export default class LonogaraDesktop extends Component {
 
     this.noButtons = this.props.views.length < 2
 
-    this.layout = this.Layout()
     this.detailQuit = this.DetailQuit()
     this.popdownQuit = this.PopdownQuit()
   }
 
+  isReady() {
+    return isNum(this.state.index) && Boolean(this.props.backgroundStyle)
+  }
+
   render() {
     return <div>
-      {this.layout}
-      {isNum(this.state.index) && this.Tree()}
+      {this.Layout()}
+      {this.isReady() && this.Tree()}
       {this.state.popdown.src && this.Popdown()}
       {this.state.preloading && this.Preload()}
     </div>
@@ -124,7 +127,7 @@ export default class LonogaraDesktop extends Component {
           right: 0
         }
       }}>
-        <Background {...{ style: this.props.backgroundStyle }} />
+        <Background {...{ style: this.props.backgroundStyle || {} }} />
         <Background {...{ style: { backgroundColor: this.props.colors.background } }} />
       </div>
     )
@@ -149,7 +152,7 @@ export default class LonogaraDesktop extends Component {
   Preload() {
     const onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
     const backgroundColor = this.props.colors.preloader
-    const opacity = isNum(this.state.index) ? 0 : 1
+    const opacity = this.isReady() ? 0 : 1
     const deduct = 60
     const preloader = jsx(this.props.Preloader)
 

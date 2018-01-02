@@ -1,6 +1,7 @@
 // @flow
 import App from './App.jsx'
-import _guardian, { HoColors, Guardian } from '../guardian'
+// import _guardian, { HoColors, Guardian } from '../guardian'
+import _guardian, { HoColors, createGuardian } from '../guardian'
 
 const guardian = _guardian()
 
@@ -13,4 +14,4 @@ guardian.colors = HoColors(() => ({
   detailQuit: 'rgb(66, 62, 89)'
 }))
 
-export default Guardian({ App, guardian })
+export default createGuardian({ App, guardian })

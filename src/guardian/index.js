@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import React, { Component } from 'react'
 import background from './Background.js'
 import sides from './Sides.js'
 import views from './Views.js'
@@ -8,11 +8,14 @@ import {
   isStr,
   isNum,
   isFnc,
-  typerror
+  typerror,
+  createBlobURL,
+  raf
 } from '../util.js'
 
 const firstIndex = ({ firstIndex }) => (isNum(firstIndex) ? firstIndex : 0)
 const preloader = ({ Preloader }) => isFnc(Preloader) && Preloader
+
 export default () => ({ firstIndex, background, preloader, sides, views })
 
 export const HoColors = (Colors) => ({ colors }) => {
@@ -34,35 +37,81 @@ export const HoColors = (Colors) => ({ colors }) => {
   return result
 }
 
-export const Guardian = ({ App, guardian }) => props => {
-  const firstIndex = guardian.firstIndex(props)
-  const colors = guardian.colors(props)
-  const { backgroundURL, backgroundStyle } = guardian.background(props)
-  const Preloader = guardian.preloader(props)
-  const sides = guardian.sides(props)
-  const views = guardian.views(props)
+export const createGuardian = ({ App, guardian }) =>
+  class Guardian extends Component {
+    constructor(props) {
 
-  return (
-    <div>
-      {backgroundURL && <link rel="prefetch" href={backgroundURL} />}
-      <style type="text/css">{`
-        body {
-          margin: 0px;
-          overflow: hidden;
-          font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;
-        }
-        .lonogara_button svg {
-          height: 100%;
-        }
-      `}</style>
-      <App {...{
+      super(props)
+
+      this.results = {}
+      this.results.firstIndex = guardian.firstIndex(props)
+      this.results.colors = guardian.colors(props)
+      this.results.Preloader = guardian.preloader(props)
+      this.results.sides = guardian.sides(props)
+      this.results.views = guardian.views(props)
+
+      const { backgroundURL, backgroundStyle } = guardian.background(props)
+      const fetchTarget = (backgroundURL && !backgroundURL.includes('http')) ? backgroundURL : undefined
+      
+      this.state = { fetchTarget }
+      this.results.backgroundStyle = backgroundStyle
+
+      if(!fetchTarget && backgroundURL) {
+        this.results.backgroundStyle.backgroundImage = `url(${backgroundURL})`
+      }
+    }
+
+    render() {
+      const {
         firstIndex,
         colors,
-        backgroundStyle,
         Preloader,
         sides,
-        views
-      }} />
-    </div>
-  )
-}
+        views,
+        backgroundStyle
+      } = this.results
+
+      return (
+        <div>
+
+          <style type="text/css">{`
+            body {
+              margin: 0px;
+              overflow: hidden;
+              font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;
+            }
+            .lonogara_button svg {
+              height: 100%;
+            }
+          `}</style>
+
+          <App {...{
+            backgroundStyle: !this.state.fetchTarget && backgroundStyle,
+            firstIndex,
+            colors,
+            Preloader,
+            sides,
+            views
+          }} />
+
+        </div>
+      )
+    }
+
+    componentDidMount() {
+      const { fetchTarget } = this.state
+
+      if(fetchTarget){
+        fetch(fetchTarget)
+        .then((res) => res.ok && res.blob())
+        .then((blob) => blob && createBlobURL(blob))
+        .then((url) => {
+          if(url) {
+            this.results.backgroundStyle.backgroundImage = `url(${url})`
+          }
+          raf(() => this.setState({ fetchTarget: undefined }))
+        })
+      }
+    }
+
+  }

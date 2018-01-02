@@ -293,9 +293,16 @@ var winnerWidth = function winnerWidth() {
 var winnerHeight = function winnerHeight() {
   return window.innerHeight
 }
+var raf = function raf(callback) {
+  return window.requestAnimationFrame(callback)
+}
 
 var windowOn = function windowOn(type, fn, opts) {
   return window.addEventListener(type, fn, opts)
+}
+
+var createBlobURL = function createBlobURL(blob) {
+  return window.URL.createObjectURL(blob)
 }
 
 var jsx$1 = function jsx$$1(Component$$1, props) {
@@ -482,20 +489,17 @@ var RENDER = Object.freeze({
 var _this = undefined
 
 //
-var WINDOW = {
-  RESIZE_FORCE_UPDATE: function RESIZE_FORCE_UPDATE(n, _ref) {
-    var update = _ref.update
-    return update()
-  }
-}
+// const WINDOW = {
+//   RESIZE_FORCE_UPDATE: (n, { update }) => update()
+// }
 
 var REACT = {
   DID_MOUNT: [
     {
       dispatches: ['REACT:DID_MOUNT_FIRST', 'REACT:DID_MOUNT_SECOND']
     },
-    function(n, _ref2) {
-      var dispatch = _ref2.dispatch
+    function(n, _ref) {
+      var dispatch = _ref.dispatch
 
       dispatch('REACT:DID_MOUNT_FIRST').then(function() {
         return dispatch('REACT:DID_MOUNT_SECOND')
@@ -514,18 +518,18 @@ var REACT = {
         'STORE:SET_DATA'
       ]
     },
-    function(n, _ref3) {
-      var props = _ref3.props,
-        dispatch = _ref3.dispatch
+    function(n, _ref2) {
+      var props = _ref2.props,
+        dispatch = _ref2.dispatch
       return Promise.all(
         props().views.map(
           (function() {
-            var _ref4 = asyncToGenerator(
+            var _ref3 = asyncToGenerator(
               /*#__PURE__*/ _regeneratorRuntime.mark(function _callee(
-                _ref5,
+                _ref4,
                 index
               ) {
-                var create = _ref5.create
+                var create = _ref4.create
                 var renderDetail, setPopdown, setInform, Components
                 return _regeneratorRuntime.wrap(
                   function _callee$(_context) {
@@ -613,7 +617,7 @@ var REACT = {
             )
 
             return function(_x, _x2) {
-              return _ref4.apply(this, arguments)
+              return _ref3.apply(this, arguments)
             }
           })()
         )
@@ -626,12 +630,12 @@ var REACT = {
       dispatches: ['STORE:GET_COMPONENT', 'RENDER:BY_REACT_DIDMOUNT']
     },
     (function() {
-      var _ref6 = asyncToGenerator(
-        /*#__PURE__*/ _regeneratorRuntime.mark(function _callee2(n, _ref7) {
-          var props = _ref7.props,
-            dispatch = _ref7.dispatch
+      var _ref5 = asyncToGenerator(
+        /*#__PURE__*/ _regeneratorRuntime.mark(function _callee2(n, _ref6) {
+          var props = _ref6.props,
+            dispatch = _ref6.dispatch
 
-          var index, componentName, _ref8, Component$$1
+          var index, componentName, _ref7, Component$$1
 
           return _regeneratorRuntime.wrap(
             function _callee2$(_context2) {
@@ -647,8 +651,8 @@ var REACT = {
                     })
 
                   case 4:
-                    _ref8 = _context2.sent
-                    Component$$1 = _ref8.Component
+                    _ref7 = _context2.sent
+                    Component$$1 = _ref7.Component
 
                     dispatch('RENDER:BY_REACT_DIDMOUNT', {
                       index: index,
@@ -668,7 +672,7 @@ var REACT = {
       )
 
       return function(_x3, _x4) {
-        return _ref6.apply(this, arguments)
+        return _ref5.apply(this, arguments)
       }
     })()
   ]
@@ -679,9 +683,9 @@ var PASS = {
     {
       dispatches: ['STORE:SET_DATA', 'STORE:GET_COMPONENT', 'RENDER:DETAIL_ON']
     },
-    function(data, _ref9) {
-      var state = _ref9.state,
-        dispatch = _ref9.dispatch
+    function(data, _ref8) {
+      var state = _ref8.state,
+        dispatch = _ref8.dispatch
 
       var _state = state(),
         index = _state.index
@@ -708,8 +712,8 @@ var PASS = {
     {
       dispatches: ['RENDER:POPDOWN_ON']
     },
-    function(arg, _ref10) {
-      var dispatch = _ref10.dispatch
+    function(arg, _ref9) {
+      var dispatch = _ref9.dispatch
 
       if (isObj(arg) && arg.src) {
         dispatch('RENDER:POPDOWN_ON', arg)
@@ -721,8 +725,8 @@ var PASS = {
     {
       dispatches: ['RENDER:INFORM_CHANGE']
     },
-    function(arg, _ref11) {
-      var dispatch = _ref11.dispatch
+    function(arg, _ref10) {
+      var dispatch = _ref10.dispatch
 
       var inform = +arg.inform
       if (inform || inform === 0) {
@@ -744,10 +748,10 @@ var DOM = {
       ]
     },
     (function() {
-      var _ref12 = asyncToGenerator(
-        /*#__PURE__*/ _regeneratorRuntime.mark(function _callee3(e, _ref13) {
-          var state = _ref13.state,
-            dispatch = _ref13.dispatch
+      var _ref11 = asyncToGenerator(
+        /*#__PURE__*/ _regeneratorRuntime.mark(function _callee3(e, _ref12) {
+          var state = _ref12.state,
+            dispatch = _ref12.dispatch
           var nowIndex, nextIndex, index, exhibits, details
           return _regeneratorRuntime.wrap(
             function _callee3$(_context3) {
@@ -816,7 +820,7 @@ var DOM = {
       )
 
       return function(_x5, _x6) {
-        return _ref12.apply(this, arguments)
+        return _ref11.apply(this, arguments)
       }
     })()
   ],
@@ -825,9 +829,9 @@ var DOM = {
     {
       dispatches: ['STORE:SET_DATA', 'RENDER:DETAIL_OFF']
     },
-    function(n, _ref14) {
-      var state = _ref14.state,
-        dispatch = _ref14.dispatch
+    function(n, _ref13) {
+      var state = _ref13.state,
+        dispatch = _ref13.dispatch
 
       dispatch('STORE:SET_DATA', {
         index: state().index,
@@ -838,29 +842,38 @@ var DOM = {
       })
     }
   ]
+
+  // export { WINDOW, REACT, PASS, DOM }
 }
 
+// import { WINDOW, REACT, PASS, DOM } from './INTERFACE.js'
+
 //
+var RESIZE_FORCE_UPDATE = function RESIZE_FORCE_UPDATE(e, _ref) {
+  var update = _ref.update
+  return update()
+}
+
 var DIMMING_ON = [
   { states: ['dimming'] },
-  function(n, _ref) {
-    var render = _ref.render
+  function(n, _ref2) {
+    var render = _ref2.render
     return render({ dimming: true })
   }
 ]
 var DIMMING_OFF = [
   { states: ['dimming'] },
-  function(n, _ref2) {
-    var render = _ref2.render
+  function(n, _ref3) {
+    var render = _ref3.render
     return render({ dimming: false })
   }
 ]
 
 var DIM_SWITCH = [
   { dispatches: ['RENDER:DIMMING_ON', 'RENDER:DIMMING_OFF'] },
-  function(e, _ref3) {
-    var state = _ref3.state,
-      dispatch = _ref3.dispatch
+  function(e, _ref4) {
+    var state = _ref4.state,
+      dispatch = _ref4.dispatch
 
     dispatch(!state().dimming ? 'RENDER:DIMMING_ON' : 'RENDER:DIMMING_OFF')
   }
@@ -876,7 +889,8 @@ add(
     DIMMING_OFF: DIMMING_OFF
   })
 )
-add(orph, 'WINDOW', WINDOW)
+// add(orph, 'WINDOW', WINDOW)
+add(orph, 'WINDOW', { RESIZE_FORCE_UPDATE: RESIZE_FORCE_UPDATE })
 add(orph, 'REACT', REACT)
 add(orph, 'DOM', Object.assign({}, DOM, { DIM_SWITCH: DIM_SWITCH }))
 add(orph, 'PASS', PASS)
@@ -1455,9 +1469,14 @@ var LonogaraDesktop = (function(_Component) {
 
         this.noButtons = this.props.views.length < 2
 
-        this.layout = this.Layout()
         this.detailQuit = this.DetailQuit()
         this.popdownQuit = this.PopdownQuit()
+      }
+    },
+    {
+      key: 'isReady',
+      value: function isReady() {
+        return isNum(this.state.index) && Boolean(this.props.backgroundStyle)
       }
     },
     {
@@ -1466,8 +1485,8 @@ var LonogaraDesktop = (function(_Component) {
         return React__default.createElement(
           'div',
           null,
-          this.layout,
-          isNum(this.state.index) && this.Tree(),
+          this.Layout(),
+          this.isReady() && this.Tree(),
           this.state.popdown.src && this.Popdown(),
           this.state.preloading && this.Preload()
         )
@@ -1538,7 +1557,7 @@ var LonogaraDesktop = (function(_Component) {
             }
           },
           React__default.createElement(Background, {
-            style: this.props.backgroundStyle
+            style: this.props.backgroundStyle || {}
           }),
           React__default.createElement(Background, {
             style: { backgroundColor: this.props.colors.background }
@@ -1589,7 +1608,7 @@ var LonogaraDesktop = (function(_Component) {
       value: function Preload$$1() {
         var onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
         var backgroundColor = this.props.colors.preloader
-        var opacity = isNum(this.state.index) ? 0 : 1
+        var opacity = this.isReady() ? 0 : 1
         var deduct = 60
         var preloader = jsx$1(this.props.Preloader)
 
@@ -1849,7 +1868,6 @@ var background = function(_ref) {
       var url = background
 
       result.backgroundURL = url
-      result.backgroundStyle.backgroundImage = 'url(' + url + ')'
     } else if (isArr(background)) {
       var _background = slicedToArray(background, 2),
         _url = _background[0],
@@ -1870,7 +1888,6 @@ var background = function(_ref) {
 
         result.backgroundStyle[key] = value
       })
-      result.backgroundStyle.backgroundImage = 'url(' + _url + ')'
     } else {
       typerror('')
     }
@@ -2006,6 +2023,7 @@ var preloader = function preloader(_ref2) {
   var Preloader = _ref2.Preloader
   return isFnc(Preloader) && Preloader
 }
+
 var _guardian = function() {
   return {
     firstIndex: firstIndex,
@@ -2043,47 +2061,114 @@ var HoColors = function HoColors(Colors) {
   }
 }
 
-var Guardian = function Guardian(_ref4) {
+var createGuardian = function createGuardian(_ref4) {
   var App = _ref4.App,
     guardian = _ref4.guardian
-  return function(props) {
-    var firstIndex = guardian.firstIndex(props)
-    var colors = guardian.colors(props)
+  return (function(_Component) {
+    inherits(Guardian, _Component)
 
-    var _guardian$background = guardian.background(props),
-      backgroundURL = _guardian$background.backgroundURL,
-      backgroundStyle = _guardian$background.backgroundStyle
+    function Guardian(props) {
+      classCallCheck(this, Guardian)
 
-    var Preloader = guardian.preloader(props)
-    var sides$$1 = guardian.sides(props)
-    var views = guardian.views(props)
+      var _this = possibleConstructorReturn(
+        this,
+        (Guardian.__proto__ || Object.getPrototypeOf(Guardian)).call(
+          this,
+          props
+        )
+      )
 
-    return React__default.createElement(
-      'div',
-      null,
-      backgroundURL &&
-        React__default.createElement('link', {
-          rel: 'prefetch',
-          href: backgroundURL
-        }),
-      React__default.createElement(
-        'style',
-        { type: 'text/css' },
-        '\n        body {\n          margin: 0px;\n          overflow: hidden;\n          font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;\n        }\n        .lonogara_button svg {\n          height: 100%;\n        }\n      '
-      ),
-      React__default.createElement(App, {
-        firstIndex: firstIndex,
-        colors: colors,
-        backgroundStyle: backgroundStyle,
-        Preloader: Preloader,
-        sides: sides$$1,
-        views: views
-      })
-    )
-  }
+      _this.results = {}
+      _this.results.firstIndex = guardian.firstIndex(props)
+      _this.results.colors = guardian.colors(props)
+      _this.results.Preloader = guardian.preloader(props)
+      _this.results.sides = guardian.sides(props)
+      _this.results.views = guardian.views(props)
+
+      var _guardian$background = guardian.background(props),
+        backgroundURL = _guardian$background.backgroundURL,
+        backgroundStyle = _guardian$background.backgroundStyle
+
+      var fetchTarget =
+        backgroundURL && !backgroundURL.includes('http')
+          ? backgroundURL
+          : undefined
+
+      _this.state = { fetchTarget: fetchTarget }
+      _this.results.backgroundStyle = backgroundStyle
+
+      if (!fetchTarget && backgroundURL) {
+        _this.results.backgroundStyle.backgroundImage =
+          'url(' + backgroundURL + ')'
+      }
+      return _this
+    }
+
+    createClass(Guardian, [
+      {
+        key: 'render',
+        value: function render() {
+          var _results = this.results,
+            firstIndex = _results.firstIndex,
+            colors = _results.colors,
+            Preloader = _results.Preloader,
+            sides$$1 = _results.sides,
+            views = _results.views,
+            backgroundStyle = _results.backgroundStyle
+
+          return React__default.createElement(
+            'div',
+            null,
+            React__default.createElement(
+              'style',
+              { type: 'text/css' },
+              '\n            body {\n              margin: 0px;\n              overflow: hidden;\n              font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;\n            }\n            .lonogara_button svg {\n              height: 100%;\n            }\n          '
+            ),
+            React__default.createElement(App, {
+              backgroundStyle: !this.state.fetchTarget && backgroundStyle,
+              firstIndex: firstIndex,
+              colors: colors,
+              Preloader: Preloader,
+              sides: sides$$1,
+              views: views
+            })
+          )
+        }
+      },
+      {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+          var _this2 = this
+
+          var fetchTarget = this.state.fetchTarget
+
+          if (fetchTarget) {
+            fetch(fetchTarget)
+              .then(function(res) {
+                return res.ok && res.blob()
+              })
+              .then(function(blob) {
+                return blob && createBlobURL(blob)
+              })
+              .then(function(url) {
+                if (url) {
+                  _this2.results.backgroundStyle.backgroundImage =
+                    'url(' + url + ')'
+                }
+                raf(function() {
+                  return _this2.setState({ fetchTarget: undefined })
+                })
+              })
+          }
+        }
+      }
+    ])
+    return Guardian
+  })(React.Component)
 }
 
 //
+// import _guardian, { HoColors, Guardian } from '../guardian'
 var guardian = _guardian()
 
 guardian.colors = HoColors(function() {
@@ -2097,9 +2182,12 @@ guardian.colors = HoColors(function() {
   }
 })
 
-var index = Guardian({ App: LonogaraDesktop, guardian: guardian })
+var index = createGuardian({ App: LonogaraDesktop, guardian: guardian })
 
 //
+// const RESIZE_FORCE_UPDATE = (e, util) => e.preventDefault()
+// no meaning
+
 var sideScrollDOM = function sideScrollDOM() {
   return document.getElementById('sideScrollElement')
 }
@@ -2143,7 +2231,8 @@ add(
     DRIFTING_OFF: DRIFTING_OFF
   })
 )
-add(orph$2, 'WINDOW', WINDOW)
+// add(orph, 'WINDOW', WINDOW)
+// add(orph, 'WINDOW', { RESIZE_FORCE_UPDATE })
 add(orph$2, 'REACT', REACT)
 add(orph$2, 'DOM', DOM)
 add(orph$2, 'PASS', PASS)
@@ -2256,7 +2345,8 @@ var Head = (function(a) {
         right: 0,
         top: 0,
         display: 'inline-block',
-        textAlign: 'center'
+        textAlign: 'center',
+        cursor: 'pointer'
       }
     }
   })
@@ -2525,10 +2615,10 @@ var Burger = (function(a) {
 var HEAD_HEIGHT$1 = 190
 var BUTTON_HEIGHT$1 = 160
 var SIDE_WIDTH = 370
-var TouchStart = function TouchStart(props) {
+var TouchStartCapture = function TouchStartCapture(props) {
   return React__default.createElement(
     Listen,
-    Object.assign({ type: 'onTouchStart' }, props)
+    Object.assign({ type: 'onTouchStartCapture' }, props)
   )
 }
 var TouchEnd = function TouchEnd(props) {
@@ -2544,7 +2634,7 @@ var TouchEndCapture = function TouchEndCapture(props) {
   )
 }
 var listeners$1 = [
-  'WINDOW:RESIZE_FORCE_UPDATE',
+  // 'WINDOW:RESIZE_FORCE_UPDATE',
   'RENDER:PRELOADING_OFF',
   'DOM:VIEW_SWITCH',
   'DOM:DETAIL_OFF',
@@ -2603,12 +2693,18 @@ var LonogaraMobile = (function(_Component) {
       }
     },
     {
+      key: 'isReady',
+      value: function isReady() {
+        return isNum(this.state.index) && Boolean(this.props.backgroundStyle)
+      }
+    },
+    {
       key: 'render',
       value: function render() {
         return React__default.createElement(
           'div',
           null,
-          isNum(this.state.index) && this.Tree(),
+          this.isReady() && this.Tree(),
           this.state.popdown.src && this.Popdown(),
           this.state.preloading && this.Preload()
         )
@@ -2617,7 +2713,7 @@ var LonogaraMobile = (function(_Component) {
     {
       key: 'componentDidMount',
       value: function componentDidMount() {
-        windowOn('resize', this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
+        // windowOn("resize", this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
         orph$2.dispatch('REACT:DID_MOUNT')
       }
     },
@@ -2638,6 +2734,17 @@ var LonogaraMobile = (function(_Component) {
           'div',
           { style: { backgroundColor: this.props.colors.side } },
           React__default.createElement(
+            'aside',
+            a$1('SIDES', {
+              style: {
+                transform: transform,
+                transition: transition,
+                bottom: bottom
+              }
+            }),
+            this.sides
+          ),
+          React__default.createElement(
             'div',
             a$1('HEAD_AND_MIDDLE', { style: { transform: transform } }),
             this.Head(),
@@ -2650,18 +2757,7 @@ var LonogaraMobile = (function(_Component) {
               a$1('BUTTONS'),
               this.Buttons(),
               veil
-            ),
-          React__default.createElement(
-            'aside',
-            a$1('SIDES', {
-              style: {
-                transform: transform,
-                transition: transition,
-                bottom: bottom
-              }
-            }),
-            this.sides
-          )
+            )
         )
       }
 
@@ -2748,9 +2844,8 @@ var LonogaraMobile = (function(_Component) {
       value: function Preload$$1() {
         var onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
         var backgroundColor = this.props.colors.preloader
-        var opacity = isNum(this.state.index) ? 0 : 1
+        var opacity = this.isReady() ? 0 : 1
         var deduct = 100
-
         var preloader = jsx$1(this.props.Preloader)
 
         return React__default.createElement(
@@ -2906,9 +3001,12 @@ var LonogaraMobile = (function(_Component) {
                 })
               }
             ),
-            React__default.createElement(TouchStart, {
-              listener: _this4.listeners['DOM:VIEW_SWITCH'],
-              'data-index': index
+            React__default.createElement(TouchStartCapture, {
+              'data-index': index,
+              listener: function listener(e) {
+                e.stopPropagation()
+                _this4.listeners['DOM:VIEW_SWITCH'](e)
+              }
             })
           )
         })
@@ -2950,7 +3048,8 @@ var a$1 = Atra({
     mountWithShut: true,
     background: 'rgba(17, 17, 17, 0.98)',
     touchRatio: 0,
-    notScroll: true
+    notScroll: true,
+    duration: 0.5
   },
   BUTTONS: {
     style: {
@@ -2979,6 +3078,7 @@ var a$1 = Atra({
 })
 
 //
+// import _guardian, { HoColors, Guardian } from '../guardian'
 var guardian$1 = _guardian()
 
 guardian$1.colors = HoColors(function() {
@@ -2993,7 +3093,7 @@ guardian$1.colors = HoColors(function() {
   }
 })
 
-var index$1 = Guardian({ App: LonogaraMobile, guardian: guardian$1 })
+var index$1 = createGuardian({ App: LonogaraMobile, guardian: guardian$1 })
 
 exports.Desktop = index
 exports.Mobile = index$1

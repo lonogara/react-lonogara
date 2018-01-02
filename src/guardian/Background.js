@@ -12,7 +12,6 @@ export default ({ background }) => {
       const url = background
 
       result.backgroundURL = url
-      result.backgroundStyle.backgroundImage = `url(${url})`
     } else if (isArr(background)) {
       const [url, style] = background
 
@@ -27,7 +26,6 @@ export default ({ background }) => {
       Object.entries(style).forEach(([key, value]) => {
         result.backgroundStyle[key] = value
       })
-      result.backgroundStyle.backgroundImage = `url(${url})`
     } else {
       typerror(``)
     }

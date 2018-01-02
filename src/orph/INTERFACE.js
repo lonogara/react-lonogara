@@ -2,9 +2,9 @@
 import { isObj } from '../util.js'
 import { exhibitScrollDOM } from './util.js'
 
-const WINDOW = {
-  RESIZE_FORCE_UPDATE: (n, { update }) => update()
-}
+// const WINDOW = {
+//   RESIZE_FORCE_UPDATE: (n, { update }) => update()
+// }
 
 const REACT = {
 
@@ -175,7 +175,7 @@ const DOM = {
 
     // RENDER
     dispatch('RENDER:BY_DOM_VIEW_SWITCH', { index, exhibits, details })
-    
+
   }],
 
   DETAIL_OFF: [{
@@ -194,4 +194,5 @@ const DOM = {
 
 }
 
-export { WINDOW, REACT, PASS, DOM }
+// export { WINDOW, REACT, PASS, DOM }
+export { REACT, PASS, DOM }

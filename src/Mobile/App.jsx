@@ -35,11 +35,11 @@ import {
 const HEAD_HEIGHT = 190
 const BUTTON_HEIGHT = 160
 const SIDE_WIDTH = 370
-const TouchStart = (props) => <Listen {...Object.assign({ type: 'onTouchStart' }, props)} />
+const TouchStartCapture = (props) => <Listen {...Object.assign({ type: 'onTouchStartCapture' }, props)} />
 const TouchEnd = (props) => <Listen {...Object.assign({ type: 'onTouchEnd' }, props)} />
 const TouchEndCapture = (props) => <Listen {...Object.assign({ type: 'onTouchEndCapture' }, props)} />
 const listeners = [
-  'WINDOW:RESIZE_FORCE_UPDATE',
+  // 'WINDOW:RESIZE_FORCE_UPDATE',
   'RENDER:PRELOADING_OFF',
   'DOM:VIEW_SWITCH',
   'DOM:DETAIL_OFF',
@@ -78,16 +78,20 @@ export default class LonogaraMobile extends Component {
     this.popdownQuit = this.PopdownQuit()
   }
 
+  isReady() {
+    return isNum(this.state.index) && Boolean(this.props.backgroundStyle)
+  }
+
   render() {
     return <div>
-      {isNum(this.state.index) && this.Tree()}
+      {this.isReady() && this.Tree()}
       {this.state.popdown.src && this.Popdown()}
       {this.state.preloading && this.Preload()}
     </div>
   }
 
   componentDidMount() {
-    windowOn("resize", this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
+    // windowOn("resize", this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
     orph.dispatch('REACT:DID_MOUNT')
   }
 
@@ -100,6 +104,9 @@ export default class LonogaraMobile extends Component {
 
     return (
       <div {...{ style: { backgroundColor: this.props.colors.side } }}>
+        <aside {...a('SIDES', { style: { transform, transition, bottom } })}>
+          {this.sides}
+        </aside>
         <div {...a('HEAD_AND_MIDDLE', { style: { transform } })}>
           {this.Head()}
           {this.Middle()}
@@ -109,9 +116,6 @@ export default class LonogaraMobile extends Component {
           {this.Buttons()}
           {veil}
         </nav>}
-        <aside {...a('SIDES', { style: { transform, transition, bottom } })}>
-          {this.sides}
-        </aside>
       </div>
     )
   }
@@ -162,9 +166,8 @@ export default class LonogaraMobile extends Component {
   Preload() {
     const onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
     const backgroundColor = this.props.colors.preloader
-    const opacity = isNum(this.state.index) ? 0 : 1
+    const opacity = this.isReady() ? 0 : 1
     const deduct = 100
-
     const preloader = jsx(this.props.Preloader)
 
     return (
@@ -269,7 +272,13 @@ export default class LonogaraMobile extends Component {
         inform: this.state.informs[index],
         svg: jsx(view.Button, { mainColor, subColor, choised: index === this.state.index })
       }}>
-        <TouchStart listener={this.listeners['DOM:VIEW_SWITCH']} data-index={index} />
+        <TouchStartCapture
+          data-index={index}
+          listener={(e) => {
+            e.stopPropagation()
+            this.listeners['DOM:VIEW_SWITCH'](e)
+          }}
+        />
       </Button>
     )
   }
@@ -307,7 +316,8 @@ const a = Atra({
     mountWithShut: true,
     background: 'rgba(17, 17, 17, 0.98)',
     touchRatio: 0,
-    notScroll: true
+    notScroll: true,
+    duration: 0.5
   },
   'BUTTONS': {
     style: {
