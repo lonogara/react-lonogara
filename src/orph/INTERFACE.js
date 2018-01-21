@@ -38,7 +38,7 @@ const DOM = (extension = {}) => [assign(extension, {
           key: 'exhibitScrollTop',
           value: getElementById(EXHIBIT_SCROLL_ID).scrollTop
         }),
-        state('detail').props && dispatch('STORE:SET_DATA', {
+        state('detail', true).props && dispatch('STORE:SET_DATA', {
           index: nowIndex,
           key: 'detailScrollTop',
           value: detailScrollElement().scrollTop

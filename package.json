@@ -1,6 +1,6 @@
 {
   "name": "lonogara",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "main": "dist/cjs.js",
   "jsnext:main": "dist/es.js",

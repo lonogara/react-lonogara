@@ -1406,7 +1406,7 @@ var DOM = function DOM() {
               key: 'exhibitScrollTop',
               value: getElementById(EXHIBIT_SCROLL_ID).scrollTop
             }),
-            state('detail').props &&
+            state('detail', true).props &&
               dispatch('STORE:SET_DATA', {
                 index: nowIndex,
                 key: 'detailScrollTop',
