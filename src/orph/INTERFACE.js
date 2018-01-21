@@ -1,198 +1,127 @@
 // @flow
-import { isObj } from '../util.js'
-import { exhibitScrollDOM } from './util.js'
+import {
+  isObj,
+  EXHIBIT_SCROLL_ID,
+  DETAIL_SCROLL_ID,
+  getElementById,
+  extractDetailScrollElement
+} from '../util.js'
 
-// const WINDOW = {
-//   RESIZE_FORCE_UPDATE: (n, { update }) => update()
-// }
+const { assign } = Object
+const detailScrollElement = () => extractDetailScrollElement(getElementById(DETAIL_SCROLL_ID))
 
-const REACT = {
+const REACT = (extension = {}) => [assign(extension, {
 
-  DID_MOUNT: [{
-    dispatches: [
-      'REACT:DID_MOUNT_FIRST',
-      'REACT:DID_MOUNT_SECOND'
-    ]
-  },
-  (n, { dispatch }): void => {
-    dispatch('REACT:DID_MOUNT_FIRST').then(() =>
-      dispatch('REACT:DID_MOUNT_SECOND')
-    )
-  }],
+  DID_MOUNT: (n, { props, dispatch }): void => {
+    dispatch('RENDER:BY_REACT_DIDMOUNT', props('firstIndex'))
+  }
 
-  DID_MOUNT_FIRST: [{
-    dispatches: [
-      'STORE:INIT',
-      'PASS:DETAIL_ON',
-      'PASS:POPDOWN_ON',
-      'PASS:INFORM_ON',
-      'STORE:SET_COMPONENT',
-      'STORE:SET_DATA'
-    ]
-  },
-  (n, { props, dispatch }): Promise<Array<void>> =>
-    Promise.all(props().views.map(
-      async ({ create }, index) => {
+}),{
+  prefix: 'REACT:',
+  use: {
+    props: true,
+    dispatch: true
+  }
+}]
 
-        await dispatch('STORE:INIT', index)
+const DOM = (extension = {}) => [assign(extension, {
 
-        const renderDetail = data => dispatch('PASS:DETAIL_ON', data)
-        const setPopdown = src => dispatch('PASS:POPDOWN_ON', src)
-        const setInform = inform => dispatch('PASS:INFORM_ON', { index, inform })
+  VIEW_SWITCH: (e, { state, dispatch }): void => {
 
-        const Components = await create({ renderDetail, setPopdown, setInform }) || {}
+    const nowIndex = state('index')
+    const index = +e.target.dataset.index
 
-        // Exhibit
-        await dispatch('STORE:SET_COMPONENT', {
+    if (nowIndex !== index) {
+      Promise.all([
+        dispatch('STORE:SET_DATA', {
+          index: nowIndex,
+          key: 'exhibitScrollTop',
+          value: getElementById(EXHIBIT_SCROLL_ID).scrollTop
+        }),
+        state('detail').props && dispatch('STORE:SET_DATA', {
+          index: nowIndex,
+          key: 'detailScrollTop',
+          value: detailScrollElement().scrollTop
+        })
+      ])
+      .then(() => dispatch('STORE:GET_DATA', { index, key: 'detailProps' }))
+      .then((detailProps) =>
+        dispatch('RENDER:BY_DOM_VIEW_SWITCH', {
           index,
-          componentName: 'Exhibit',
-          Component: Components['Exhibit']
-        }).then(() =>
-          dispatch('STORE:SET_DATA', {
-            index,
-            dataName: 'exhibitScrollTop',
-            value: 0
-          }))
+          detailProps,
+          renderCallback: async () => {
+            getElementById(EXHIBIT_SCROLL_ID).scrollTop = await dispatch(
+              'STORE:GET_DATA',
+              { index, key: 'exhibitScrollTop' }
+            )
 
-        // Detail
-        await dispatch('STORE:SET_COMPONENT', {
-          index,
-          componentName: 'Detail',
-          Component: Components['Detail']
-        }).then(() =>
-          dispatch('STORE:SET_DATA', {
-            index,
-            dataName: 'detailProps',
-            value: false
-          }))
-
-        return
-      }
-    ))
-  ],
-
-  DID_MOUNT_SECOND: [{
-    dispatches: [
-      'STORE:GET_COMPONENT',
-      'RENDER:BY_REACT_DIDMOUNT'
-    ]
+            if (detailProps) {
+              detailScrollElement().scrollTop = await dispatch(
+                'STORE:GET_DATA',
+                { index, key: 'detailScrollTop' }
+              )
+            }
+          }
+        })
+      )
+    }
   },
-  async (n, { props, dispatch }): Promise<void> => {
-    const index = props().firstIndex
 
-    const componentName = 'Exhibit'
-    const { Component } = await dispatch('STORE:GET_COMPONENT', { index, componentName })
-    dispatch('RENDER:BY_REACT_DIDMOUNT', { index, Component })
-  }]
-}
+  DETAIL_OFF: (n, { state, dispatch }): void => {
+    const index = state('index')
 
-const PASS = {
+    Promise.all([
+      dispatch(
+        'STORE:SET_DATA',
+        { index, key: 'detailScrollTop', value: 0 }
+      ),
+      dispatch(
+        'STORE:SET_DATA',
+        { index, key: 'detailProps', value: undefined }
+      )
+    ])
+    .then(() => dispatch('RENDER:DETAIL_OFF'))
+  }
 
-  DETAIL_ON: [{
-    dispatches: [
+}),{
+  prefix: 'DOM:',
+  use: {
+    state: true,
+    dispatch: true
+  }
+}]
+
+const PASSED = (extension = {}) => [assign(extension, {
+
+  DETAIL_ON: (data, { state, dispatch }): void => {
+    const props = { data }
+    dispatch(
       'STORE:SET_DATA',
-      'STORE:GET_COMPONENT',
-      'RENDER:DETAIL_ON'
-    ]
-  },
-  (data, { state, dispatch }): void => {
-    const { index } = state()
-
-    dispatch('STORE:SET_DATA', {
-      index,
-      dataName: 'detailProps',
-      value: { data }
-    })
-    .then(() =>
-      dispatch('STORE:GET_COMPONENT', {
-        index,
-        componentName: 'Detail',
-        dataName: 'detailProps'
-      })
+      { index: state('index'), key: 'detailProps', value: props }
     )
-    .then(details => dispatch('RENDER:DETAIL_ON', details))
-
-  }],
-
-  POPDOWN_ON: [{
-    dispatches: ['RENDER:POPDOWN_ON']
+    .then(() => dispatch('RENDER:DETAIL_ON', props))
   },
-  (arg, { dispatch }): void => {
+
+  POPDOWN_ON: (arg, { dispatch }): void => {
     if (isObj(arg) && arg.src) {
       dispatch('RENDER:POPDOWN_ON', arg)
     }
-  }],
-
-  INFORM_ON: [{
-    dispatches: ['RENDER:INFORM_CHANGE']
   },
-  (arg, { dispatch }): void => {
+
+  INFORM_ON: (arg, { dispatch }): void => {
     const inform = +arg.inform
     if(inform || inform === 0){
       const { index } = arg
       dispatch(`RENDER:INFORM_CHANGE`, { index, inform })
     }
-  }]
-}
+  }
 
-const DOM = {
+}),{
+  prefix: 'PASSED:',
+  use: {
+    state: true,
+    dispatch: true
+  }
+}]
 
-  VIEW_SWITCH: [{
-    dispatches: [
-      'STORE:SET_DATA',
-      'STORE:GET_COMPONENT',
-      'RENDER:BY_DOM_VIEW_SWITCH'
-    ]
-  },
-  async (e, { state, dispatch }): void => {
-    const nowIndex = state().index
-    const nextIndex = +e.target.dataset.index
-
-    if (nowIndex === nextIndex) return
-
-    // SET NOW SCROLLTOP STORE
-    await dispatch('STORE:SET_DATA', {
-      index: nowIndex,
-      dataName: 'exhibitScrollTop',
-      value: exhibitScrollDOM().scrollTop
-    })
-
-    const index = nextIndex
-
-    // GET exhibits
-    const exhibits = await dispatch('STORE:GET_COMPONENT', {
-      index,
-      componentName: 'Exhibit',
-      dataName: 'exhibitScrollTop'
-    })
-
-    // GET details
-    const details = await dispatch('STORE:GET_COMPONENT', {
-      index,
-      componentName: 'Detail',
-      dataName: 'detailProps'
-    })
-
-    // RENDER
-    dispatch('RENDER:BY_DOM_VIEW_SWITCH', { index, exhibits, details })
-
-  }],
-
-  DETAIL_OFF: [{
-    dispatches: [
-      'STORE:SET_DATA',
-      'RENDER:DETAIL_OFF'
-    ]
-  },
-  (n, { state, dispatch }): void => {
-    dispatch('STORE:SET_DATA', {
-      index: state().index,
-      dataName: 'detailProps',
-      value: false
-    }).then(() => dispatch('RENDER:DETAIL_OFF'))
-  }]
-
-}
-
-// export { WINDOW, REACT, PASS, DOM }
-export { REACT, PASS, DOM }
+export { REACT, DOM, PASSED }

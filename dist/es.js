@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import Atra from 'atra'
+import { ShutFromLeft, ShutFromTop } from 'react-shut'
+import Center from 'react-centpn'
 import Orph from 'orph'
 import _regeneratorRuntime from 'babel-runtime/regenerator'
-import { ShutFromLeft, ShutFromTop } from 'react-shut'
-import Center from 'react-vertical-center'
 
 var _typeof =
   typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol'
@@ -169,91 +169,28 @@ var slicedToArray = (function() {
   }
 })()
 
-//
+var toConsumableArray = function(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++)
+      arr2[i] = arr[i]
 
-var views = new Map()
-
-var View = (function() {
-  function View() {
-    classCallCheck(this, View)
-
-    this.components = {}
-    this.data = {}
+    return arr2
+  } else {
+    return Array.from(arr)
   }
-
-  createClass(View, [
-    {
-      key: 'setComponent',
-      value: function setComponent(_ref) {
-        var componentName = _ref.componentName,
-          Component$$1 = _ref.Component
-
-        this.components[componentName] = Component$$1
-      }
-    },
-    {
-      key: 'setData',
-      value: function setData(_ref2) {
-        var dataName = _ref2.dataName,
-          value = _ref2.value
-
-        this.data[dataName] = value
-      }
-    },
-    {
-      key: 'getComponent',
-      value: function getComponent(_ref3) {
-        var componentName = _ref3.componentName,
-          dataName = _ref3.dataName
-
-        var Component$$1 = this.components[componentName]
-        var data = this.data[dataName]
-        return { Component: Component$$1, data: data }
-      }
-    }
-  ])
-  return View
-})()
-
-var INIT = function INIT(index) {
-  return views.set(index, new View())
 }
-
-var SET_COMPONENT = function SET_COMPONENT(_ref4) {
-  var index = _ref4.index,
-    componentName = _ref4.componentName,
-    Component$$1 = _ref4.Component
-  return views
-    .get(index)
-    .setComponent({ componentName: componentName, Component: Component$$1 })
-}
-
-var SET_DATA = function SET_DATA(_ref5) {
-  var index = _ref5.index,
-    dataName = _ref5.dataName,
-    value = _ref5.value
-  return views.get(index).setData({ dataName: dataName, value: value })
-}
-
-var GET_COMPONENT = function GET_COMPONENT(_ref6) {
-  var index = _ref6.index,
-    componentName = _ref6.componentName,
-    dataName = _ref6.dataName
-
-  var view = views.get(index)
-  return view
-    ? view.getComponent({ componentName: componentName, dataName: dataName })
-    : {}
-}
-
-var STORE = Object.freeze({
-  INIT: INIT,
-  SET_COMPONENT: SET_COMPONENT,
-  SET_DATA: SET_DATA,
-  GET_COMPONENT: GET_COMPONENT
-})
 
 //
+var EXHIBIT_SCROLL_ID = 'exhibitScrollElement'
+var DETAIL_SCROLL_ID = 'detailScrollParent'
+var MOBILE_SIDE_SCROLL_ID = 'sideScrollElement'
+var getElementById = function getElementById(id) {
+  return document.getElementById(id)
+}
+var extractDetailScrollElement = function extractDetailScrollElement(el) {
+  return el.children[0].children[0].children[0]
+}
+
 var isArr = Array.isArray
 var isObj = function isObj(target) {
   return (
@@ -313,576 +250,6 @@ var createClickA = function createClickA(href) {
     )
   }
 }
-
-//
-var exhibitScrollDOM = function exhibitScrollDOM() {
-  return document.getElementById('exhibitScrollElement')
-}
-
-var add = function add(orph, prefix, imports) {
-  return Object.entries(imports)
-    .filter(function(_ref) {
-      var _ref2 = slicedToArray(_ref, 1),
-        name = _ref2[0]
-
-      return name !== 'default'
-    })
-    .forEach(function(_ref3) {
-      var _ref4 = slicedToArray(_ref3, 2),
-        name = _ref4[0],
-        value = _ref4[1]
-
-      var addedName = prefix + ':' + name
-
-      var listener = void 0,
-        states = void 0,
-        dispatches = void 0
-
-      if (isArr(value)) {
-        var _value = slicedToArray(value, 2),
-          opts = _value[0],
-          fn = _value[1]
-
-        listener = fn
-        states = opts.states || []
-        dispatches = opts.dispatches || []
-      } else {
-        listener = value
-        states = []
-        dispatches = []
-      }
-
-      orph.add(addedName, listener, { states: states, dispatches: dispatches })
-    })
-}
-
-//
-var PRELOADING_OFF = [
-  { states: ['preloading'] },
-  function(n, _ref) {
-    var render = _ref.render
-    return render({ preloading: false })
-  }
-]
-
-var POPDOWN_ON = [
-  { states: ['popdown'] },
-  function(_ref2, _ref3) {
-    var src = _ref2.src,
-      vertically = _ref2.vertically
-    var render = _ref3.render
-    return render({ popdown: { src: src, vertically: vertically } })
-  }
-]
-
-var POPDOWN_OFF = [
-  { states: ['popdown'] },
-  function(n, _ref4) {
-    var render = _ref4.render
-    return render({ popdown: {} })
-  }
-]
-
-var DETAIL_ON = [
-  { states: ['detail'] },
-  function(_ref5, _ref6) {
-    var Component$$1 = _ref5.Component,
-      data = _ref5.data
-    var render = _ref6.render
-    return render({
-      detail: {
-        Component: Component$$1,
-        props: data,
-        mountWithShut: true
-      }
-    })
-  }
-]
-
-var DETAIL_OFF = [
-  { states: ['detail'] },
-  function(n, _ref7) {
-    var render = _ref7.render
-    return render({ detail: {} })
-  }
-]
-
-var BY_REACT_DIDMOUNT = [
-  { states: ['index', 'exhibit'] },
-  function(_ref8, _ref9) {
-    var index = _ref8.index,
-      Component$$1 = _ref8.Component
-    var render = _ref9.render
-    return render({
-      index: index,
-      exhibit: {
-        Component: Component$$1
-      }
-    })
-  }
-]
-
-var BY_DOM_VIEW_SWITCH = [
-  { states: ['index', 'exhibit', 'detail'] },
-  function(_ref10, _ref11) {
-    var index = _ref10.index,
-      exhibits = _ref10.exhibits,
-      details = _ref10.details
-    var render = _ref11.render
-
-    var exhibit = {
-      Component: exhibits.Component
-    }
-
-    var detail = !details.data
-      ? {}
-      : {
-          Component: details.Component,
-          props: details.data,
-          mountWithShut: false
-        }
-
-    render({ index: index, exhibit: exhibit, detail: detail }, function() {
-      exhibitScrollDOM().scrollTop = exhibits.data
-    })
-  }
-]
-
-var INFORM_CHANGE = [
-  { states: ['informs'] },
-  function(_ref12, _ref13) {
-    var index = _ref12.index,
-      inform = _ref12.inform
-    var state = _ref13.state,
-      render = _ref13.render
-
-    var _state = state(),
-      informs = _state.informs
-
-    informs[index] = inform
-    render({ informs: informs })
-  }
-]
-
-var RENDER = Object.freeze({
-  PRELOADING_OFF: PRELOADING_OFF,
-  POPDOWN_ON: POPDOWN_ON,
-  POPDOWN_OFF: POPDOWN_OFF,
-  DETAIL_ON: DETAIL_ON,
-  DETAIL_OFF: DETAIL_OFF,
-  BY_REACT_DIDMOUNT: BY_REACT_DIDMOUNT,
-  BY_DOM_VIEW_SWITCH: BY_DOM_VIEW_SWITCH,
-  INFORM_CHANGE: INFORM_CHANGE
-})
-
-var _this = undefined
-
-//
-// const WINDOW = {
-//   RESIZE_FORCE_UPDATE: (n, { update }) => update()
-// }
-
-var REACT = {
-  DID_MOUNT: [
-    {
-      dispatches: ['REACT:DID_MOUNT_FIRST', 'REACT:DID_MOUNT_SECOND']
-    },
-    function(n, _ref) {
-      var dispatch = _ref.dispatch
-
-      dispatch('REACT:DID_MOUNT_FIRST').then(function() {
-        return dispatch('REACT:DID_MOUNT_SECOND')
-      })
-    }
-  ],
-
-  DID_MOUNT_FIRST: [
-    {
-      dispatches: [
-        'STORE:INIT',
-        'PASS:DETAIL_ON',
-        'PASS:POPDOWN_ON',
-        'PASS:INFORM_ON',
-        'STORE:SET_COMPONENT',
-        'STORE:SET_DATA'
-      ]
-    },
-    function(n, _ref2) {
-      var props = _ref2.props,
-        dispatch = _ref2.dispatch
-      return Promise.all(
-        props().views.map(
-          (function() {
-            var _ref3 = asyncToGenerator(
-              /*#__PURE__*/ _regeneratorRuntime.mark(function _callee(
-                _ref4,
-                index
-              ) {
-                var create = _ref4.create
-                var renderDetail, setPopdown, setInform, Components
-                return _regeneratorRuntime.wrap(
-                  function _callee$(_context) {
-                    while (1) {
-                      switch ((_context.prev = _context.next)) {
-                        case 0:
-                          _context.next = 2
-                          return dispatch('STORE:INIT', index)
-
-                        case 2:
-                          renderDetail = function renderDetail(data) {
-                            return dispatch('PASS:DETAIL_ON', data)
-                          }
-
-                          setPopdown = function setPopdown(src) {
-                            return dispatch('PASS:POPDOWN_ON', src)
-                          }
-
-                          setInform = function setInform(inform) {
-                            return dispatch('PASS:INFORM_ON', {
-                              index: index,
-                              inform: inform
-                            })
-                          }
-
-                          _context.next = 7
-                          return create({
-                            renderDetail: renderDetail,
-                            setPopdown: setPopdown,
-                            setInform: setInform
-                          })
-
-                        case 7:
-                          _context.t0 = _context.sent
-
-                          if (_context.t0) {
-                            _context.next = 10
-                            break
-                          }
-
-                          _context.t0 = {}
-
-                        case 10:
-                          Components = _context.t0
-                          _context.next = 13
-                          return dispatch('STORE:SET_COMPONENT', {
-                            index: index,
-                            componentName: 'Exhibit',
-                            Component: Components['Exhibit']
-                          }).then(function() {
-                            return dispatch('STORE:SET_DATA', {
-                              index: index,
-                              dataName: 'exhibitScrollTop',
-                              value: 0
-                            })
-                          })
-
-                        case 13:
-                          _context.next = 15
-                          return dispatch('STORE:SET_COMPONENT', {
-                            index: index,
-                            componentName: 'Detail',
-                            Component: Components['Detail']
-                          }).then(function() {
-                            return dispatch('STORE:SET_DATA', {
-                              index: index,
-                              dataName: 'detailProps',
-                              value: false
-                            })
-                          })
-
-                        case 15:
-                          return _context.abrupt('return')
-
-                        case 16:
-                        case 'end':
-                          return _context.stop()
-                      }
-                    }
-                  },
-                  _callee,
-                  _this
-                )
-              })
-            )
-
-            return function(_x, _x2) {
-              return _ref3.apply(this, arguments)
-            }
-          })()
-        )
-      )
-    }
-  ],
-
-  DID_MOUNT_SECOND: [
-    {
-      dispatches: ['STORE:GET_COMPONENT', 'RENDER:BY_REACT_DIDMOUNT']
-    },
-    (function() {
-      var _ref5 = asyncToGenerator(
-        /*#__PURE__*/ _regeneratorRuntime.mark(function _callee2(n, _ref6) {
-          var props = _ref6.props,
-            dispatch = _ref6.dispatch
-
-          var index, componentName, _ref7, Component$$1
-
-          return _regeneratorRuntime.wrap(
-            function _callee2$(_context2) {
-              while (1) {
-                switch ((_context2.prev = _context2.next)) {
-                  case 0:
-                    index = props().firstIndex
-                    componentName = 'Exhibit'
-                    _context2.next = 4
-                    return dispatch('STORE:GET_COMPONENT', {
-                      index: index,
-                      componentName: componentName
-                    })
-
-                  case 4:
-                    _ref7 = _context2.sent
-                    Component$$1 = _ref7.Component
-
-                    dispatch('RENDER:BY_REACT_DIDMOUNT', {
-                      index: index,
-                      Component: Component$$1
-                    })
-
-                  case 7:
-                  case 'end':
-                    return _context2.stop()
-                }
-              }
-            },
-            _callee2,
-            _this
-          )
-        })
-      )
-
-      return function(_x3, _x4) {
-        return _ref5.apply(this, arguments)
-      }
-    })()
-  ]
-}
-
-var PASS = {
-  DETAIL_ON: [
-    {
-      dispatches: ['STORE:SET_DATA', 'STORE:GET_COMPONENT', 'RENDER:DETAIL_ON']
-    },
-    function(data, _ref8) {
-      var state = _ref8.state,
-        dispatch = _ref8.dispatch
-
-      var _state = state(),
-        index = _state.index
-
-      dispatch('STORE:SET_DATA', {
-        index: index,
-        dataName: 'detailProps',
-        value: { data: data }
-      })
-        .then(function() {
-          return dispatch('STORE:GET_COMPONENT', {
-            index: index,
-            componentName: 'Detail',
-            dataName: 'detailProps'
-          })
-        })
-        .then(function(details) {
-          return dispatch('RENDER:DETAIL_ON', details)
-        })
-    }
-  ],
-
-  POPDOWN_ON: [
-    {
-      dispatches: ['RENDER:POPDOWN_ON']
-    },
-    function(arg, _ref9) {
-      var dispatch = _ref9.dispatch
-
-      if (isObj(arg) && arg.src) {
-        dispatch('RENDER:POPDOWN_ON', arg)
-      }
-    }
-  ],
-
-  INFORM_ON: [
-    {
-      dispatches: ['RENDER:INFORM_CHANGE']
-    },
-    function(arg, _ref10) {
-      var dispatch = _ref10.dispatch
-
-      var inform = +arg.inform
-      if (inform || inform === 0) {
-        var index = arg.index
-
-        dispatch('RENDER:INFORM_CHANGE', { index: index, inform: inform })
-      }
-    }
-  ]
-}
-
-var DOM = {
-  VIEW_SWITCH: [
-    {
-      dispatches: [
-        'STORE:SET_DATA',
-        'STORE:GET_COMPONENT',
-        'RENDER:BY_DOM_VIEW_SWITCH'
-      ]
-    },
-    (function() {
-      var _ref11 = asyncToGenerator(
-        /*#__PURE__*/ _regeneratorRuntime.mark(function _callee3(e, _ref12) {
-          var state = _ref12.state,
-            dispatch = _ref12.dispatch
-          var nowIndex, nextIndex, index, exhibits, details
-          return _regeneratorRuntime.wrap(
-            function _callee3$(_context3) {
-              while (1) {
-                switch ((_context3.prev = _context3.next)) {
-                  case 0:
-                    nowIndex = state().index
-                    nextIndex = +e.target.dataset.index
-
-                    if (!(nowIndex === nextIndex)) {
-                      _context3.next = 4
-                      break
-                    }
-
-                    return _context3.abrupt('return')
-
-                  case 4:
-                    _context3.next = 6
-                    return dispatch('STORE:SET_DATA', {
-                      index: nowIndex,
-                      dataName: 'exhibitScrollTop',
-                      value: exhibitScrollDOM().scrollTop
-                    })
-
-                  case 6:
-                    index = nextIndex
-
-                    // GET exhibits
-
-                    _context3.next = 9
-                    return dispatch('STORE:GET_COMPONENT', {
-                      index: index,
-                      componentName: 'Exhibit',
-                      dataName: 'exhibitScrollTop'
-                    })
-
-                  case 9:
-                    exhibits = _context3.sent
-                    _context3.next = 12
-                    return dispatch('STORE:GET_COMPONENT', {
-                      index: index,
-                      componentName: 'Detail',
-                      dataName: 'detailProps'
-                    })
-
-                  case 12:
-                    details = _context3.sent
-
-                    // RENDER
-                    dispatch('RENDER:BY_DOM_VIEW_SWITCH', {
-                      index: index,
-                      exhibits: exhibits,
-                      details: details
-                    })
-
-                  case 14:
-                  case 'end':
-                    return _context3.stop()
-                }
-              }
-            },
-            _callee3,
-            _this
-          )
-        })
-      )
-
-      return function(_x5, _x6) {
-        return _ref11.apply(this, arguments)
-      }
-    })()
-  ],
-
-  DETAIL_OFF: [
-    {
-      dispatches: ['STORE:SET_DATA', 'RENDER:DETAIL_OFF']
-    },
-    function(n, _ref13) {
-      var state = _ref13.state,
-        dispatch = _ref13.dispatch
-
-      dispatch('STORE:SET_DATA', {
-        index: state().index,
-        dataName: 'detailProps',
-        value: false
-      }).then(function() {
-        return dispatch('RENDER:DETAIL_OFF')
-      })
-    }
-  ]
-
-  // export { WINDOW, REACT, PASS, DOM }
-}
-
-// import { WINDOW, REACT, PASS, DOM } from './INTERFACE.js'
-
-//
-var RESIZE_FORCE_UPDATE = function RESIZE_FORCE_UPDATE(e, _ref) {
-  var update = _ref.update
-  return update()
-}
-
-var DIMMING_ON = [
-  { states: ['dimming'] },
-  function(n, _ref2) {
-    var render = _ref2.render
-    return render({ dimming: true })
-  }
-]
-var DIMMING_OFF = [
-  { states: ['dimming'] },
-  function(n, _ref3) {
-    var render = _ref3.render
-    return render({ dimming: false })
-  }
-]
-
-var DIM_SWITCH = [
-  { dispatches: ['RENDER:DIMMING_ON', 'RENDER:DIMMING_OFF'] },
-  function(e, _ref4) {
-    var state = _ref4.state,
-      dispatch = _ref4.dispatch
-
-    dispatch(!state().dimming ? 'RENDER:DIMMING_ON' : 'RENDER:DIMMING_OFF')
-  }
-]
-
-var orph = new Orph()
-add(orph, 'STORE', STORE)
-add(
-  orph,
-  'RENDER',
-  Object.assign({}, RENDER, {
-    DIMMING_ON: DIMMING_ON,
-    DIMMING_OFF: DIMMING_OFF
-  })
-)
-// add(orph, 'WINDOW', WINDOW)
-add(orph, 'WINDOW', { RESIZE_FORCE_UPDATE: RESIZE_FORCE_UPDATE })
-add(orph, 'REACT', REACT)
-add(orph, 'DOM', Object.assign({}, DOM, { DIM_SWITCH: DIM_SWITCH }))
-add(orph, 'PASS', PASS)
 
 //
 var Preload = (function(a) {
@@ -1406,14 +773,6 @@ var MouseUp = function MouseUp(props) {
     Object.assign({ type: 'onMouseUp' }, props)
   )
 }
-var listeners = [
-  'WINDOW:RESIZE_FORCE_UPDATE',
-  'RENDER:PRELOADING_OFF',
-  'DOM:DETAIL_OFF',
-  'DOM:VIEW_SWITCH',
-  'DOM:DIM_SWITCH',
-  'RENDER:POPDOWN_OFF'
-]
 
 var LonogaraDesktop = (function(_Component) {
   inherits(LonogaraDesktop, _Component)
@@ -1428,52 +787,40 @@ var LonogaraDesktop = (function(_Component) {
       ).call(this, props)
     )
 
-    _this.state = {
-      preloading: true,
-      dimming: false,
-      index: undefined,
-      exhibit: {},
-      detail: {},
-      popdown: {},
-      informs: [0, 0, 0, 0]
-    }
+    props.orph.attach(_this)
+    _this.listeners = props.orph.order([
+      'WINDOW:RESIZE_FORCE_UPDATE',
+      'RENDER:PRELOADING_OFF',
+      'DOM:DETAIL_OFF',
+      'DOM:VIEW_SWITCH',
+      'DOM:DIM_SWITCH',
+      'RENDER:POPDOWN_OFF'
+    ])
+
+    _this.noButtons = props.views.length < 2
+    _this.detailQuit = _this.DetailQuit()
+    _this.popdownQuit = _this.PopdownQuit()
     return _this
   }
 
   createClass(LonogaraDesktop, [
     {
-      key: 'componentWillMount',
-      value: function componentWillMount() {
-        var _this2 = this
-
-        orph.attach(this)
-        this.listeners = {}
-        listeners.forEach(function(NAME) {
-          _this2.listeners[NAME] = orph.create(NAME)
-        })
-
-        this.noButtons = this.props.views.length < 2
-
-        this.detailQuit = this.DetailQuit()
-        this.popdownQuit = this.PopdownQuit()
-      }
-    },
-    {
       key: 'isReady',
       value: function isReady() {
-        return isNum(this.state.index) && Boolean(this.props.backgroundStyle)
+        return Boolean(this.props.views) && Boolean(this.props.backgroundStyle)
       }
     },
     {
       key: 'render',
       value: function render() {
+        var isReady = this.isReady()
         return React.createElement(
-          'div',
+          Fragment,
           null,
           this.Layout(),
-          this.isReady() && this.Tree(),
+          isReady && this.Tree(),
           this.state.popdown.src && this.Popdown(),
-          this.state.preloading && this.Preload()
+          this.state.preloading && this.Preload(isReady ? 0 : 1)
         )
       }
     },
@@ -1481,7 +828,7 @@ var LonogaraDesktop = (function(_Component) {
       key: 'componentDidMount',
       value: function componentDidMount() {
         windowOn('resize', this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
-        orph.dispatch('REACT:DID_MOUNT')
+        this.props.orph.dispatch('REACT:DID_MOUNT')
       }
     },
     {
@@ -1491,12 +838,11 @@ var LonogaraDesktop = (function(_Component) {
         var base = this.props.colors.base
         var dimming = this.state.dimming
 
-        var mainHeight =
+        var height =
           winnerHeight() -
           HEAD_HEIGHT -
           (noButtons ? 80 : BUTTON_HEIGHT) -
           BOTTOM_MARGIN
-
         return React.createElement(
           'div',
           a('ROOT'),
@@ -1511,7 +857,7 @@ var LonogaraDesktop = (function(_Component) {
           ),
           React.createElement(
             'div',
-            a('MAIN', { style: { height: mainHeight, borderColor: base } }),
+            a('MAIN', { style: { height: height, borderColor: base } }),
             this.Middle(),
             this.DimSwitch(),
             dimming && this.DimBoard()
@@ -1524,8 +870,6 @@ var LonogaraDesktop = (function(_Component) {
             )
         )
       }
-
-      /*-----------------------  -----------------------*/
     },
     {
       key: 'Layout',
@@ -1553,7 +897,7 @@ var LonogaraDesktop = (function(_Component) {
     {
       key: 'DetailQuit',
       value: function DetailQuit() {
-        var _this3 = this
+        var _this2 = this
 
         return function(_ref) {
           var fn = _ref.fn
@@ -1561,7 +905,7 @@ var LonogaraDesktop = (function(_Component) {
             QuitDetail,
             null,
             React.createElement(ArrowLeft, {
-              stroke: _this3.props.colors.detailQuit
+              stroke: _this2.props.colors.detailQuit
             }),
             React.createElement(MouseDown, { positionValue: -20, listener: fn })
           )
@@ -1584,21 +928,15 @@ var LonogaraDesktop = (function(_Component) {
     },
     {
       key: 'Preload',
-      value: function Preload$$1() {
-        var onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
-        var backgroundColor = this.props.colors.preloader
-        var opacity = this.isReady() ? 0 : 1
-        var deduct = 60
-        var preloader = jsx$1(this.props.Preloader)
-
+      value: function Preload$$1(opacity) {
         return React.createElement(
           Preload,
           {
-            onTransitionEnd: onTransitionEnd,
-            backgroundColor: backgroundColor,
-            opacity: opacity
+            opacity: opacity,
+            onTransitionEnd: this.listeners['RENDER:PRELOADING_OFF'],
+            backgroundColor: this.props.colors.preloader
           },
-          React.createElement(Center, { deduct: deduct }, preloader)
+          React.createElement(Center, { top: -60 }, jsx$1(this.props.Preloader))
         )
       }
     },
@@ -1619,39 +957,39 @@ var LonogaraDesktop = (function(_Component) {
     {
       key: 'Middle',
       value: function Middle() {
-        var exhibit = jsx$1(this.state.exhibit.Component)
         return React.createElement(
           'div',
-          a('MIDDLE'),
-          React.createElement('div', a('MIDDLE_WRAP:EXHIBIT'), exhibit),
-          this.state.detail.Component && this.Detail()
+          a('MIDDLE_WRAP:BOTH'),
+          React.createElement(
+            'div',
+            a('MIDDLE_WRAP:EXHIBIT'),
+            jsx$1(this.props.views[this.state.index].Exhibit)
+          ),
+          React.createElement(
+            'div',
+            a('MIDDLE_WRAP:DETAIL'),
+            this.state.detail.props && this.Detail()
+          )
         )
       }
     },
     {
       key: 'Detail',
       value: function Detail() {
-        var background = this.props.colors.detail
-        var Quit = this.detailQuit
-        var onQuitEnd = this.listeners['DOM:DETAIL_OFF']
-        var _state$detail = this.state.detail,
-          Component$$1 = _state$detail.Component,
-          props = _state$detail.props,
-          mountWithShut = _state$detail.mountWithShut
-
-        var detail = jsx$1(Component$$1, props)
-
         return React.createElement(
           ShutFromLeft,
           {
+            mountWithShut: this.state.detail.mountWithShut,
             touchRatio: 0,
             duration: 0.55,
-            background: background,
-            Quit: Quit,
-            onQuitEnd: onQuitEnd,
-            mountWithShut: mountWithShut
+            background: this.props.colors.detail,
+            Quit: this.detailQuit,
+            onQuitEnd: this.listeners['DOM:DETAIL_OFF']
           },
-          detail
+          jsx$1(
+            this.props.views[this.state.index].Detail,
+            this.state.detail.props
+          )
         )
       }
     },
@@ -1679,7 +1017,7 @@ var LonogaraDesktop = (function(_Component) {
             a('DIM_WRAP'),
             React.createElement(
               Center,
-              { deduct: 24 },
+              { top: -24 },
               React.createElement(
                 'div',
                 {
@@ -1724,7 +1062,7 @@ var LonogaraDesktop = (function(_Component) {
     {
       key: 'Buttons',
       value: function Buttons() {
-        var _this4 = this
+        var _this3 = this
 
         var _props$colors = this.props.colors,
           base = _props$colors.base,
@@ -1738,16 +1076,16 @@ var LonogaraDesktop = (function(_Component) {
               {
                 width: 100,
                 borderBottomColor: base,
-                inform: _this4.state.informs[index],
+                inform: _this3.state.informs[index],
                 svg: jsx$1(view.Button, {
-                  choised: index === _this4.state.index,
+                  choised: index === _this3.state.index,
                   mainColor: base,
                   subColor: sub
                 })
               }
             ),
             React.createElement(MouseDown, {
-              listener: _this4.listeners['DOM:VIEW_SWITCH'],
+              listener: _this3.listeners['DOM:VIEW_SWITCH'],
               'data-index': index
             })
           )
@@ -1788,7 +1126,7 @@ var a = Atra({
       borderStyle: 'solid'
     }
   },
-  MIDDLE: {
+  'MIDDLE_WRAP:BOTH': {
     style: {
       outline: 'none',
       position: 'relative',
@@ -1797,11 +1135,14 @@ var a = Atra({
     }
   },
   'MIDDLE_WRAP:EXHIBIT': {
-    id: 'exhibitScrollElement',
+    id: EXHIBIT_SCROLL_ID,
     style: {
       overflowY: 'scroll',
       height: '100%'
     }
+  },
+  'MIDDLE_WRAP:DETAIL': {
+    id: DETAIL_SCROLL_ID
   },
   BUTTONS: {
     style: {
@@ -1824,6 +1165,359 @@ var a = Atra({
     }
   }
 })
+
+//
+
+var STORE = function() {
+  var extension =
+    arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {}
+
+  var views = new Map()
+
+  return [
+    Object.assign(extension, {
+      INIT: function INIT(_ref) {
+        var index = _ref.index,
+          initials = _ref.initials
+        return views.set(index, new View(initials))
+      },
+
+      SET_DATA: function SET_DATA(_ref2) {
+        var index = _ref2.index,
+          key = _ref2.key,
+          value = _ref2.value
+        return views.get(index).setData(key, value)
+      },
+
+      GET_DATA: function GET_DATA(_ref3) {
+        var index = _ref3.index,
+          key = _ref3.key
+        return views.get(index).getData(key)
+      }
+    }),
+    {
+      prefix: 'STORE:',
+      use: {}
+    }
+  ]
+}
+
+var View = (function() {
+  function View(initials) {
+    var _this = this
+
+    classCallCheck(this, View)
+
+    this.data = new Map()
+    initials.forEach(function(_ref4) {
+      var key = _ref4.key,
+        value = _ref4.value
+      return _this.data.set(key, value)
+    })
+  }
+
+  createClass(View, [
+    {
+      key: 'setData',
+      value: function setData(key, value) {
+        this.throwInvalidKey(key)
+        this.data.set(key, value)
+      }
+    },
+    {
+      key: 'getData',
+      value: function getData(key) {
+        this.throwInvalidKey(key)
+        return this.data.get(key)
+      }
+    },
+    {
+      key: 'throwInvalidKey',
+      value: function throwInvalidKey(key) {
+        if (!this.data.has(key)) {
+          throw new Error('STORE: ' + key + ' is not set.')
+        }
+      }
+    }
+  ])
+  return View
+})()
+
+//
+
+var RENDER = function() {
+  var extension =
+    arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {}
+  return [
+    Object.assign(extension, {
+      PRELOADING_OFF: function PRELOADING_OFF(n, _ref) {
+        var render = _ref.render
+        return render({ preloading: false })
+      },
+
+      POPDOWN_ON: function POPDOWN_ON(_ref2, _ref3) {
+        var src = _ref2.src,
+          vertically = _ref2.vertically
+        var render = _ref3.render
+        return render({ popdown: { src: src, vertically: vertically } })
+      },
+
+      POPDOWN_OFF: function POPDOWN_OFF(n, _ref4) {
+        var render = _ref4.render
+        return render({ popdown: {} })
+      },
+
+      DETAIL_ON: function DETAIL_ON(props, _ref5) {
+        var render = _ref5.render
+        return render({ detail: { props: props, mountWithShut: true } })
+      },
+
+      DETAIL_OFF: function DETAIL_OFF(n, _ref6) {
+        var render = _ref6.render
+        return render({ detail: {} })
+      },
+
+      BY_REACT_DIDMOUNT: function BY_REACT_DIDMOUNT(index, _ref7) {
+        var render = _ref7.render
+        return render({ index: index })
+      },
+
+      BY_DOM_VIEW_SWITCH: function BY_DOM_VIEW_SWITCH(_ref8, _ref9) {
+        var index = _ref8.index,
+          detailProps = _ref8.detailProps,
+          renderCallback = _ref8.renderCallback
+        var render = _ref9.render
+        return render(
+          {
+            index: index,
+            detail: !detailProps
+              ? {}
+              : { props: detailProps, mountWithShut: false }
+          },
+          renderCallback
+        )
+      },
+
+      INFORM_CHANGE: function INFORM_CHANGE(_ref10, _ref11) {
+        var index = _ref10.index,
+          inform = _ref10.inform
+        var state = _ref11.state,
+          render = _ref11.render
+
+        var informs = state('informs')
+        informs[index] = inform
+        render({ informs: informs })
+      }
+    }),
+    {
+      prefix: 'RENDER:',
+      use: {
+        state: true,
+        render: true
+      }
+    }
+  ]
+}
+
+var _this = undefined
+
+//
+var assign = Object.assign
+
+var detailScrollElement = function detailScrollElement() {
+  return extractDetailScrollElement(getElementById(DETAIL_SCROLL_ID))
+}
+
+var REACT = function REACT() {
+  var extension =
+    arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {}
+  return [
+    assign(extension, {
+      DID_MOUNT: function DID_MOUNT(n, _ref) {
+        var props = _ref.props,
+          dispatch = _ref.dispatch
+
+        dispatch('RENDER:BY_REACT_DIDMOUNT', props('firstIndex'))
+      }
+    }),
+    {
+      prefix: 'REACT:',
+      use: {
+        props: true,
+        dispatch: true
+      }
+    }
+  ]
+}
+
+var DOM = function DOM() {
+  var extension =
+    arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {}
+  return [
+    assign(extension, {
+      VIEW_SWITCH: function VIEW_SWITCH(e, _ref2) {
+        var state = _ref2.state,
+          dispatch = _ref2.dispatch
+
+        var nowIndex = state('index')
+        var index = +e.target.dataset.index
+
+        if (nowIndex !== index) {
+          Promise.all([
+            dispatch('STORE:SET_DATA', {
+              index: nowIndex,
+              key: 'exhibitScrollTop',
+              value: getElementById(EXHIBIT_SCROLL_ID).scrollTop
+            }),
+            state('detail').props &&
+              dispatch('STORE:SET_DATA', {
+                index: nowIndex,
+                key: 'detailScrollTop',
+                value: detailScrollElement().scrollTop
+              })
+          ])
+            .then(function() {
+              return dispatch('STORE:GET_DATA', {
+                index: index,
+                key: 'detailProps'
+              })
+            })
+            .then(function(detailProps) {
+              return dispatch('RENDER:BY_DOM_VIEW_SWITCH', {
+                index: index,
+                detailProps: detailProps,
+                renderCallback: (function() {
+                  var _ref3 = asyncToGenerator(
+                    /*#__PURE__*/ _regeneratorRuntime.mark(function _callee() {
+                      return _regeneratorRuntime.wrap(
+                        function _callee$(_context) {
+                          while (1) {
+                            switch ((_context.prev = _context.next)) {
+                              case 0:
+                                _context.next = 2
+                                return dispatch('STORE:GET_DATA', {
+                                  index: index,
+                                  key: 'exhibitScrollTop'
+                                })
+
+                              case 2:
+                                getElementById(EXHIBIT_SCROLL_ID).scrollTop =
+                                  _context.sent
+
+                                if (!detailProps) {
+                                  _context.next = 7
+                                  break
+                                }
+
+                                _context.next = 6
+                                return dispatch('STORE:GET_DATA', {
+                                  index: index,
+                                  key: 'detailScrollTop'
+                                })
+
+                              case 6:
+                                detailScrollElement().scrollTop = _context.sent
+
+                              case 7:
+                              case 'end':
+                                return _context.stop()
+                            }
+                          }
+                        },
+                        _callee,
+                        _this
+                      )
+                    })
+                  )
+
+                  return function renderCallback() {
+                    return _ref3.apply(this, arguments)
+                  }
+                })()
+              })
+            })
+        }
+      },
+
+      DETAIL_OFF: function DETAIL_OFF(n, _ref4) {
+        var state = _ref4.state,
+          dispatch = _ref4.dispatch
+
+        var index = state('index')
+
+        Promise.all([
+          dispatch('STORE:SET_DATA', {
+            index: index,
+            key: 'detailScrollTop',
+            value: 0
+          }),
+          dispatch('STORE:SET_DATA', {
+            index: index,
+            key: 'detailProps',
+            value: undefined
+          })
+        ]).then(function() {
+          return dispatch('RENDER:DETAIL_OFF')
+        })
+      }
+    }),
+    {
+      prefix: 'DOM:',
+      use: {
+        state: true,
+        dispatch: true
+      }
+    }
+  ]
+}
+
+var PASSED = function PASSED() {
+  var extension =
+    arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {}
+  return [
+    assign(extension, {
+      DETAIL_ON: function DETAIL_ON(data, _ref5) {
+        var state = _ref5.state,
+          dispatch = _ref5.dispatch
+
+        var props = { data: data }
+        dispatch('STORE:SET_DATA', {
+          index: state('index'),
+          key: 'detailProps',
+          value: props
+        }).then(function() {
+          return dispatch('RENDER:DETAIL_ON', props)
+        })
+      },
+
+      POPDOWN_ON: function POPDOWN_ON(arg, _ref6) {
+        var dispatch = _ref6.dispatch
+
+        if (isObj(arg) && arg.src) {
+          dispatch('RENDER:POPDOWN_ON', arg)
+        }
+      },
+
+      INFORM_ON: function INFORM_ON(arg, _ref7) {
+        var dispatch = _ref7.dispatch
+
+        var inform = +arg.inform
+        if (inform || inform === 0) {
+          var index = arg.index
+
+          dispatch('RENDER:INFORM_CHANGE', { index: index, inform: inform })
+        }
+      }
+    }),
+    {
+      prefix: 'PASSED:',
+      use: {
+        state: true,
+        dispatch: true
+      }
+    }
+  ]
+}
 
 //
 var background = function(_ref) {
@@ -1943,10 +1637,10 @@ var sides = function(_ref) {
 }
 
 //
-var views$1 = function(_ref) {
+var views = function(_ref) {
   var views = _ref.views
 
-  var result = []
+  var result = { views: [], creates: [] }
 
   if (views) {
     if (!isArr(views)) {
@@ -1978,7 +1672,9 @@ var views$1 = function(_ref) {
         )
       }
 
-      result.push({ head: head, Button: Button, create: create })
+      result.views.push({ head: head, Button: Button })
+      result.creates.push(create)
+      // result.push({ head, Button, create })
     })
   }
 
@@ -1986,28 +1682,9 @@ var views$1 = function(_ref) {
 }
 
 //
-var firstIndex = function firstIndex(_ref) {
-  var firstIndex = _ref.firstIndex
-  return isNum(firstIndex) ? firstIndex : 0
-}
-var preloader = function preloader(_ref2) {
-  var Preloader = _ref2.Preloader
-  return isFnc(Preloader) && Preloader
-}
-
-var _guardian = function() {
-  return {
-    firstIndex: firstIndex,
-    background: background,
-    preloader: preloader,
-    sides: sides,
-    views: views$1
-  }
-}
-
 var HoColors = function HoColors(Colors) {
-  return function(_ref3) {
-    var colors = _ref3.colors
+  return function(_ref) {
+    var colors = _ref.colors
 
     var result = Colors()
 
@@ -2032,9 +1709,36 @@ var HoColors = function HoColors(Colors) {
   }
 }
 
-var createGuardian = function createGuardian(_ref4) {
-  var App = _ref4.App,
-    guardian = _ref4.guardian
+var firstIndex = function firstIndex(_ref2) {
+  var firstIndex = _ref2.firstIndex
+  return isNum(firstIndex) ? firstIndex : 0
+}
+var preloader = function preloader(_ref3) {
+  var Preloader = _ref3.Preloader
+  return isFnc(Preloader) && Preloader
+}
+
+var create = function create() {
+  return {
+    firstIndex: firstIndex,
+    background: background,
+    preloader: preloader,
+    sides: sides,
+    views: views
+  }
+}
+
+//
+var initials = [
+  { key: 'exhibitScrollTop', value: 0 },
+  { key: 'detailScrollTop', value: 0 },
+  { key: 'detailProps', value: undefined }
+]
+
+var Guardian = function(_ref) {
+  var App = _ref.App,
+    orph = _ref.orph,
+    defaults$$1 = _ref.defaults
   return (function(_Component) {
     inherits(Guardian, _Component)
 
@@ -2049,29 +1753,81 @@ var createGuardian = function createGuardian(_ref4) {
         )
       )
 
+      _this.state = { ready: false }
+      _this.asynces = []
       _this.results = {}
-      _this.results.firstIndex = guardian.firstIndex(props)
-      _this.results.colors = guardian.colors(props)
-      _this.results.Preloader = guardian.preloader(props)
-      _this.results.sides = guardian.sides(props)
-      _this.results.views = guardian.views(props)
 
-      var _guardian$background = guardian.background(props),
-        backgroundURL = _guardian$background.backgroundURL,
-        backgroundStyle = _guardian$background.backgroundStyle
+      _this.results.firstIndex = defaults$$1.firstIndex(props)
+      _this.results.colors = defaults$$1.colors(props)
+      _this.results.Preloader = defaults$$1.preloader(props)
+      _this.results.sides = defaults$$1.sides(props)
 
-      var fetchTarget =
-        backgroundURL && !backgroundURL.includes('http')
-          ? backgroundURL
-          : undefined
+      var _defaults$background = defaults$$1.background(props),
+        backgroundURL = _defaults$background.backgroundURL,
+        backgroundStyle = _defaults$background.backgroundStyle
 
-      _this.state = { fetchTarget: fetchTarget }
       _this.results.backgroundStyle = backgroundStyle
 
-      if (!fetchTarget && backgroundURL) {
-        _this.results.backgroundStyle.backgroundImage =
-          'url(' + backgroundURL + ')'
+      if (backgroundURL) {
+        if (backgroundURL.includes('http')) {
+          _this.results.backgroundStyle.backgroundImage =
+            'url(' + backgroundURL + ')'
+        } else {
+          _this.asynces.push(
+            fetch(backgroundURL)
+              .then(function(res) {
+                return res.ok && res.blob()
+              })
+              .then(function(blob) {
+                return blob && createBlobURL(blob)
+              })
+              .then(function(backgroundURL) {
+                if (backgroundURL) {
+                  _this.results.backgroundStyle.backgroundImage =
+                    'url(' + backgroundURL + ')'
+                }
+              })
+          )
+        }
       }
+
+      var _defaults$views = defaults$$1.views(props),
+        views = _defaults$views.views,
+        creates = _defaults$views.creates
+
+      _this.results.views = views
+
+      creates.forEach(function(create, index) {
+        return _this.asynces.push(
+          orph
+            .dispatch('STORE:INIT', { index: index, initials: initials })
+            .then(function() {
+              return create({
+                renderDetail: function renderDetail(data) {
+                  return orph.dispatch('PASSED:DETAIL_ON', data)
+                },
+                setPopdown: function setPopdown(src) {
+                  return orph.dispatch('PASSED:POPDOWN_ON', src)
+                },
+                setInform: function setInform(inform) {
+                  return orph.dispatch('PASSED:INFORM_ON', {
+                    index: index,
+                    inform: inform
+                  })
+                }
+              })
+            })
+            .then(function() {
+              var components =
+                arguments.length > 0 && arguments[0] !== undefined
+                  ? arguments[0]
+                  : {}
+              return Object.keys(components).forEach(function(key) {
+                _this.results.views[index][key] = components[key]
+              })
+            })
+        )
+      })
       return _this
     }
 
@@ -2079,30 +1835,29 @@ var createGuardian = function createGuardian(_ref4) {
       {
         key: 'render',
         value: function render() {
-          var _results = this.results,
-            firstIndex = _results.firstIndex,
-            colors = _results.colors,
-            Preloader = _results.Preloader,
-            sides$$1 = _results.sides,
-            views = _results.views,
-            backgroundStyle = _results.backgroundStyle
-
           return React.createElement(
-            'div',
+            Fragment,
             null,
             React.createElement(
               'style',
               { type: 'text/css' },
-              '\n            body {\n              margin: 0px;\n              overflow: hidden;\n              font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;\n            }\n            .lonogara_button svg {\n              height: 100%;\n            }\n          '
+              '\n          body {\n            margin: 0px;\n            overflow: hidden;\n            font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;\n          }\n          .lonogara_button svg {\n            height: 100%;\n          }\n        '
             ),
-            React.createElement(App, {
-              backgroundStyle: !this.state.fetchTarget && backgroundStyle,
-              firstIndex: firstIndex,
-              colors: colors,
-              Preloader: Preloader,
-              sides: sides$$1,
-              views: views
-            })
+            React.createElement(
+              App,
+              _extends(
+                { orph: orph },
+                {
+                  firstIndex: this.results.firstIndex,
+                  colors: this.results.colors,
+                  Preloader: this.results.Preloader,
+                  sides: this.results.sides,
+                  backgroundStyle:
+                    this.state.ready && this.results.backgroundStyle,
+                  views: this.state.ready && this.results.views
+                }
+              )
+            )
           )
         }
       },
@@ -2111,26 +1866,11 @@ var createGuardian = function createGuardian(_ref4) {
         value: function componentDidMount() {
           var _this2 = this
 
-          var fetchTarget = this.state.fetchTarget
-
-          if (fetchTarget) {
-            fetch(fetchTarget)
-              .then(function(res) {
-                return res.ok && res.blob()
-              })
-              .then(function(blob) {
-                return blob && createBlobURL(blob)
-              })
-              .then(function(url) {
-                if (url) {
-                  _this2.results.backgroundStyle.backgroundImage =
-                    'url(' + url + ')'
-                }
-                raf(function() {
-                  return _this2.setState({ fetchTarget: undefined })
-                })
-              })
-          }
+          Promise.all(this.asynces).then(function() {
+            return raf(function() {
+              return _this2.setState({ ready: true })
+            })
+          })
         }
       }
     ])
@@ -2139,10 +1879,68 @@ var createGuardian = function createGuardian(_ref4) {
 }
 
 //
-// import _guardian, { HoColors, Guardian } from '../guardian'
-var guardian = _guardian()
+var orph = new Orph({
+  preloading: true,
+  index: undefined,
+  detail: {},
+  popdown: {},
+  dimming: false,
+  informs: [0, 0, 0, 0]
+})
 
-guardian.colors = HoColors(function() {
+orph.register.apply(orph, toConsumableArray(STORE()))
+
+orph.register.apply(
+  orph,
+  toConsumableArray(
+    RENDER({
+      DIMMING_ON: function DIMMING_ON(n, _ref) {
+        var render = _ref.render
+        return render({ dimming: true })
+      },
+      DIMMING_OFF: function DIMMING_OFF(n, _ref2) {
+        var render = _ref2.render
+        return render({ dimming: false })
+      }
+    })
+  )
+)
+
+orph.register.apply(orph, toConsumableArray(REACT()))
+
+orph.register.apply(
+  orph,
+  toConsumableArray(
+    DOM({
+      DIM_SWITCH: function DIM_SWITCH(e, _ref3) {
+        var state = _ref3.state,
+          dispatch = _ref3.dispatch
+        return dispatch(
+          !state('dimming') ? 'RENDER:DIMMING_ON' : 'RENDER:DIMMING_OFF'
+        )
+      }
+    })
+  )
+)
+
+orph.register.apply(orph, toConsumableArray(PASSED()))
+
+orph.register(
+  {
+    RESIZE_FORCE_UPDATE: function RESIZE_FORCE_UPDATE(e, _ref4) {
+      var update = _ref4.update
+      return update()
+    }
+  },
+  {
+    prefix: 'WINDOW:',
+    use: { update: true }
+  }
+)
+
+var defaults$1 = create()
+
+defaults$1.colors = HoColors(function() {
   return {
     base: '#ffffff',
     sub: 'rgb(145, 145, 145)',
@@ -2153,60 +1951,7 @@ guardian.colors = HoColors(function() {
   }
 })
 
-var index = createGuardian({ App: LonogaraDesktop, guardian: guardian })
-
-//
-// const RESIZE_FORCE_UPDATE = (e, util) => e.preventDefault()
-// no meaning
-
-var sideScrollDOM = function sideScrollDOM() {
-  return document.getElementById('sideScrollElement')
-}
-
-var DRIFTING_ON = [
-  { states: ['drifting'] },
-  function(n, _ref) {
-    var render = _ref.render
-    return render({ drifting: true })
-  }
-]
-var DRIFTING_LAG = [
-  { states: ['drifting'] },
-  function(n, _ref2) {
-    var render = _ref2.render
-    return render({ drifting: 'lag' })
-  }
-]
-var DRIFTING_OFF = [
-  { states: ['drifting'] },
-  function(n, _ref3) {
-    var state = _ref3.state,
-      render = _ref3.render
-    return (
-      state().drifting === 'lag' &&
-      render({ drifting: false }, function() {
-        sideScrollDOM().scrollTop = 0
-      })
-    )
-  }
-]
-
-var orph$2 = new Orph()
-add(orph$2, 'STORE', STORE)
-add(
-  orph$2,
-  'RENDER',
-  Object.assign({}, RENDER, {
-    DRIFTING_ON: DRIFTING_ON,
-    DRIFTING_LAG: DRIFTING_LAG,
-    DRIFTING_OFF: DRIFTING_OFF
-  })
-)
-// add(orph, 'WINDOW', WINDOW)
-// add(orph, 'WINDOW', { RESIZE_FORCE_UPDATE })
-add(orph$2, 'REACT', REACT)
-add(orph$2, 'DOM', DOM)
-add(orph$2, 'PASS', PASS)
+var index = Guardian({ App: LonogaraDesktop, orph: orph, defaults: defaults$1 })
 
 //
 var Button$1 = (function(a) {
@@ -2279,7 +2024,7 @@ var Head = (function(a) {
       }),
       React.createElement(
         Center,
-        { deduct: -12 },
+        { top: 12 },
         React.createElement(
           'span',
           a('WORD', { style: { color: color } }),
@@ -2571,21 +2316,11 @@ var TouchEndCapture = function TouchEndCapture(props) {
     Object.assign({ type: 'onTouchEndCapture' }, props)
   )
 }
-var listeners$1 = [
-  // 'WINDOW:RESIZE_FORCE_UPDATE',
-  'RENDER:PRELOADING_OFF',
-  'DOM:VIEW_SWITCH',
-  'DOM:DETAIL_OFF',
-  'RENDER:DRIFTING_ON',
-  'RENDER:DRIFTING_LAG',
-  'RENDER:DRIFTING_OFF',
-  'RENDER:POPDOWN_OFF'
-]
 
 var LonogaraMobile = (function(_Component) {
   inherits(LonogaraMobile, _Component)
 
-  // listeners: { [name: string]: () => {} }
+  // this.listeners: { [name: string]: () => {} }
   // sides: React$Node
 
   function LonogaraMobile(props) {
@@ -2599,60 +2334,48 @@ var LonogaraMobile = (function(_Component) {
       )
     )
 
-    _this.state = {
-      preloading: true,
-      drifting: false,
-      index: undefined,
-      exhibit: {},
-      detail: {},
-      popdown: {},
-      informs: [0, 0, 0, 0]
-    }
+    props.orph.attach(_this)
+    _this.listeners = props.orph.order([
+      'RENDER:PRELOADING_OFF',
+      'DOM:VIEW_SWITCH',
+      'DOM:DETAIL_OFF',
+      'RENDER:DRIFTING_ON',
+      'RENDER:DRIFTING_LAG',
+      'RENDER:DRIFTING_OFF',
+      'RENDER:POPDOWN_OFF'
+    ])
+
+    _this.noButtons = props.views.length < 2
+    _this.sides = _this.Sides()
+    _this.detailQuit = _this.DetailQuit()
+    _this.popdownQuit = _this.PopdownQuit()
     return _this
   }
 
   createClass(LonogaraMobile, [
     {
-      key: 'componentWillMount',
-      value: function componentWillMount() {
-        var _this2 = this
-
-        orph$2.attach(this)
-        this.listeners = {}
-        listeners$1.forEach(function(NAME) {
-          _this2.listeners[NAME] = orph$2.create(NAME)
-        })
-
-        this.noButtons = this.props.views.length < 2
-
-        this.sides = this.Sides()
-        this.detailQuit = this.DetailQuit()
-        this.popdownQuit = this.PopdownQuit()
-        // windowOn("resize", this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
-      }
-    },
-    {
-      key: 'isTreeReady',
-      value: function isTreeReady() {
-        return isNum(this.state.index) && Boolean(this.props.backgroundStyle)
+      key: 'isReady',
+      value: function isReady() {
+        return Boolean(this.props.views) && Boolean(this.props.backgroundStyle)
       }
     },
     {
       key: 'render',
       value: function render() {
+        var isReady = this.isReady()
         return React.createElement(
-          'div',
+          Fragment,
           null,
-          this.isTreeReady() && this.Tree(),
+          isReady && this.Tree(),
           this.state.popdown.src && this.Popdown(),
-          this.state.preloading && this.Preload()
+          this.state.preloading && this.Preload(isReady ? 0 : 1)
         )
       }
     },
     {
       key: 'componentDidMount',
       value: function componentDidMount() {
-        orph$2.dispatch('REACT:DID_MOUNT')
+        this.props.orph.dispatch('REACT:DID_MOUNT')
       }
     },
     {
@@ -2667,9 +2390,7 @@ var LonogaraMobile = (function(_Component) {
             : 'translateX(' + -SIDE_WIDTH + 'px)'
         var transition = !drifting || drifting === 'lag' ? '0.6s' : '0.72s'
         var height = winnerHeight() - (noButtons ? 0 : BUTTON_HEIGHT$1)
-
         var veil = this.Veil()
-
         return React.createElement(
           'div',
           { style: { backgroundColor: this.props.colors.side } },
@@ -2695,8 +2416,6 @@ var LonogaraMobile = (function(_Component) {
             React.createElement('nav', a$1('BUTTONS'), this.Buttons(), veil)
         )
       }
-
-      /*-----------------------  -----------------------*/
     },
     {
       key: 'Sides',
@@ -2727,7 +2446,7 @@ var LonogaraMobile = (function(_Component) {
     {
       key: 'DetailQuit',
       value: function DetailQuit() {
-        var _this3 = this
+        var _this2 = this
 
         return function(_ref2) {
           var fn = _ref2.fn
@@ -2735,7 +2454,7 @@ var LonogaraMobile = (function(_Component) {
             QuitDetail$1,
             null,
             React.createElement(ArrowLeft, {
-              stroke: _this3.props.colors.detailQuit
+              stroke: _this2.props.colors.detailQuit
             }),
             React.createElement(TouchEndCapture, {
               positionValue: -20,
@@ -2774,21 +2493,19 @@ var LonogaraMobile = (function(_Component) {
     },
     {
       key: 'Preload',
-      value: function Preload$$1() {
-        var onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
-        var backgroundColor = this.props.colors.preloader
-        var opacity = this.isTreeReady() ? 0 : 1
-        var deduct = 100
-        var preloader = jsx$1(this.props.Preloader)
-
+      value: function Preload$$1(opacity) {
         return React.createElement(
           Preload,
           {
-            onTransitionEnd: onTransitionEnd,
-            backgroundColor: backgroundColor,
-            opacity: opacity
+            opacity: opacity,
+            onTransitionEnd: this.listeners['RENDER:PRELOADING_OFF'],
+            backgroundColor: this.props.colors.preloader
           },
-          React.createElement(Center, { deduct: deduct }, preloader)
+          React.createElement(
+            Center,
+            { top: -100 },
+            jsx$1(this.props.Preloader)
+          )
         )
       }
     },
@@ -2802,7 +2519,6 @@ var LonogaraMobile = (function(_Component) {
           vertically = _state$popdown.vertically
 
         var top = vertically && '4%'
-
         return React.createElement(
           ShutFromTop,
           a$1('POPDOWN_SHUT', { Quit: Quit, onQuitEnd: onQuitEnd }),
@@ -2836,8 +2552,8 @@ var LonogaraMobile = (function(_Component) {
           Head,
           {
             height: HEAD_HEIGHT$1,
-            backgroundColor: base,
             word: this.props.views[this.state.index].head,
+            backgroundColor: base,
             color: sub
           },
           React.createElement(Burger, { stroke: sub }),
@@ -2856,10 +2572,7 @@ var LonogaraMobile = (function(_Component) {
           (this.noButtons ? 0 : BUTTON_HEIGHT$1)
         var backgroundStyle = this.props.backgroundStyle
         var backgroundColor = this.props.colors.background
-
-        var exhibit = jsx$1(this.state.exhibit.Component)
-        var isDetail = isFnc(this.state.detail.Component)
-
+        var isDetail = isObj(this.state.detail.props)
         return React.createElement(
           'div',
           a$1('MIDDLE', { style: { height: height } }),
@@ -2875,9 +2588,13 @@ var LonogaraMobile = (function(_Component) {
               a$1('MIDDLE_WRAP:EXHIBIT', {
                 style: { overflowY: isDetail ? 'hidden' : 'scroll' }
               }),
-              exhibit
+              jsx$1(this.props.views[this.state.index].Exhibit)
             ),
-            isDetail && this.Detail()
+            React.createElement(
+              'div',
+              a$1('MIDDLE_WRAP:DETAIL'),
+              isDetail && this.Detail()
+            )
           )
         )
       }
@@ -2885,39 +2602,27 @@ var LonogaraMobile = (function(_Component) {
     {
       key: 'Detail',
       value: function Detail() {
-        var background = this.props.colors.detail
-        var notScroll = Boolean(this.state.popdown.src)
-        var Quit = this.detailQuit
-        var onQuitEnd = this.listeners['DOM:DETAIL_OFF']
-
-        var _state$detail = this.state.detail,
-          Component$$1 = _state$detail.Component,
-          props = _state$detail.props,
-          mountWithShut = _state$detail.mountWithShut
-
-        var detail = jsx$1(Component$$1, props)
-
         return React.createElement(
           ShutFromLeft,
           {
+            mountWithShut: this.state.detail.mountWithShut,
             duration: 0.55,
-            background: background,
-            notScroll: notScroll,
-            Quit: Quit,
-            onQuitEnd: onQuitEnd,
-            mountWithShut: mountWithShut
+            background: this.props.colors.detail,
+            notScroll: Boolean(this.state.popdown.src),
+            Quit: this.detailQuit,
+            onQuitEnd: this.listeners['DOM:DETAIL_OFF']
           },
-          detail
+          jsx$1(
+            this.props.views[this.state.index].Detail,
+            this.state.detail.props
+          )
         )
       }
     },
     {
       key: 'Buttons',
       value: function Buttons() {
-        var _this4 = this
-
-        var mainColor = this.props.colors.base
-        var subColor = this.props.colors.sub
+        var _this3 = this
 
         return this.props.views.map(function(view, index, views) {
           return React.createElement(
@@ -2926,11 +2631,11 @@ var LonogaraMobile = (function(_Component) {
               { key: index },
               {
                 width: winnerWidth() / views.length - 0.5,
-                inform: _this4.state.informs[index],
+                inform: _this3.state.informs[index],
                 svg: jsx$1(view.Button, {
-                  mainColor: mainColor,
-                  subColor: subColor,
-                  choised: index === _this4.state.index
+                  choised: index === _this3.state.index,
+                  mainColor: _this3.props.colors.base,
+                  subColor: _this3.props.colors.sub
                 })
               }
             ),
@@ -2938,7 +2643,7 @@ var LonogaraMobile = (function(_Component) {
               'data-index': index,
               listener: function listener(e) {
                 e.stopPropagation()
-                _this4.listeners['DOM:VIEW_SWITCH'](e)
+                _this3.listeners['DOM:VIEW_SWITCH'](e)
               }
             })
           )
@@ -2968,7 +2673,7 @@ var a$1 = Atra({
     }
   },
   'MIDDLE_WRAP:EXHIBIT': {
-    id: 'exhibitScrollElement',
+    id: EXHIBIT_SCROLL_ID,
     style: {
       position: 'relative',
       height: '100%',
@@ -2976,6 +2681,9 @@ var a$1 = Atra({
       WebkitOverflowScrolling: 'touch',
       overflowX: 'hidden'
     }
+  },
+  'MIDDLE_WRAP:DETAIL': {
+    id: DETAIL_SCROLL_ID
   },
   POPDOWN_SHUT: {
     mountWithShut: true,
@@ -2995,7 +2703,7 @@ var a$1 = Atra({
     }
   },
   SIDES: {
-    id: 'sideScrollElement',
+    id: MOBILE_SIDE_SCROLL_ID,
     style: {
       position: 'fixed',
       top: 0,
@@ -3011,10 +2719,52 @@ var a$1 = Atra({
 })
 
 //
-// import _guardian, { HoColors, Guardian } from '../guardian'
-var guardian$1 = _guardian()
+var orph$1 = new Orph({
+  preloading: true,
+  index: undefined,
+  detail: {},
+  popdown: {},
+  drifting: false,
+  informs: [0, 0, 0, 0]
+})
 
-guardian$1.colors = HoColors(function() {
+orph$1.register.apply(orph$1, toConsumableArray(STORE()))
+
+orph$1.register.apply(
+  orph$1,
+  toConsumableArray(
+    RENDER({
+      DRIFTING_ON: function DRIFTING_ON(n, _ref) {
+        var render = _ref.render
+        return render({ drifting: true })
+      },
+      DRIFTING_LAG: function DRIFTING_LAG(n, _ref2) {
+        var render = _ref2.render
+        return render({ drifting: 'lag' })
+      },
+      DRIFTING_OFF: function DRIFTING_OFF(n, _ref3) {
+        var state = _ref3.state,
+          render = _ref3.render
+        return (
+          state('drifting') === 'lag' &&
+          render({ drifting: false }, function() {
+            getElementById(MOBILE_SIDE_SCROLL_ID).scrollTop = 0
+          })
+        )
+      }
+    })
+  )
+)
+
+orph$1.register.apply(orph$1, toConsumableArray(REACT()))
+
+orph$1.register.apply(orph$1, toConsumableArray(DOM()))
+
+orph$1.register.apply(orph$1, toConsumableArray(PASSED()))
+
+var defaults$2 = create()
+
+defaults$2.colors = HoColors(function() {
   return {
     base: 'rgb(24, 24, 35)',
     sub: 'rgb(255, 255, 255)',
@@ -3026,6 +2776,10 @@ guardian$1.colors = HoColors(function() {
   }
 })
 
-var index$1 = createGuardian({ App: LonogaraMobile, guardian: guardian$1 })
+var index$1 = Guardian({
+  App: LonogaraMobile,
+  orph: orph$1,
+  defaults: defaults$2
+})
 
 export { index as Desktop, index$1 as Mobile }

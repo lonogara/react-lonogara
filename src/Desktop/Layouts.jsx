@@ -2,7 +2,7 @@
 import React from 'react'
 import Atra from 'atra'
 import { ShutFromLeft, ShutFromTop } from 'react-shut'
-import Center from 'react-vertical-center'
+import Center from 'react-centpn'
 import { Preload } from '../Layouts.jsx'
 
 export { ShutFromLeft, ShutFromTop, Center, Preload }

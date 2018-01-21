@@ -1,15 +1,10 @@
-import * as STORE from './STORE.js'
-import * as RENDER from './RENDER.js'
-// import { WINDOW, REACT, PASS, DOM } from './INTERFACE.js'
-import { REACT, PASS, DOM } from './INTERFACE.js'
-import { add } from './util.js'
-
+import STORE from './STORE.js'
+import RENDER from './RENDER.js'
+import { REACT, DOM, PASSED } from './INTERFACE.js'
 export {
   STORE,
   RENDER,
-  // WINDOW,
   REACT,
-  PASS,
   DOM,
-  add
+  PASSED
 }

@@ -1,38 +1,42 @@
 // @flow
 
-const views = new Map()
+export default (extension = {}) => {
+
+  const views: Map<View> = new Map()
+
+  return [Object.assign(extension, {
+    
+    INIT: ({ index, initials }): void => views.set(index, new View(initials)),
+
+    SET_DATA: ({ index, key, value }): void => views.get(index).setData(key, value),
+
+    GET_DATA: ({ index, key }) => views.get(index).getData(key)
+
+  }),{
+    prefix: 'STORE:',
+    use: {}
+  }]
+}
 
 class View {
-  constructor() {
-    this.components = {}
-    this.data = {}
+  constructor(initials) {
+    this.data = new Map()
+    initials.forEach(({ key, value }) => this.data.set(key, value))
   }
 
-  setComponent({ componentName, Component }) {
-    this.components[componentName] = Component
+  setData(key, value) {
+    this.throwInvalidKey(key)
+    this.data.set(key, value)
   }
 
-  setData({ dataName, value }) {
-    this.data[dataName] = value
+  getData(key) {
+    this.throwInvalidKey(key)
+    return this.data.get(key)
   }
 
-  getComponent({ componentName, dataName }) {
-    const Component = this.components[componentName]
-    const data = this.data[dataName]
-    return { Component, data }
+  throwInvalidKey(key) {
+    if (!this.data.has(key)) {
+      throw new Error(`STORE: ${key} is not set.`)
+    }
   }
 }
-
-export const INIT = (index): void => views.set(index, new View())
-
-export const SET_COMPONENT = ({ index, componentName, Component }): void =>
-  views.get(index).setComponent({ componentName, Component })
-
-export const SET_DATA = ({ index, dataName, value }): void =>
-  views.get(index).setData({ dataName, value })
-
-export const GET_COMPONENT = ({ index, componentName, dataName }) => {
-  const view = views.get(index)
-  return view ? view.getComponent({ componentName, dataName }) : {}
-}
-

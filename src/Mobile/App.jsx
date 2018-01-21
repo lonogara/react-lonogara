@@ -1,11 +1,13 @@
 // @flow
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import Atra from 'atra'
-import orph from './orph.js'
 import {
+  EXHIBIT_SCROLL_ID,
+  DETAIL_SCROLL_ID,
+  MOBILE_SIDE_SCROLL_ID,
   jsx,
   isNum,
-  isFnc,
+  isObj,
   createClickA,
   winnerWidth,
   winnerHeight,
@@ -38,73 +40,78 @@ const SIDE_WIDTH = 370
 const TouchStartCapture = (props) => <Listen {...Object.assign({ type: 'onTouchStartCapture' }, props)} />
 const TouchEnd = (props) => <Listen {...Object.assign({ type: 'onTouchEnd' }, props)} />
 const TouchEndCapture = (props) => <Listen {...Object.assign({ type: 'onTouchEndCapture' }, props)} />
-const listeners = [
-  // 'WINDOW:RESIZE_FORCE_UPDATE',
-  'RENDER:PRELOADING_OFF',
-  'DOM:VIEW_SWITCH',
-  'DOM:DETAIL_OFF',
-  'RENDER:DRIFTING_ON',
-  'RENDER:DRIFTING_LAG',
-  'RENDER:DRIFTING_OFF',
-  'RENDER:POPDOWN_OFF'
-]
+
+type Props = {
+  firstIndex: number,
+  backgroundStyle: { [key: string]: string },
+  Preloader: React$Component,
+  sides: Array<>,
+  views: Array<>
+}
+
+type State = {
+  preloading: boolean,
+  index?: number,
+  detail: {
+    props?: { [data: string]: any },
+    mountWithShut?: boolean
+  },
+  popdown: {
+    src?: string,
+    vertically?: boolean
+  },
+  drifting: boolean,
+  informs: [number, number, number, number]
+}
 
 export default class LonogaraMobile extends Component {
-  // listeners: { [name: string]: () => {} }
+  // this.listeners: { [name: string]: () => {} }
   // sides: React$Node
 
   constructor(props) {
     super(props)
-    this.state = {
-      preloading: true,
-      drifting: false,
-      index: undefined,
-      exhibit: {},
-      detail: {},
-      popdown: {},
-      informs: [0, 0, 0, 0]
-    }
-  }
 
-  componentWillMount() {
-    orph.attach(this)
-    this.listeners = {}
-    listeners.forEach(NAME => { this.listeners[NAME] = orph.create(NAME) })
+    props.orph.attach(this)
+    this.listeners = props.orph.order([
+      'RENDER:PRELOADING_OFF',
+      'DOM:VIEW_SWITCH',
+      'DOM:DETAIL_OFF',
+      'RENDER:DRIFTING_ON',
+      'RENDER:DRIFTING_LAG',
+      'RENDER:DRIFTING_OFF',
+      'RENDER:POPDOWN_OFF'
+    ])
 
-    this.noButtons = this.props.views.length < 2
-
+    this.noButtons = props.views.length < 2
     this.sides = this.Sides()
     this.detailQuit = this.DetailQuit()
     this.popdownQuit = this.PopdownQuit()
-    // windowOn("resize", this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
   }
 
-  isTreeReady() {
-    return isNum(this.state.index) && Boolean(this.props.backgroundStyle)
+  isReady() {
+    return Boolean(this.props.views) && Boolean(this.props.backgroundStyle)
   }
 
   render() {
-    return <div>
-      {this.isTreeReady() && this.Tree()}
+    const isReady = this.isReady()
+    return <Fragment>
+      {isReady && this.Tree()}
       {this.state.popdown.src && this.Popdown()}
-      {this.state.preloading && this.Preload()}
-    </div>
+      {this.state.preloading && this.Preload(isReady ? 0 : 1)}
+    </Fragment>
   }
 
   componentDidMount() {
-    orph.dispatch('REACT:DID_MOUNT')
+    this.props.orph.dispatch('REACT:DID_MOUNT')
   }
 
   Tree() {
     const { drifting } = this.state
     const { noButtons } = this
-
     const transform = (!drifting || drifting === 'lag') ? `translateX(0px)` : `translateX(${-SIDE_WIDTH}px)`
     const transition = (!drifting || drifting === 'lag') ? '0.6s' : '0.72s'
     const height = winnerHeight() - (noButtons ? 0 : BUTTON_HEIGHT)
-
     const veil = this.Veil()
-
     return (
       <div {...{ style: { backgroundColor: this.props.colors.side } }}>
         <aside {...a('SIDES', { style: { transform, transition, height } })}>
@@ -122,8 +129,6 @@ export default class LonogaraMobile extends Component {
       </div>
     )
   }
-
-  /*-----------------------  -----------------------*/
 
   Sides() {
     return this.props.sides.map(({ href, buttonImage, coverColor, descriptionText, descriptionStyle }, index) =>
@@ -166,16 +171,16 @@ export default class LonogaraMobile extends Component {
       </QuitPopdown>
   }
 
-  Preload() {
-    const onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
-    const backgroundColor = this.props.colors.preloader
-    const opacity = this.isTreeReady() ? 0 : 1
-    const deduct = 100
-    const preloader = jsx(this.props.Preloader)
-
+  Preload(opacity) {
     return (
-      <Preload {...{ onTransitionEnd, backgroundColor, opacity }}>
-        <Center {...{ deduct }}>{preloader}</Center>
+      <Preload {...{
+        opacity,
+        onTransitionEnd: this.listeners['RENDER:PRELOADING_OFF'],
+        backgroundColor: this.props.colors.preloader
+      }}>
+        <Center {...{ top: -100 }}>
+          {jsx(this.props.Preloader)}
+        </Center>
       </Preload>
     )
   }
@@ -185,7 +190,6 @@ export default class LonogaraMobile extends Component {
     const onQuitEnd = this.listeners['RENDER:POPDOWN_OFF']
     const { src, vertically } = this.state.popdown
     const top = vertically && "4%"
-
     return (
       <ShutFromTop {...a('POPDOWN_SHUT', { Quit, onQuitEnd })}>
         <Popdown {...{ src, top }} />
@@ -206,12 +210,11 @@ export default class LonogaraMobile extends Component {
 
   Head() {
     const { base, sub } = this.props.colors
-
     return (
       <Head {...{
         height: HEAD_HEIGHT,
-        backgroundColor: base,
         word: this.props.views[this.state.index].head,
+        backgroundColor: base,
         color: sub
       }}>
         <Burger stroke={sub} />
@@ -224,56 +227,51 @@ export default class LonogaraMobile extends Component {
     const height = winnerHeight() - HEAD_HEIGHT - (this.noButtons ? 0 : BUTTON_HEIGHT)
     const backgroundStyle = this.props.backgroundStyle
     const backgroundColor = this.props.colors.background
-
-    const exhibit = jsx(this.state.exhibit.Component)
-    const isDetail = isFnc(this.state.detail.Component)
-
+    const isDetail = isObj(this.state.detail.props)
     return (
       <div {...a('MIDDLE', { style: { height } })}>
         <Background {...{ style: backgroundStyle }} />
         <Background {...{ style: { backgroundColor } }} />
         <div {...a('MIDDLE_WRAP:BOTH')}>
           <div {...a('MIDDLE_WRAP:EXHIBIT', { style: { overflowY: isDetail ? 'hidden' : 'scroll' } })}>
-            {exhibit}
+            {jsx(this.props.views[this.state.index].Exhibit)}
           </div>
-          {isDetail && this.Detail()}
+          <div {...a('MIDDLE_WRAP:DETAIL')}>
+            {isDetail && this.Detail()}
+          </div>
         </div>
       </div>
     )
   }
 
   Detail() {
-    const background = this.props.colors.detail
-    const notScroll = Boolean(this.state.popdown.src)
-    const Quit = this.detailQuit
-    const onQuitEnd = this.listeners['DOM:DETAIL_OFF']
-
-    const { Component, props, mountWithShut } = this.state.detail
-    const detail = jsx(Component, props)
-
     return (
       <ShutFromLeft {...{
+        mountWithShut: this.state.detail.mountWithShut,
         duration: 0.55,
-        background,
-        notScroll,
-        Quit,
-        onQuitEnd,
-        mountWithShut
+        background: this.props.colors.detail,
+        notScroll: Boolean(this.state.popdown.src),
+        Quit: this.detailQuit,
+        onQuitEnd: this.listeners['DOM:DETAIL_OFF']
       }}>
-        {detail}
+        {jsx(
+          this.props.views[this.state.index].Detail,
+          this.state.detail.props
+        )}
       </ShutFromLeft>
     )
   }
 
   Buttons() {
-    const mainColor = this.props.colors.base
-    const subColor = this.props.colors.sub
-
     return this.props.views.map((view, index, views) =>
       <Button key={index} {...{
         width: (winnerWidth() / views.length) - 0.5,
         inform: this.state.informs[index],
-        svg: jsx(view.Button, { mainColor, subColor, choised: index === this.state.index })
+        svg: jsx(view.Button, {
+          choised: index === this.state.index,
+          mainColor: this.props.colors.base,
+          subColor: this.props.colors.sub
+        })
       }}>
         <TouchStartCapture
           data-index={index}
@@ -306,7 +304,7 @@ const a = Atra({
     }
   },
   'MIDDLE_WRAP:EXHIBIT': {
-    id:"exhibitScrollElement",
+    id: EXHIBIT_SCROLL_ID,
     style: {
       position:"relative",
       height: "100%",
@@ -314,6 +312,9 @@ const a = Atra({
       WebkitOverflowScrolling:"touch",
       overflowX: "hidden"
     }
+  },
+  'MIDDLE_WRAP:DETAIL': {
+    id: DETAIL_SCROLL_ID
   },
   'POPDOWN_SHUT': {
     mountWithShut: true,
@@ -333,7 +334,7 @@ const a = Atra({
     }
   },
   'SIDES': {
-    id: 'sideScrollElement',
+    id: MOBILE_SIDE_SCROLL_ID,
     style: {
       position: 'fixed',
       top: 0,
@@ -347,29 +348,3 @@ const a = Atra({
     }
   }
 })
-
-type Props = {
-  firstIndex: number,
-  backgroundStyle: { [key: string]: string },
-  Preloader: React$Component,
-  sides: Array<>,
-  views: Array<>
-}
-
-type State = {
-  preloading: boolean,
-  drifting: boolean,
-  index: null | number,
-  exhibit: {
-    Component?: React$Component
-  },
-  detail: {
-    Component?: React$Component,
-    data?: any
-  },
-  popdown: {
-    src?: string,
-    vertically?: boolean
-  },
-  informs: [number, number, number, number]
-}

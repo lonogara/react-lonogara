@@ -1,6 +1,12 @@
 // @flow
 import React from 'react'
 
+export const EXHIBIT_SCROLL_ID = 'exhibitScrollElement'
+export const DETAIL_SCROLL_ID = 'detailScrollParent'
+export const MOBILE_SIDE_SCROLL_ID = 'sideScrollElement'
+export const getElementById = (id) => document.getElementById(id)
+export const extractDetailScrollElement = (el) => el.children[0].children[0].children[0]
+
 export const isArr = Array.isArray
 export const isObj = target => typeof target === 'object' && !isArr(target)
 export const isStr = target => typeof target === 'string'

@@ -2,7 +2,8 @@
 import { isArr, isStr, isFnc, typerror, error } from '../util.js'
 
 export default ({ views }) => {
-  const result = []
+
+  const result = { views: [], creates: [] }
 
   if (views) {
     if (!isArr(views)) {
@@ -27,7 +28,9 @@ export default ({ views }) => {
         typerror(`view.create must be "function" but ${typeof create}`)
       }
 
-      result.push({ head, Button, create })
+      result.views.push({ head, Button })
+      result.creates.push(create)
+      // result.push({ head, Button, create })
     })
   }
 

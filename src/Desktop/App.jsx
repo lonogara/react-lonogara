@@ -1,8 +1,9 @@
 // @flow
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import Atra from 'atra'
-import orph from './orph.js'
 import {
+  EXHIBIT_SCROLL_ID,
+  DETAIL_SCROLL_ID,
   jsx,
   isNum,
   createClickA,
@@ -27,7 +28,6 @@ import {
   ArrowLeft,
   ArrowWideUp,
   Popdown,
-  // ArrowUp,
   Strap
 } from './Soles.jsx'
 
@@ -36,65 +36,73 @@ const BUTTON_HEIGHT = 110
 const BOTTOM_MARGIN = 40
 const MouseDown = (props) => <Listen {...Object.assign({ type: 'onMouseDown' }, props)} />
 const MouseUp = (props) => <Listen {...Object.assign({ type: 'onMouseUp' }, props)} />
-const listeners = [
-  'WINDOW:RESIZE_FORCE_UPDATE',
-  'RENDER:PRELOADING_OFF',
-  'DOM:DETAIL_OFF',
-  'DOM:VIEW_SWITCH',
-  'DOM:DIM_SWITCH',
-  'RENDER:POPDOWN_OFF'
-]
+
+type Props = {
+  firstIndex: number,
+  backgroundStyle: { [key: string]: string },
+  Preloader: React$Component,
+  sides: Array<>,
+  views: Array<>
+}
+
+type State = {
+  preloading: boolean,
+  index?: number,
+  detail: {
+    props?: { [data: string]: any },
+    mountWithShut?: boolean
+  },
+  popdown: {
+    src?: string
+  },
+  dimming: boolean,
+  informs: [number, number, number, number]
+}
 
 export default class LonogaraDesktop extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      preloading: true,
-      dimming: false,
-      index: undefined,
-      exhibit: {},
-      detail: {},
-      popdown: {},
-      informs: [0, 0, 0, 0]
-    }
-  }
 
-  componentWillMount() {
-    orph.attach(this)
-    this.listeners = {}
-    listeners.forEach(NAME => { this.listeners[NAME] = orph.create(NAME) })
+    props.orph.attach(this)
+    this.listeners = props.orph.order([
+      'WINDOW:RESIZE_FORCE_UPDATE',
+      'RENDER:PRELOADING_OFF',
+      'DOM:DETAIL_OFF',
+      'DOM:VIEW_SWITCH',
+      'DOM:DIM_SWITCH',
+      'RENDER:POPDOWN_OFF'
+    ])
 
-    this.noButtons = this.props.views.length < 2
-
+    this.noButtons = props.views.length < 2
     this.detailQuit = this.DetailQuit()
     this.popdownQuit = this.PopdownQuit()
   }
 
   isReady() {
-    return isNum(this.state.index) && Boolean(this.props.backgroundStyle)
+    return Boolean(this.props.views) && Boolean(this.props.backgroundStyle)
   }
 
   render() {
-    return <div>
+    const isReady = this.isReady()
+    return <Fragment>
       {this.Layout()}
-      {this.isReady() && this.Tree()}
+      {isReady && this.Tree()}
       {this.state.popdown.src && this.Popdown()}
-      {this.state.preloading && this.Preload()}
-    </div>
+      {this.state.preloading && this.Preload(isReady ? 0 : 1)}
+    </Fragment>
   }
 
   componentDidMount() {
     windowOn("resize", this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
-    orph.dispatch('REACT:DID_MOUNT')
+    this.props.orph.dispatch('REACT:DID_MOUNT')
   }
 
   Tree() {
     const { noButtons } = this
     const { base } = this.props.colors
     const { dimming } = this.state
-    const mainHeight = winnerHeight() - HEAD_HEIGHT - (noButtons ? 80 : BUTTON_HEIGHT) - BOTTOM_MARGIN
-
+    const height = winnerHeight() - HEAD_HEIGHT - (noButtons ? 80 : BUTTON_HEIGHT) - BOTTOM_MARGIN
     return(
       <div {...a('ROOT')}>
         <header {...a('HEAD', { style: { visibility: dimming && 'hidden' } })}>
@@ -102,7 +110,7 @@ export default class LonogaraDesktop extends Component {
             {this.props.views[this.state.index].head}
           </span>
         </header>
-        <div {...a('MAIN', { style: { height: mainHeight, borderColor: base } })}>
+        <div {...a('MAIN', { style: { height, borderColor: base } })}>
           {this.Middle()}
           {this.DimSwitch()}
           {dimming && this.DimBoard()}
@@ -113,8 +121,6 @@ export default class LonogaraDesktop extends Component {
       </div>
     )
   }
-
-  /*-----------------------  -----------------------*/
 
   Layout() {
     return (
@@ -149,16 +155,16 @@ export default class LonogaraDesktop extends Component {
       </QuitPopdown>
   }
 
-  Preload() {
-    const onTransitionEnd = this.listeners['RENDER:PRELOADING_OFF']
-    const backgroundColor = this.props.colors.preloader
-    const opacity = this.isReady() ? 0 : 1
-    const deduct = 60
-    const preloader = jsx(this.props.Preloader)
-
+  Preload(opacity) {
     return (
-      <Preload {...{ onTransitionEnd, backgroundColor, opacity }}>
-        <Center {...{ deduct }}>{preloader}</Center>
+      <Preload {...{
+        opacity,
+        onTransitionEnd: this.listeners['RENDER:PRELOADING_OFF'],
+        backgroundColor: this.props.colors.preloader
+      }}>
+        <Center {...{ top: -60 }}>
+          {jsx(this.props.Preloader)}
+        </Center>
       </Preload>
     )
   }
@@ -167,7 +173,6 @@ export default class LonogaraDesktop extends Component {
     const Quit = this.popdownQuit
     const onQuitEnd = this.listeners['RENDER:POPDOWN_OFF']
     const { src } = this.state.popdown
-
     return (
       <ShutFromTop {...a('POPDOWN_SHUT', { Quit, onQuitEnd })}>
         <Popdown {...{ src }} />
@@ -176,32 +181,32 @@ export default class LonogaraDesktop extends Component {
   }
 
   Middle() {
-    const exhibit = jsx(this.state.exhibit.Component)
     return (
-      <div {...a('MIDDLE')}>
-        <div {...a('MIDDLE_WRAP:EXHIBIT')}>{exhibit}</div>
-        {this.state.detail.Component && this.Detail()}
+      <div {...a('MIDDLE_WRAP:BOTH')}>
+        <div {...a('MIDDLE_WRAP:EXHIBIT')}>
+          {jsx(this.props.views[this.state.index].Exhibit)}
+        </div>
+        <div {...a('MIDDLE_WRAP:DETAIL')}>
+          {this.state.detail.props && this.Detail()}
+        </div>
       </div>
     )
   }
 
   Detail() {
-    const background = this.props.colors.detail
-    const Quit = this.detailQuit
-    const onQuitEnd = this.listeners['DOM:DETAIL_OFF']
-    const { Component, props, mountWithShut } = this.state.detail
-    const detail = jsx(Component, props)
-
     return (
       <ShutFromLeft {...{
+        mountWithShut: this.state.detail.mountWithShut,
         touchRatio: 0,
         duration: 0.55,
-        background,
-        Quit,
-        onQuitEnd,
-        mountWithShut
+        background: this.props.colors.detail,
+        Quit: this.detailQuit,
+        onQuitEnd: this.listeners['DOM:DETAIL_OFF']
       }}>
-        {detail}
+        {jsx(
+          this.props.views[this.state.index].Detail,
+          this.state.detail.props
+        )}
       </ShutFromLeft>
     )
   }
@@ -219,7 +224,7 @@ export default class LonogaraDesktop extends Component {
     return (
       <DimBoard>
         <div {...a('DIM_WRAP')}>
-          <Center {...{ deduct: 24 }}>
+          <Center {...{ top: -24 }}>
             <div {...{ style: this.props.sides.length < 5 ? { textAlign: 'center' } : { display: 'flex' } }}>
               {this.DimItems()}
             </div>
@@ -245,7 +250,6 @@ export default class LonogaraDesktop extends Component {
 
   Buttons() {
     const { base, sub } = this.props.colors
-
     return this.props.views.map((view, index) =>
       <Button key={index} {...{
         width: 100,
@@ -293,7 +297,7 @@ const a = Atra({
       borderStyle: 'solid'
     }
   },
-  'MIDDLE': {
+  'MIDDLE_WRAP:BOTH': {
     style: {
       outline: 'none',
       position: 'relative',
@@ -302,11 +306,14 @@ const a = Atra({
     }
   },
   'MIDDLE_WRAP:EXHIBIT': {
-    id:'exhibitScrollElement',
+    id: EXHIBIT_SCROLL_ID,
     style: {
       overflowY: 'scroll',
       height: '100%'
     }
+  },
+  'MIDDLE_WRAP:DETAIL': {
+    id: DETAIL_SCROLL_ID
   },
   'BUTTONS': {
     style: {
@@ -329,29 +336,3 @@ const a = Atra({
     }
   }
 })
-
-type Props = {
-  firstIndex: number,
-  backgroundStyle: { [key: string]: string },
-  Preloader: React$Component,
-  sides: Array<>,
-  views: Array<>
-}
-
-type State = {
-  preloading: boolean,
-  dimming: boolean,
-  index: null | number,
-  exhibit: {
-    Component?: React$Component
-  },
-  detail: {
-    Component?: React$Component,
-    data?: any
-  },
-  popdown: {
-    src?: string,
-    vertically?: boolean
-  },
-  informs: [number, number, number, number]
-}
