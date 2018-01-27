@@ -12,9 +12,10 @@ const detailScrollElement = () => extractDetailScrollElement(getElementById(DETA
 
 const REACT = (extension = {}) => [assign(extension, {
 
-  DID_MOUNT: (n, { props, dispatch }): void => {
-    dispatch('RENDER:BY_REACT_DIDMOUNT', props('firstIndex'))
-  }
+  DID_MOUNT: (n, { props, dispatch }): void =>
+    props('firstIndex').then(firstIndex =>
+      dispatch('RENDER:BY_REACT_DIDMOUNT', firstIndex)
+    )
 
 }),{
   prefix: 'REACT:',
@@ -27,62 +28,62 @@ const REACT = (extension = {}) => [assign(extension, {
 const DOM = (extension = {}) => [assign(extension, {
 
   VIEW_SWITCH: (e, { state, dispatch }): void => {
-
-    const nowIndex = state('index')
     const index = +e.target.dataset.index
 
-    if (nowIndex !== index) {
-      Promise.all([
-        dispatch('STORE:SET_DATA', {
-          index: nowIndex,
-          key: 'exhibitScrollTop',
-          value: getElementById(EXHIBIT_SCROLL_ID).scrollTop
-        }),
-        state('detail', true).props && dispatch('STORE:SET_DATA', {
-          index: nowIndex,
-          key: 'detailScrollTop',
-          value: detailScrollElement().scrollTop
-        })
-      ])
-      .then(() => dispatch('STORE:GET_DATA', { index, key: 'detailProps' }))
-      .then((detailProps) =>
-        dispatch('RENDER:BY_DOM_VIEW_SWITCH', {
-          index,
-          detailProps,
-          renderCallback: async () => {
-            getElementById(EXHIBIT_SCROLL_ID).scrollTop = await dispatch(
-              'STORE:GET_DATA',
-              { index, key: 'exhibitScrollTop' }
-            )
-
-            if (detailProps) {
-              detailScrollElement().scrollTop = await dispatch(
+    return state('index').then(nowIndex =>
+      nowIndex !== index &&
+      state('detail', true).then(detail =>
+        Promise.all([
+          dispatch('STORE:SET_DATA', {
+            index: nowIndex,
+            key: 'exhibitScrollTop',
+            value: getElementById(EXHIBIT_SCROLL_ID).scrollTop
+          }),
+          detail.props && dispatch('STORE:SET_DATA', {
+            index: nowIndex,
+            key: 'detailScrollTop',
+            value: detailScrollElement().scrollTop
+          })
+        ])
+        .then(() => dispatch('STORE:GET_DATA', { index, key: 'detailProps' }))
+        .then((detailProps) =>
+          dispatch('RENDER:BY_DOM_VIEW_SWITCH', {
+            index,
+            detailProps,
+            renderCallback: async () => {
+              getElementById(EXHIBIT_SCROLL_ID).scrollTop = await dispatch(
                 'STORE:GET_DATA',
-                { index, key: 'detailScrollTop' }
+                { index, key: 'exhibitScrollTop' }
               )
+
+              if (detailProps) {
+                detailScrollElement().scrollTop = await dispatch(
+                  'STORE:GET_DATA',
+                  { index, key: 'detailScrollTop' }
+                )
+              }
             }
-          }
-        })
+          })
+        )
       )
-    }
+    )
   },
 
-  DETAIL_OFF: (n, { state, dispatch }): void => {
-    const index = state('index')
-
-    Promise.all([
-      dispatch(
-        'STORE:SET_DATA',
-        { index, key: 'detailScrollTop', value: 0 }
-      ),
-      dispatch(
-        'STORE:SET_DATA',
-        { index, key: 'detailProps', value: undefined }
-      )
-    ])
+  DETAIL_OFF: (n, { state, dispatch }): void =>
+    state('index')
+    .then(index =>
+      Promise.all([
+        dispatch(
+          'STORE:SET_DATA',
+          { index, key: 'detailScrollTop', value: 0 }
+        ),
+        dispatch(
+          'STORE:SET_DATA',
+          { index, key: 'detailProps', value: undefined }
+        )
+      ])
+    )
     .then(() => dispatch('RENDER:DETAIL_OFF'))
-  }
-
 }),{
   prefix: 'DOM:',
   use: {
@@ -95,9 +96,13 @@ const PASSED = (extension = {}) => [assign(extension, {
 
   DETAIL_ON: (data, { state, dispatch }): void => {
     const props = { data }
-    dispatch(
-      'STORE:SET_DATA',
-      { index: state('index'), key: 'detailProps', value: props }
+
+    state('index')
+    .then(index =>
+      dispatch(
+        'STORE:SET_DATA',
+        { index, key: 'detailProps', value: props }
+      )
     )
     .then(() => dispatch('RENDER:DETAIL_ON', props))
   },

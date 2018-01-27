@@ -12,7 +12,12 @@ export default (extension = {}) => [Object.assign(extension, {
     render({ popdown: {} }),
 
   DETAIL_ON: (props, { render }): void =>
-    render({ detail: { props, mountWithShut: true } }),
+    render({
+      detail: {
+        mountWithShut: true,
+        props: Object.assign({}, props, { isContinued: false })
+      }
+    }),
 
   DETAIL_OFF: (n, { render }): void =>
     render({ detail: {} }),
@@ -27,7 +32,10 @@ export default (extension = {}) => [Object.assign(extension, {
   },{ render }): void =>
     render({
       index,
-      detail: !detailProps ? {} : { props: detailProps, mountWithShut: false }
+      detail: !detailProps ? {} : {
+        mountWithShut: false,
+        props: Object.assign({}, detailProps, { isContinued: true })
+      }
     },renderCallback),
 
   INFORM_CHANGE: ({ index, inform }, { state, render }) => {

@@ -25,10 +25,12 @@ orph.register(...REACT())
 
 orph.register(...DOM({
   DIM_SWITCH: (e, { state, dispatch }): void =>
-    dispatch(
-      !state('dimming')
-      ? 'RENDER:DIMMING_ON'
-      : 'RENDER:DIMMING_OFF'
+    state('dimming').then(dimming =>
+      dispatch(
+        !dimming
+        ? 'RENDER:DIMMING_ON'
+        : 'RENDER:DIMMING_OFF'
+      )
     )
 }))
 

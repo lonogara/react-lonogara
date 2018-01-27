@@ -2658,9 +2658,9 @@ optionator@^0.8.1:
     type-check "~0.3.2"
     wordwrap "~1.0.0"
 
-orph@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/orph/-/orph-2.0.0.tgz#44e77ce59ad78c278b639494ff6fc3c2087b035a"
+orph@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/orph/-/orph-3.0.0.tgz#41b224fee3f5f98206918367a19a2c91c51cbc84"
 
 os-homedir@^1.0.0, os-homedir@^1.0.1:
   version "1.0.2"

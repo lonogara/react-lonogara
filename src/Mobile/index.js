@@ -21,10 +21,13 @@ orph.register(...RENDER({
   DRIFTING_ON: (n, { render }): void => render({ drifting: true }),
   DRIFTING_LAG: (n, { render }): void => render({ drifting: 'lag' }),
   DRIFTING_OFF: (n, { state, render }): void =>
-    state('drifting') === 'lag' &&
-    render({ drifting: false }, () => {
-      getElementById(MOBILE_SIDE_SCROLL_ID).scrollTop = 0
-    })
+    state('drifting').then(drifting =>
+      drifting === 'lag' &&
+      render(
+        { drifting: false },
+        () => { getElementById(MOBILE_SIDE_SCROLL_ID).scrollTop = 0 }
+      )
+    )
 }))
 
 orph.register(...REACT())

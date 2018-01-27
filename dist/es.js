@@ -1269,7 +1269,12 @@ var RENDER = function() {
 
       DETAIL_ON: function DETAIL_ON(props, _ref5) {
         var render = _ref5.render
-        return render({ detail: { props: props, mountWithShut: true } })
+        return render({
+          detail: {
+            mountWithShut: true,
+            props: Object.assign({}, props, { isContinued: false })
+          }
+        })
       },
 
       DETAIL_OFF: function DETAIL_OFF(n, _ref6) {
@@ -1292,7 +1297,10 @@ var RENDER = function() {
             index: index,
             detail: !detailProps
               ? {}
-              : { props: detailProps, mountWithShut: false }
+              : {
+                  mountWithShut: false,
+                  props: Object.assign({}, detailProps, { isContinued: true })
+                }
           },
           renderCallback
         )
@@ -1336,8 +1344,9 @@ var REACT = function REACT() {
       DID_MOUNT: function DID_MOUNT(n, _ref) {
         var props = _ref.props,
           dispatch = _ref.dispatch
-
-        dispatch('RENDER:BY_REACT_DIDMOUNT', props('firstIndex'))
+        return props('firstIndex').then(function(firstIndex) {
+          return dispatch('RENDER:BY_REACT_DIDMOUNT', firstIndex)
+        })
       }
     }),
     {
@@ -1359,106 +1368,116 @@ var DOM = function DOM() {
         var state = _ref2.state,
           dispatch = _ref2.dispatch
 
-        var nowIndex = state('index')
         var index = +e.target.dataset.index
 
-        if (nowIndex !== index) {
-          Promise.all([
-            dispatch('STORE:SET_DATA', {
-              index: nowIndex,
-              key: 'exhibitScrollTop',
-              value: getElementById(EXHIBIT_SCROLL_ID).scrollTop
-            }),
-            state('detail', true).props &&
-              dispatch('STORE:SET_DATA', {
-                index: nowIndex,
-                key: 'detailScrollTop',
-                value: detailScrollElement().scrollTop
-              })
-          ])
-            .then(function() {
-              return dispatch('STORE:GET_DATA', {
-                index: index,
-                key: 'detailProps'
-              })
-            })
-            .then(function(detailProps) {
-              return dispatch('RENDER:BY_DOM_VIEW_SWITCH', {
-                index: index,
-                detailProps: detailProps,
-                renderCallback: (function() {
-                  var _ref3 = asyncToGenerator(
-                    /*#__PURE__*/ _regeneratorRuntime.mark(function _callee() {
-                      return _regeneratorRuntime.wrap(
-                        function _callee$(_context) {
-                          while (1) {
-                            switch ((_context.prev = _context.next)) {
-                              case 0:
-                                _context.next = 2
-                                return dispatch('STORE:GET_DATA', {
-                                  index: index,
-                                  key: 'exhibitScrollTop'
-                                })
+        return state('index').then(function(nowIndex) {
+          return (
+            nowIndex !== index &&
+            state('detail', true).then(function(detail) {
+              return Promise.all([
+                dispatch('STORE:SET_DATA', {
+                  index: nowIndex,
+                  key: 'exhibitScrollTop',
+                  value: getElementById(EXHIBIT_SCROLL_ID).scrollTop
+                }),
+                detail.props &&
+                  dispatch('STORE:SET_DATA', {
+                    index: nowIndex,
+                    key: 'detailScrollTop',
+                    value: detailScrollElement().scrollTop
+                  })
+              ])
+                .then(function() {
+                  return dispatch('STORE:GET_DATA', {
+                    index: index,
+                    key: 'detailProps'
+                  })
+                })
+                .then(function(detailProps) {
+                  return dispatch('RENDER:BY_DOM_VIEW_SWITCH', {
+                    index: index,
+                    detailProps: detailProps,
+                    renderCallback: (function() {
+                      var _ref3 = asyncToGenerator(
+                        /*#__PURE__*/ _regeneratorRuntime.mark(
+                          function _callee() {
+                            return _regeneratorRuntime.wrap(
+                              function _callee$(_context) {
+                                while (1) {
+                                  switch ((_context.prev = _context.next)) {
+                                    case 0:
+                                      _context.next = 2
+                                      return dispatch('STORE:GET_DATA', {
+                                        index: index,
+                                        key: 'exhibitScrollTop'
+                                      })
 
-                              case 2:
-                                getElementById(EXHIBIT_SCROLL_ID).scrollTop =
-                                  _context.sent
+                                    case 2:
+                                      getElementById(
+                                        EXHIBIT_SCROLL_ID
+                                      ).scrollTop =
+                                        _context.sent
 
-                                if (!detailProps) {
-                                  _context.next = 7
-                                  break
+                                      if (!detailProps) {
+                                        _context.next = 7
+                                        break
+                                      }
+
+                                      _context.next = 6
+                                      return dispatch('STORE:GET_DATA', {
+                                        index: index,
+                                        key: 'detailScrollTop'
+                                      })
+
+                                    case 6:
+                                      detailScrollElement().scrollTop =
+                                        _context.sent
+
+                                    case 7:
+                                    case 'end':
+                                      return _context.stop()
+                                  }
                                 }
-
-                                _context.next = 6
-                                return dispatch('STORE:GET_DATA', {
-                                  index: index,
-                                  key: 'detailScrollTop'
-                                })
-
-                              case 6:
-                                detailScrollElement().scrollTop = _context.sent
-
-                              case 7:
-                              case 'end':
-                                return _context.stop()
-                            }
+                              },
+                              _callee,
+                              _this
+                            )
                           }
-                        },
-                        _callee,
-                        _this
+                        )
                       )
-                    })
-                  )
 
-                  return function renderCallback() {
-                    return _ref3.apply(this, arguments)
-                  }
-                })()
-              })
+                      return function renderCallback() {
+                        return _ref3.apply(this, arguments)
+                      }
+                    })()
+                  })
+                })
             })
-        }
+          )
+        })
       },
 
       DETAIL_OFF: function DETAIL_OFF(n, _ref4) {
         var state = _ref4.state,
           dispatch = _ref4.dispatch
-
-        var index = state('index')
-
-        Promise.all([
-          dispatch('STORE:SET_DATA', {
-            index: index,
-            key: 'detailScrollTop',
-            value: 0
-          }),
-          dispatch('STORE:SET_DATA', {
-            index: index,
-            key: 'detailProps',
-            value: undefined
+        return state('index')
+          .then(function(index) {
+            return Promise.all([
+              dispatch('STORE:SET_DATA', {
+                index: index,
+                key: 'detailScrollTop',
+                value: 0
+              }),
+              dispatch('STORE:SET_DATA', {
+                index: index,
+                key: 'detailProps',
+                value: undefined
+              })
+            ])
           })
-        ]).then(function() {
-          return dispatch('RENDER:DETAIL_OFF')
-        })
+          .then(function() {
+            return dispatch('RENDER:DETAIL_OFF')
+          })
       }
     }),
     {
@@ -1481,13 +1500,18 @@ var PASSED = function PASSED() {
           dispatch = _ref5.dispatch
 
         var props = { data: data }
-        dispatch('STORE:SET_DATA', {
-          index: state('index'),
-          key: 'detailProps',
-          value: props
-        }).then(function() {
-          return dispatch('RENDER:DETAIL_ON', props)
-        })
+
+        state('index')
+          .then(function(index) {
+            return dispatch('STORE:SET_DATA', {
+              index: index,
+              key: 'detailProps',
+              value: props
+            })
+          })
+          .then(function() {
+            return dispatch('RENDER:DETAIL_ON', props)
+          })
       },
 
       POPDOWN_ON: function POPDOWN_ON(arg, _ref6) {
@@ -1773,8 +1797,8 @@ var Guardian = function(_ref) {
           _this.results.backgroundStyle.backgroundImage =
             'url(' + backgroundURL + ')'
         } else {
-          _this.asynces.push(
-            fetch(backgroundURL)
+          _this.asynces.push(function() {
+            return fetch(backgroundURL)
               .then(function(res) {
                 return res.ok && res.blob()
               })
@@ -1787,7 +1811,7 @@ var Guardian = function(_ref) {
                     'url(' + backgroundURL + ')'
                 }
               })
-          )
+          })
         }
       }
 
@@ -1798,8 +1822,8 @@ var Guardian = function(_ref) {
       _this.results.views = views
 
       creates.forEach(function(create, index) {
-        return _this.asynces.push(
-          orph
+        return _this.asynces.push(function() {
+          return orph
             .dispatch('STORE:INIT', { index: index, initials: initials })
             .then(function() {
               return create({
@@ -1826,7 +1850,7 @@ var Guardian = function(_ref) {
                 _this.results.views[index][key] = components[key]
               })
             })
-        )
+        })
       })
       return _this
     }
@@ -1866,7 +1890,11 @@ var Guardian = function(_ref) {
         value: function componentDidMount() {
           var _this2 = this
 
-          Promise.all(this.asynces).then(function() {
+          Promise.all(
+            this.asynces.map(function(fn) {
+              return fn()
+            })
+          ).then(function() {
             return raf(function() {
               return _this2.setState({ ready: true })
             })
@@ -1915,9 +1943,9 @@ orph.register.apply(
       DIM_SWITCH: function DIM_SWITCH(e, _ref3) {
         var state = _ref3.state,
           dispatch = _ref3.dispatch
-        return dispatch(
-          !state('dimming') ? 'RENDER:DIMMING_ON' : 'RENDER:DIMMING_OFF'
-        )
+        return state('dimming').then(function(dimming) {
+          return dispatch(!dimming ? 'RENDER:DIMMING_ON' : 'RENDER:DIMMING_OFF')
+        })
       }
     })
   )
@@ -2745,12 +2773,14 @@ orph$1.register.apply(
       DRIFTING_OFF: function DRIFTING_OFF(n, _ref3) {
         var state = _ref3.state,
           render = _ref3.render
-        return (
-          state('drifting') === 'lag' &&
-          render({ drifting: false }, function() {
-            getElementById(MOBILE_SIDE_SCROLL_ID).scrollTop = 0
-          })
-        )
+        return state('drifting').then(function(drifting) {
+          return (
+            drifting === 'lag' &&
+            render({ drifting: false }, function() {
+              getElementById(MOBILE_SIDE_SCROLL_ID).scrollTop = 0
+            })
+          )
+        })
       }
     })
   )
