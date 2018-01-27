@@ -1834,8 +1834,8 @@ var Guardian = function(_ref) {
           _this.results.backgroundStyle.backgroundImage =
             'url(' + backgroundURL + ')'
         } else {
-          _this.asynces.push(function() {
-            return fetch(backgroundURL)
+          _this.asynces.push(
+            fetch(backgroundURL)
               .then(function(res) {
                 return res.ok && res.blob()
               })
@@ -1848,7 +1848,7 @@ var Guardian = function(_ref) {
                     'url(' + backgroundURL + ')'
                 }
               })
-          })
+          )
         }
       }
 
@@ -1859,8 +1859,8 @@ var Guardian = function(_ref) {
       _this.results.views = views
 
       creates.forEach(function(create, index) {
-        return _this.asynces.push(function() {
-          return orph
+        return _this.asynces.push(
+          orph
             .dispatch('STORE:INIT', { index: index, initials: initials })
             .then(function() {
               return create({
@@ -1887,12 +1887,24 @@ var Guardian = function(_ref) {
                 _this.results.views[index][key] = components[key]
               })
             })
-        })
+        )
       })
       return _this
     }
 
     createClass(Guardian, [
+      {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+          var _this2 = this
+
+          Promise.all(this.asynces).then(function() {
+            return raf(function() {
+              return _this2.setState({ ready: true })
+            })
+          })
+        }
+      },
       {
         key: 'render',
         value: function render() {
@@ -1920,22 +1932,6 @@ var Guardian = function(_ref) {
               )
             )
           )
-        }
-      },
-      {
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-          var _this2 = this
-
-          Promise.all(
-            this.asynces.map(function(fn) {
-              return fn()
-            })
-          ).then(function() {
-            return raf(function() {
-              return _this2.setState({ ready: true })
-            })
-          })
         }
       }
     ])

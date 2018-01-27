@@ -29,7 +29,7 @@ export default ({ App, orph, defaults }) =>
         if (backgroundURL.includes('http')) {
           this.results.backgroundStyle.backgroundImage = `url(${backgroundURL})`
         } else {
-          this.asynces.push(() =>
+          this.asynces.push(
             fetch(backgroundURL)
             .then((res) => res.ok && res.blob())
             .then((blob) => blob && createBlobURL(blob))
@@ -47,7 +47,7 @@ export default ({ App, orph, defaults }) =>
       this.results.views = views
 
       creates.forEach((create, index) =>
-        this.asynces.push(() =>
+        this.asynces.push(
           orph.dispatch('STORE:INIT', { index, initials })
           .then(() =>
             create({
@@ -63,6 +63,10 @@ export default ({ App, orph, defaults }) =>
           )
         )
       )
+    }
+
+    componentDidMount() {
+      Promise.all(this.asynces).then(() => raf(() => this.setState({ ready: true })))
     }
 
     render() {
@@ -86,9 +90,5 @@ export default ({ App, orph, defaults }) =>
           views: this.state.ready && this.results.views
         }} />
       </Fragment>
-    }
-
-    componentDidMount() {
-      Promise.all(this.asynces.map(fn => fn())).then(() => raf(() => this.setState({ ready: true })))
     }
   }
