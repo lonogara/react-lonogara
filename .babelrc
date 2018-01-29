@@ -1,9 +1,12 @@
 {
+  "presets": [
+    "flow",
+    "react"
+  ],
   "env": {
     "BUILD": {
       "presets": [
-        "es2015-rollup",
-        "react"
+        "es2015-rollup"
       ],
       "plugins": [
         "transform-async-to-generator",
@@ -17,13 +20,24 @@
     "TEST": {
       "presets": [
         ["env", { "targets": { "node": "current" } }],
-        "flow",
-        "react"
       ],
       "plugins": [
         "istanbul",
         ["espower", { "embedAst": true }],
         "empower-assert"
+      ]
+    },
+    "WDS": {
+      "presets": [
+        ["env", { "targets": { "browsers": ["last 2 versions", "safari >= 7"] } }]
+      ],
+      "plugins": [
+        "transform-async-to-generator",
+        ["transform-runtime", {
+          "helpers": false,
+          "polyfill": false,
+          "regenerator": true
+        }]
       ]
     }
   }

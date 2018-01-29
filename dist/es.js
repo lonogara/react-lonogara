@@ -233,6 +233,14 @@ var createBlobURL = function createBlobURL(blob) {
   return window.URL.createObjectURL(blob)
 }
 
+var lag = function lag() {
+  var time =
+    arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0
+  return new Promise(function(resolve) {
+    return setTimeout(resolve, time)
+  })
+}
+
 var jsx$1 = function jsx$$1(Component$$1, props) {
   return isFnc(Component$$1) && React.createElement(Component$$1, props)
 }
@@ -276,7 +284,7 @@ var Preload = (function(a) {
         bottom: 0,
         left: 0,
         right: 0,
-        transitionDuration: '0.7s',
+        transitionDuration: '0.45s',
         transitionProperty: 'opacity'
       }
     },
@@ -424,8 +432,13 @@ var DimItem = (function(a) {
 
 var DimBoard = (function(a) {
   return function(_ref3) {
-    var children = _ref3.children
-    return React.createElement('div', a('ROOT'), children)
+    var backgroundColor = _ref3.backgroundColor,
+      children = _ref3.children
+    return React.createElement(
+      'div',
+      a('ROOT', { style: { backgroundColor: backgroundColor } }),
+      children
+    )
   }
 })(
   Atra({
@@ -435,8 +448,7 @@ var DimBoard = (function(a) {
         top: 0,
         width: '100%',
         height: '100%',
-        overflow: 'hidden',
-        background: 'rgba(28, 28, 28, 0.9)'
+        overflow: 'hidden'
       }
     }
   })
@@ -797,17 +809,31 @@ var LonogaraDesktop = (function(_Component) {
       'RENDER:POPDOWN_OFF'
     ])
 
-    _this.noButtons = props.views.length < 2
-    _this.detailQuit = _this.DetailQuit()
-    _this.popdownQuit = _this.PopdownQuit()
+    _this.DetailQuit = _this.HoDetailQuit()
+    _this.PopdownQuit = _this.HoPopdownQuit()
     return _this
   }
 
   createClass(LonogaraDesktop, [
     {
+      key: 'componentDidMount',
+      value: function componentDidMount() {
+        windowOn('resize', this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
+        this.props.orph.dispatch('REACT:DID_MOUNT')
+      }
+    },
+    {
+      key: 'componentWillReceiveProps',
+      value: function componentWillReceiveProps(nextProps) {
+        if (nextProps.views && !('noButtons' in this)) {
+          this.noButtons = nextProps.views.length < 2
+        }
+      }
+    },
+    {
       key: 'isReady',
       value: function isReady() {
-        return Boolean(this.props.views) && Boolean(this.props.backgroundStyle)
+        return Boolean(this.props.views)
       }
     },
     {
@@ -817,18 +843,11 @@ var LonogaraDesktop = (function(_Component) {
         return React.createElement(
           Fragment,
           null,
-          this.Layout(),
+          this.Background(),
           isReady && this.Tree(),
           this.state.popdown.src && this.Popdown(),
           this.state.preloading && this.Preload(isReady ? 0 : 1)
         )
-      }
-    },
-    {
-      key: 'componentDidMount',
-      value: function componentDidMount() {
-        windowOn('resize', this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
-        this.props.orph.dispatch('REACT:DID_MOUNT')
       }
     },
     {
@@ -843,6 +862,7 @@ var LonogaraDesktop = (function(_Component) {
           HEAD_HEIGHT -
           (noButtons ? 80 : BUTTON_HEIGHT) -
           BOTTOM_MARGIN
+        var view = this.props.views[this.state.index] || {}
         return React.createElement(
           'div',
           a('ROOT'),
@@ -852,13 +872,13 @@ var LonogaraDesktop = (function(_Component) {
             React.createElement(
               'span',
               a('HEAD:WORD', { style: { color: base } }),
-              this.props.views[this.state.index].head
+              view.head
             )
           ),
           React.createElement(
             'div',
             a('MAIN', { style: { height: height, borderColor: base } }),
-            this.Middle(),
+            this.Middle(view),
             this.DimSwitch(),
             dimming && this.DimBoard()
           ),
@@ -872,8 +892,8 @@ var LonogaraDesktop = (function(_Component) {
       }
     },
     {
-      key: 'Layout',
-      value: function Layout() {
+      key: 'Background',
+      value: function Background$$1() {
         return React.createElement(
           'div',
           {
@@ -895,8 +915,8 @@ var LonogaraDesktop = (function(_Component) {
       }
     },
     {
-      key: 'DetailQuit',
-      value: function DetailQuit() {
+      key: 'HoDetailQuit',
+      value: function HoDetailQuit() {
         var _this2 = this
 
         return function(_ref) {
@@ -913,8 +933,8 @@ var LonogaraDesktop = (function(_Component) {
       }
     },
     {
-      key: 'PopdownQuit',
-      value: function PopdownQuit() {
+      key: 'HoPopdownQuit',
+      value: function HoPopdownQuit() {
         return function(_ref2) {
           var fn = _ref2.fn
           return React.createElement(
@@ -943,7 +963,7 @@ var LonogaraDesktop = (function(_Component) {
     {
       key: 'Popdown',
       value: function Popdown$$1() {
-        var Quit = this.popdownQuit
+        var Quit = this.PopdownQuit
         var onQuitEnd = this.listeners['RENDER:POPDOWN_OFF']
         var src = this.state.popdown.src
 
@@ -956,26 +976,26 @@ var LonogaraDesktop = (function(_Component) {
     },
     {
       key: 'Middle',
-      value: function Middle() {
+      value: function Middle(view) {
         return React.createElement(
           'div',
           a('MIDDLE_WRAP:BOTH'),
           React.createElement(
             'div',
             a('MIDDLE_WRAP:EXHIBIT'),
-            jsx$1(this.props.views[this.state.index].Exhibit)
+            jsx$1(view.Exhibit)
           ),
           React.createElement(
             'div',
             a('MIDDLE_WRAP:DETAIL'),
-            this.state.detail.props && this.Detail()
+            this.state.detail.props && this.Detail(view)
           )
         )
       }
     },
     {
       key: 'Detail',
-      value: function Detail() {
+      value: function Detail(view) {
         return React.createElement(
           ShutFromLeft,
           {
@@ -983,13 +1003,10 @@ var LonogaraDesktop = (function(_Component) {
             touchRatio: 0,
             duration: 0.55,
             background: this.props.colors.detail,
-            Quit: this.detailQuit,
+            Quit: this.DetailQuit,
             onQuitEnd: this.listeners['DOM:DETAIL_OFF']
           },
-          jsx$1(
-            this.props.views[this.state.index].Detail,
-            this.state.detail.props
-          )
+          jsx$1(view.Detail, this.state.detail.props)
         )
       }
     },
@@ -1011,7 +1028,7 @@ var LonogaraDesktop = (function(_Component) {
       value: function DimBoard$$1() {
         return React.createElement(
           DimBoard,
-          null,
+          { backgroundColor: this.props.colors.links },
           React.createElement(
             'div',
             a('DIM_WRAP'),
@@ -1022,7 +1039,7 @@ var LonogaraDesktop = (function(_Component) {
                 'div',
                 {
                   style:
-                    this.props.sides.length < 5
+                    this.props.links.length < 5
                       ? { textAlign: 'center' }
                       : { display: 'flex' }
                 },
@@ -1036,7 +1053,7 @@ var LonogaraDesktop = (function(_Component) {
     {
       key: 'DimItems',
       value: function DimItems() {
-        return this.props.sides.map(function(_ref3, index) {
+        return this.props.links.map(function(_ref3, index) {
           var href = _ref3.href,
             buttonImage = _ref3.buttonImage,
             coverColor = _ref3.coverColor,
@@ -1311,10 +1328,10 @@ var RENDER = function() {
           inform = _ref10.inform
         var state = _ref11.state,
           render = _ref11.render
-
-        var informs = state('informs')
-        informs[index] = inform
-        render({ informs: informs })
+        return state('informs').then(function(informs) {
+          informs[index] = inform
+          render({ informs: informs })
+        })
       }
     }),
     {
@@ -1563,10 +1580,10 @@ var background = function(_ref) {
         style = _background[1]
 
       if (!isStr(_url)) {
-        typerror('')
+        typerror('props.background url must be "string"')
       }
       if (!isObj(style)) {
-        typerror('')
+        typerror('props.background style must be "object"')
       }
 
       result.backgroundURL = _url
@@ -1578,7 +1595,7 @@ var background = function(_ref) {
         result.backgroundStyle[key] = value
       })
     } else {
-      typerror('')
+      typerror('props.background is invalid')
     }
   }
 
@@ -1586,17 +1603,17 @@ var background = function(_ref) {
 }
 
 //
-var sides = function(_ref) {
-  var sides = _ref.sides
+var links = function(_ref) {
+  var links = _ref.links
 
   var result = []
 
-  if (sides) {
-    if (!isArr(sides)) {
-      typerror('')
+  if (links) {
+    if (!isArr(links)) {
+      typerror('props.links must be "array"')
     }
 
-    sides.forEach(function(_ref2) {
+    links.forEach(function(_ref2) {
       var href = _ref2.href,
         buttonImage = _ref2.buttonImage,
         coverColor = _ref2.coverColor,
@@ -1612,21 +1629,21 @@ var sides = function(_ref) {
 
       if (href) {
         if (!isStr(href)) {
-          typerror('')
+          typerror('props.link.href must be "string"')
         }
         side.href = href
       }
 
       if (buttonImage) {
         if (!isStr(buttonImage)) {
-          typerror('')
+          typerror('props.link.buttonImage must be "string"')
         }
         side.buttonImage = 'url(' + buttonImage + ')'
       }
 
       if (coverColor) {
         if (!isStr(coverColor)) {
-          typerror('')
+          typerror('props.link.coverColor must be "string"')
         }
         side.coverColor = coverColor
       }
@@ -1640,16 +1657,16 @@ var sides = function(_ref) {
             style = _description[1]
 
           if (!isStr(text)) {
-            typerror('')
+            typerror('props.link.description must be "string"')
           }
           if (!isObj(style)) {
-            typerror('')
+            typerror('props.link.description style must be "object"')
           }
 
           side.descriptionText = text
           side.descriptionStyle = style
         } else {
-          typerror('')
+          typerror('props.link.description is invalid')
         }
       }
 
@@ -1668,11 +1685,11 @@ var views = function(_ref) {
 
   if (views) {
     if (!isArr(views)) {
-      typerror('')
+      typerror('props.views must be "array"')
     }
 
     if (views.length > 7) {
-      error('')
+      error('props.views max length => 7')
     }
 
     views.forEach(function(_ref2) {
@@ -1681,10 +1698,10 @@ var views = function(_ref) {
         create = _ref2.create
 
       if (head && !isStr(head)) {
-        typerror('')
+        typerror('props.view.head must be "string"')
       }
       if (!isFnc(Button)) {
-        typerror('')
+        typerror('props.view.Button required as component function')
       }
       if (!create) {
         error('view.create is required')
@@ -1698,7 +1715,6 @@ var views = function(_ref) {
 
       result.views.push({ head: head, Button: Button })
       result.creates.push(create)
-      // result.push({ head, Button, create })
     })
   }
 
@@ -1718,7 +1734,7 @@ var HoColors = function HoColors(Colors) {
       }
       if (
         !Object.values(colors).every(function(value) {
-          return isStr(value)
+          return isStr(value) || !value
         })
       ) {
         typerror('props.colors contain invalied value')
@@ -1734,7 +1750,13 @@ var HoColors = function HoColors(Colors) {
 }
 
 var firstIndex = function firstIndex(_ref2) {
-  var firstIndex = _ref2.firstIndex
+  var firstIndex = _ref2.firstIndex,
+    views$$1 = _ref2.views
+
+  if (firstIndex > views$$1.length - 1) {
+    throw new Error('props.firstIndex > views.length - 1')
+  }
+
   return isNum(firstIndex) ? firstIndex : 0
 }
 var preloader = function preloader(_ref3) {
@@ -1747,7 +1769,7 @@ var create = function create() {
     firstIndex: firstIndex,
     background: background,
     preloader: preloader,
-    sides: sides,
+    links: links,
     views: views
   }
 }
@@ -1784,7 +1806,7 @@ var Guardian = function(_ref) {
       _this.results.firstIndex = defaults$$1.firstIndex(props)
       _this.results.colors = defaults$$1.colors(props)
       _this.results.Preloader = defaults$$1.preloader(props)
-      _this.results.sides = defaults$$1.sides(props)
+      _this.results.links = defaults$$1.links(props)
 
       var _defaults$background = defaults$$1.background(props),
         backgroundURL = _defaults$background.backgroundURL,
@@ -1828,15 +1850,21 @@ var Guardian = function(_ref) {
             .then(function() {
               return create({
                 renderDetail: function renderDetail(data) {
-                  return orph.dispatch('PASSED:DETAIL_ON', data)
+                  return lag().then(function() {
+                    return orph.dispatch('PASSED:DETAIL_ON', data)
+                  })
                 },
                 setPopdown: function setPopdown(src) {
-                  return orph.dispatch('PASSED:POPDOWN_ON', src)
+                  return lag().then(function() {
+                    return orph.dispatch('PASSED:POPDOWN_ON', src)
+                  })
                 },
                 setInform: function setInform(inform) {
-                  return orph.dispatch('PASSED:INFORM_ON', {
-                    index: index,
-                    inform: inform
+                  return lag().then(function() {
+                    return orph.dispatch('PASSED:INFORM_ON', {
+                      index: index,
+                      inform: inform
+                    })
                   })
                 }
               })
@@ -1887,7 +1915,7 @@ var Guardian = function(_ref) {
                   firstIndex: this.results.firstIndex,
                   colors: this.results.colors,
                   Preloader: this.results.Preloader,
-                  sides: this.results.sides,
+                  links: this.results.links,
                   backgroundStyle:
                     this.state.ready && this.results.backgroundStyle,
                   views: this.state.ready && this.results.views
@@ -1971,7 +1999,8 @@ defaults$1.colors = HoColors(function() {
     background: 'rgba(0, 0, 0, 0.6)',
     preloader: 'rgb(241, 241, 241)',
     detail: 'rgb(243, 243, 243)',
-    detailQuit: 'rgb(66, 62, 89)'
+    detailQuit: 'rgb(66, 62, 89)',
+    links: 'rgba(28, 28, 28, 0.9)'
   }
 })
 
@@ -2345,7 +2374,7 @@ var LonogaraMobile = (function(_Component) {
   inherits(LonogaraMobile, _Component)
 
   // this.listeners: { [name: string]: () => {} }
-  // sides: React$Node
+  // links: React$Node
 
   function LonogaraMobile(props) {
     classCallCheck(this, LonogaraMobile)
@@ -2369,18 +2398,36 @@ var LonogaraMobile = (function(_Component) {
       'RENDER:POPDOWN_OFF'
     ])
 
-    _this.noButtons = props.views.length < 2
-    _this.sides = _this.Sides()
-    _this.detailQuit = _this.DetailQuit()
-    _this.popdownQuit = _this.PopdownQuit()
+    _this.links = _this.Links()
+    _this.DetailQuit = _this.HoDetailQuit()
+    _this.PopdownQuit = _this.HoPopdownQuit()
     return _this
   }
 
   createClass(LonogaraMobile, [
     {
+      key: 'componentDidMount',
+      value: function componentDidMount() {
+        this.props.orph.dispatch('REACT:DID_MOUNT')
+      }
+    },
+    {
+      key: 'componentWillReceiveProps',
+      value: function componentWillReceiveProps(nextProps) {
+        if (nextProps.views) {
+          // if (!('noHeader' in this)) {
+          //   this.noHeader = nextProps.views.every(({ head }) => !head)
+          // }
+          if (!('noButtons' in this)) {
+            this.noButtons = nextProps.views.length < 2
+          }
+        }
+      }
+    },
+    {
       key: 'isReady',
       value: function isReady() {
-        return Boolean(this.props.views) && Boolean(this.props.backgroundStyle)
+        return Boolean(this.props.views)
       }
     },
     {
@@ -2397,12 +2444,6 @@ var LonogaraMobile = (function(_Component) {
       }
     },
     {
-      key: 'componentDidMount',
-      value: function componentDidMount() {
-        this.props.orph.dispatch('REACT:DID_MOUNT')
-      }
-    },
-    {
       key: 'Tree',
       value: function Tree() {
         var drifting = this.state.drifting
@@ -2415,9 +2456,10 @@ var LonogaraMobile = (function(_Component) {
         var transition = !drifting || drifting === 'lag' ? '0.6s' : '0.72s'
         var height = winnerHeight() - (noButtons ? 0 : BUTTON_HEIGHT$1)
         var veil = this.Veil()
+        var view = this.props.views[this.state.index] || {}
         return React.createElement(
           'div',
-          { style: { backgroundColor: this.props.colors.side } },
+          { style: { backgroundColor: this.props.colors.links } },
           React.createElement(
             'aside',
             a$1('SIDES', {
@@ -2427,13 +2469,13 @@ var LonogaraMobile = (function(_Component) {
                 height: height
               }
             }),
-            this.sides
+            this.links
           ),
           React.createElement(
             'div',
             a$1('HEAD_AND_MIDDLE', { style: { transform: transform } }),
-            this.Head(),
-            this.Middle(),
+            this.Head(view),
+            this.Middle(view),
             veil
           ),
           !noButtons &&
@@ -2442,9 +2484,9 @@ var LonogaraMobile = (function(_Component) {
       }
     },
     {
-      key: 'Sides',
-      value: function Sides() {
-        return this.props.sides.map(function(_ref, index) {
+      key: 'Links',
+      value: function Links() {
+        return this.props.links.map(function(_ref, index) {
           var href = _ref.href,
             buttonImage = _ref.buttonImage,
             coverColor = _ref.coverColor,
@@ -2468,8 +2510,8 @@ var LonogaraMobile = (function(_Component) {
       }
     },
     {
-      key: 'DetailQuit',
-      value: function DetailQuit() {
+      key: 'HoDetailQuit',
+      value: function HoDetailQuit() {
         var _this2 = this
 
         return function(_ref2) {
@@ -2493,8 +2535,8 @@ var LonogaraMobile = (function(_Component) {
       }
     },
     {
-      key: 'PopdownQuit',
-      value: function PopdownQuit() {
+      key: 'HoPopdownQuit',
+      value: function HoPopdownQuit() {
         return function(_ref3) {
           var fn = _ref3.fn
           return React.createElement(
@@ -2536,7 +2578,7 @@ var LonogaraMobile = (function(_Component) {
     {
       key: 'Popdown',
       value: function Popdown$$1() {
-        var Quit = this.popdownQuit
+        var Quit = this.PopdownQuit
         var onQuitEnd = this.listeners['RENDER:POPDOWN_OFF']
         var _state$popdown = this.state.popdown,
           src = _state$popdown.src,
@@ -2567,7 +2609,7 @@ var LonogaraMobile = (function(_Component) {
     },
     {
       key: 'Head',
-      value: function Head$$1() {
+      value: function Head$$1(view) {
         var _props$colors = this.props.colors,
           base = _props$colors.base,
           sub = _props$colors.sub
@@ -2576,7 +2618,7 @@ var LonogaraMobile = (function(_Component) {
           Head,
           {
             height: HEAD_HEIGHT$1,
-            word: this.props.views[this.state.index].head,
+            word: view.head,
             backgroundColor: base,
             color: sub
           },
@@ -2589,7 +2631,7 @@ var LonogaraMobile = (function(_Component) {
     },
     {
       key: 'Middle',
-      value: function Middle() {
+      value: function Middle(view) {
         var height =
           winnerHeight() -
           HEAD_HEIGHT$1 -
@@ -2612,12 +2654,12 @@ var LonogaraMobile = (function(_Component) {
               a$1('MIDDLE_WRAP:EXHIBIT', {
                 style: { overflowY: isDetail ? 'hidden' : 'scroll' }
               }),
-              jsx$1(this.props.views[this.state.index].Exhibit)
+              jsx$1(view.Exhibit)
             ),
             React.createElement(
               'div',
               a$1('MIDDLE_WRAP:DETAIL'),
-              isDetail && this.Detail()
+              isDetail && this.Detail(view)
             )
           )
         )
@@ -2625,7 +2667,7 @@ var LonogaraMobile = (function(_Component) {
     },
     {
       key: 'Detail',
-      value: function Detail() {
+      value: function Detail(view) {
         return React.createElement(
           ShutFromLeft,
           {
@@ -2633,13 +2675,10 @@ var LonogaraMobile = (function(_Component) {
             duration: 0.55,
             background: this.props.colors.detail,
             notScroll: Boolean(this.state.popdown.src),
-            Quit: this.detailQuit,
+            Quit: this.DetailQuit,
             onQuitEnd: this.listeners['DOM:DETAIL_OFF']
           },
-          jsx$1(
-            this.props.views[this.state.index].Detail,
-            this.state.detail.props
-          )
+          jsx$1(view.Detail, this.state.detail.props)
         )
       }
     },
@@ -2798,7 +2837,7 @@ defaults$2.colors = HoColors(function() {
     preloader: 'rgb(241, 241, 241)',
     detail: 'rgb(243, 243, 243)',
     detailQuit: 'rgb(24, 24, 35)',
-    side: 'rgb(77, 172, 125)'
+    links: 'rgb(77, 172, 125)'
   }
 })
 

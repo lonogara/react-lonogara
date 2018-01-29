@@ -45,7 +45,7 @@ type Props = {
   firstIndex: number,
   backgroundStyle: { [key: string]: string },
   Preloader: React$Component,
-  sides: Array<>,
+  links: Array<>,
   views: Array<>
 }
 
@@ -66,7 +66,7 @@ type State = {
 
 export default class LonogaraMobile extends Component {
   // this.listeners: { [name: string]: () => {} }
-  // sides: React$Node
+  // links: React$Node
 
   constructor(props) {
     super(props)
@@ -82,14 +82,28 @@ export default class LonogaraMobile extends Component {
       'RENDER:POPDOWN_OFF'
     ])
 
-    this.noButtons = props.views.length < 2
-    this.sides = this.Sides()
-    this.detailQuit = this.DetailQuit()
-    this.popdownQuit = this.PopdownQuit()
+    this.links = this.Links()
+    this.DetailQuit = this.HoDetailQuit()
+    this.PopdownQuit = this.HoPopdownQuit()
+  }
+
+  componentDidMount() {
+    this.props.orph.dispatch('REACT:DID_MOUNT')
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.views) {
+      // if (!('noHeader' in this)) {
+      //   this.noHeader = nextProps.views.every(({ head }) => !head)
+      // }
+      if (!('noButtons' in this)) {
+        this.noButtons = nextProps.views.length < 2
+      }
+    }
   }
 
   isReady() {
-    return Boolean(this.props.views) && Boolean(this.props.backgroundStyle)
+    return Boolean(this.props.views)
   }
 
   render() {
@@ -101,10 +115,6 @@ export default class LonogaraMobile extends Component {
     </Fragment>
   }
 
-  componentDidMount() {
-    this.props.orph.dispatch('REACT:DID_MOUNT')
-  }
-
   Tree() {
     const { drifting } = this.state
     const { noButtons } = this
@@ -112,14 +122,15 @@ export default class LonogaraMobile extends Component {
     const transition = (!drifting || drifting === 'lag') ? '0.6s' : '0.72s'
     const height = winnerHeight() - (noButtons ? 0 : BUTTON_HEIGHT)
     const veil = this.Veil()
+    const view = this.props.views[this.state.index] || {}
     return (
-      <div {...{ style: { backgroundColor: this.props.colors.side } }}>
+      <div {...{ style: { backgroundColor: this.props.colors.links } }}>
         <aside {...a('SIDES', { style: { transform, transition, height } })}>
-          {this.sides}
+          {this.links}
         </aside>
         <div {...a('HEAD_AND_MIDDLE', { style: { transform } })}>
-          {this.Head()}
-          {this.Middle()}
+          {this.Head(view)}
+          {this.Middle(view)}
           {veil}
         </div>
         {!noButtons && <nav {...a('BUTTONS')}>
@@ -130,8 +141,8 @@ export default class LonogaraMobile extends Component {
     )
   }
 
-  Sides() {
-    return this.props.sides.map(({ href, buttonImage, coverColor, descriptionText, descriptionStyle }, index) =>
+  Links() {
+    return this.props.links.map(({ href, buttonImage, coverColor, descriptionText, descriptionStyle }, index) =>
       <SideItem key={index} {...{
         size: SIDE_WIDTH / 1.7,
         buttonImage,
@@ -144,7 +155,7 @@ export default class LonogaraMobile extends Component {
     )
   }
 
-  DetailQuit() {
+  HoDetailQuit() {
     return ({ fn }) =>
       <QuitDetail>
         <ArrowLeft stroke={this.props.colors.detailQuit} />
@@ -159,7 +170,7 @@ export default class LonogaraMobile extends Component {
       </QuitDetail>
   }
 
-  PopdownQuit() {
+  HoPopdownQuit() {
     return ({ fn }) =>
       <QuitPopdown>
         <ArrowWideUp />
@@ -186,7 +197,7 @@ export default class LonogaraMobile extends Component {
   }
 
   Popdown() {
-    const Quit = this.popdownQuit
+    const Quit = this.PopdownQuit
     const onQuitEnd = this.listeners['RENDER:POPDOWN_OFF']
     const { src, vertically } = this.state.popdown
     const top = vertically && "4%"
@@ -208,12 +219,12 @@ export default class LonogaraMobile extends Component {
     )
   }
 
-  Head() {
+  Head(view) {
     const { base, sub } = this.props.colors
     return (
       <Head {...{
         height: HEAD_HEIGHT,
-        word: this.props.views[this.state.index].head,
+        word: view.head,
         backgroundColor: base,
         color: sub
       }}>
@@ -223,7 +234,7 @@ export default class LonogaraMobile extends Component {
     )
   }
 
-  Middle() {
+  Middle(view) {
     const height = winnerHeight() - HEAD_HEIGHT - (this.noButtons ? 0 : BUTTON_HEIGHT)
     const backgroundStyle = this.props.backgroundStyle
     const backgroundColor = this.props.colors.background
@@ -234,30 +245,27 @@ export default class LonogaraMobile extends Component {
         <Background {...{ style: { backgroundColor } }} />
         <div {...a('MIDDLE_WRAP:BOTH')}>
           <div {...a('MIDDLE_WRAP:EXHIBIT', { style: { overflowY: isDetail ? 'hidden' : 'scroll' } })}>
-            {jsx(this.props.views[this.state.index].Exhibit)}
+            {jsx(view.Exhibit)}
           </div>
           <div {...a('MIDDLE_WRAP:DETAIL')}>
-            {isDetail && this.Detail()}
+            {isDetail && this.Detail(view)}
           </div>
         </div>
       </div>
     )
   }
 
-  Detail() {
+  Detail(view) {
     return (
       <ShutFromLeft {...{
         mountWithShut: this.state.detail.mountWithShut,
         duration: 0.55,
         background: this.props.colors.detail,
         notScroll: Boolean(this.state.popdown.src),
-        Quit: this.detailQuit,
+        Quit: this.DetailQuit,
         onQuitEnd: this.listeners['DOM:DETAIL_OFF']
       }}>
-        {jsx(
-          this.props.views[this.state.index].Detail,
-          this.state.detail.props
-        )}
+        {jsx(view.Detail,this.state.detail.props)}
       </ShutFromLeft>
     )
   }

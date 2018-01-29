@@ -115,7 +115,10 @@ export const DimItem = ((a) =>
 
 export const DimBoard = ((a) =>
 
-  ({ children }) => <div {...a('ROOT')}>{children}</div>
+  ({ backgroundColor, children }) =>
+    <div {...a('ROOT', { style: { backgroundColor } })}>
+      {children}
+    </div>
 
 )(Atra({
   ROOT: {
@@ -124,8 +127,7 @@ export const DimBoard = ((a) =>
       top: 0,
       width: '100%',
       height: '100%',
-      overflow: 'hidden',
-      background: 'rgba(28, 28, 28, 0.9)'
+      overflow: 'hidden'
     }
   }
 }))

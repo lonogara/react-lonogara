@@ -1,6 +1,6 @@
 // @flow
 import React, { Component, Fragment } from 'react'
-import { createBlobURL, raf } from './util.js'
+import { createBlobURL, lag, raf } from './util.js'
 
 const initials = [
   { key: 'exhibitScrollTop', value: 0 },
@@ -19,7 +19,7 @@ export default ({ App, orph, defaults }) =>
       this.results.firstIndex = defaults.firstIndex(props)
       this.results.colors = defaults.colors(props)
       this.results.Preloader = defaults.preloader(props)
-      this.results.sides = defaults.sides(props)
+      this.results.links = defaults.links(props)
 
       const { backgroundURL, backgroundStyle } = defaults.background(props)
 
@@ -51,9 +51,9 @@ export default ({ App, orph, defaults }) =>
           orph.dispatch('STORE:INIT', { index, initials })
           .then(() =>
             create({
-              renderDetail: data => orph.dispatch('PASSED:DETAIL_ON', data),
-              setPopdown: src => orph.dispatch('PASSED:POPDOWN_ON', src),
-              setInform: inform => orph.dispatch('PASSED:INFORM_ON', { index, inform })
+              renderDetail: data => lag().then(() => orph.dispatch('PASSED:DETAIL_ON', data)),
+              setPopdown: src => lag().then(() => orph.dispatch('PASSED:POPDOWN_ON', src)),
+              setInform: inform => lag().then(() => orph.dispatch('PASSED:INFORM_ON', { index, inform }))
             })
           )
           .then((components = {}) =>
@@ -85,7 +85,7 @@ export default ({ App, orph, defaults }) =>
           firstIndex: this.results.firstIndex,
           colors: this.results.colors,
           Preloader: this.results.Preloader,
-          sides: this.results.sides,
+          links: this.results.links,
           backgroundStyle: this.state.ready && this.results.backgroundStyle,
           views: this.state.ready && this.results.views
         }} />

@@ -45,7 +45,7 @@ defaults.colors = HoColors(() => ({
   preloader: 'rgb(241, 241, 241)',
   detail: 'rgb(243, 243, 243)',
   detailQuit: 'rgb(24, 24, 35)',
-  side: 'rgb(77, 172, 125)'
+  links: 'rgb(77, 172, 125)'
 }))
 
 export default Guardian({ App, orph, defaults })

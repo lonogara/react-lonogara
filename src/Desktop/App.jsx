@@ -41,7 +41,7 @@ type Props = {
   firstIndex: number,
   backgroundStyle: { [key: string]: string },
   Preloader: React$Component,
-  sides: Array<>,
+  links: Array<>,
   views: Array<>
 }
 
@@ -74,28 +74,34 @@ export default class LonogaraDesktop extends Component {
       'RENDER:POPDOWN_OFF'
     ])
 
-    this.noButtons = props.views.length < 2
-    this.detailQuit = this.DetailQuit()
-    this.popdownQuit = this.PopdownQuit()
+    this.DetailQuit = this.HoDetailQuit()
+    this.PopdownQuit = this.HoPopdownQuit()
+  }
+
+
+  componentDidMount() {
+    windowOn("resize", this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
+    this.props.orph.dispatch('REACT:DID_MOUNT')
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.views && !('noButtons' in this)) {
+      this.noButtons = nextProps.views.length < 2
+    }
   }
 
   isReady() {
-    return Boolean(this.props.views) && Boolean(this.props.backgroundStyle)
+    return Boolean(this.props.views)
   }
 
   render() {
     const isReady = this.isReady()
     return <Fragment>
-      {this.Layout()}
+      {this.Background()}
       {isReady && this.Tree()}
       {this.state.popdown.src && this.Popdown()}
       {this.state.preloading && this.Preload(isReady ? 0 : 1)}
     </Fragment>
-  }
-
-  componentDidMount() {
-    windowOn("resize", this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
-    this.props.orph.dispatch('REACT:DID_MOUNT')
   }
 
   Tree() {
@@ -103,15 +109,16 @@ export default class LonogaraDesktop extends Component {
     const { base } = this.props.colors
     const { dimming } = this.state
     const height = winnerHeight() - HEAD_HEIGHT - (noButtons ? 80 : BUTTON_HEIGHT) - BOTTOM_MARGIN
+    const view = this.props.views[this.state.index] || {}
     return(
       <div {...a('ROOT')}>
         <header {...a('HEAD', { style: { visibility: dimming && 'hidden' } })}>
           <span {...a('HEAD:WORD', { style: { color: base } })}>
-            {this.props.views[this.state.index].head}
+            {view.head}
           </span>
         </header>
         <div {...a('MAIN', { style: { height, borderColor: base } })}>
-          {this.Middle()}
+          {this.Middle(view)}
           {this.DimSwitch()}
           {dimming && this.DimBoard()}
         </div>
@@ -122,7 +129,7 @@ export default class LonogaraDesktop extends Component {
     )
   }
 
-  Layout() {
+  Background() {
     return (
       <div {...{
         style: {
@@ -139,7 +146,7 @@ export default class LonogaraDesktop extends Component {
     )
   }
 
-  DetailQuit() {
+  HoDetailQuit() {
     return ({ fn }) =>
       <QuitDetail>
         <ArrowLeft stroke={this.props.colors.detailQuit} />
@@ -147,7 +154,7 @@ export default class LonogaraDesktop extends Component {
       </QuitDetail>
   }
 
-  PopdownQuit() {
+  HoPopdownQuit() {
     return ({ fn }) =>
       <QuitPopdown>
         <ArrowWideUp />
@@ -170,7 +177,7 @@ export default class LonogaraDesktop extends Component {
   }
 
   Popdown() {
-    const Quit = this.popdownQuit
+    const Quit = this.PopdownQuit
     const onQuitEnd = this.listeners['RENDER:POPDOWN_OFF']
     const { src } = this.state.popdown
     return (
@@ -180,33 +187,30 @@ export default class LonogaraDesktop extends Component {
     )
   }
 
-  Middle() {
+  Middle(view) {
     return (
       <div {...a('MIDDLE_WRAP:BOTH')}>
         <div {...a('MIDDLE_WRAP:EXHIBIT')}>
-          {jsx(this.props.views[this.state.index].Exhibit)}
+          {jsx(view.Exhibit)}
         </div>
         <div {...a('MIDDLE_WRAP:DETAIL')}>
-          {this.state.detail.props && this.Detail()}
+          {this.state.detail.props && this.Detail(view)}
         </div>
       </div>
     )
   }
 
-  Detail() {
+  Detail(view) {
     return (
       <ShutFromLeft {...{
         mountWithShut: this.state.detail.mountWithShut,
         touchRatio: 0,
         duration: 0.55,
         background: this.props.colors.detail,
-        Quit: this.detailQuit,
+        Quit: this.DetailQuit,
         onQuitEnd: this.listeners['DOM:DETAIL_OFF']
       }}>
-        {jsx(
-          this.props.views[this.state.index].Detail,
-          this.state.detail.props
-        )}
+        {jsx(view.Detail,this.state.detail.props)}
       </ShutFromLeft>
     )
   }
@@ -222,10 +226,10 @@ export default class LonogaraDesktop extends Component {
 
   DimBoard() {
     return (
-      <DimBoard>
+      <DimBoard backgroundColor={this.props.colors.links}>
         <div {...a('DIM_WRAP')}>
           <Center {...{ top: -24 }}>
-            <div {...{ style: this.props.sides.length < 5 ? { textAlign: 'center' } : { display: 'flex' } }}>
+            <div {...{ style: this.props.links.length < 5 ? { textAlign: 'center' } : { display: 'flex' } }}>
               {this.DimItems()}
             </div>
           </Center>
@@ -235,7 +239,7 @@ export default class LonogaraDesktop extends Component {
   }
 
   DimItems() {
-    return this.props.sides.map(({ href, buttonImage, coverColor, descriptionText, descriptionStyle }, index) =>
+    return this.props.links.map(({ href, buttonImage, coverColor, descriptionText, descriptionStyle }, index) =>
       <DimItem key={index} {...{
         size: 130,
         buttonImage,

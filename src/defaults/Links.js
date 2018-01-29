@@ -1,15 +1,15 @@
 // @flow
 import { isArr, isStr, isObj, typerror } from '../util.js'
 
-export default ({ sides }) => {
+export default ({ links }) => {
   const result = []
 
-  if (sides) {
-    if (!isArr(sides)) {
-      typerror(``)
+  if (links) {
+    if (!isArr(links)) {
+      typerror(`props.links must be "array"`)
     }
 
-    sides.forEach(({ href, buttonImage, coverColor, description }) => {
+    links.forEach(({ href, buttonImage, coverColor, description }) => {
       const side = {
         href: undefined,
         buttonImage: undefined,
@@ -20,21 +20,21 @@ export default ({ sides }) => {
 
       if (href) {
         if (!isStr(href)) {
-          typerror(``)
+          typerror(`props.link.href must be "string"`)
         }
         side.href = href
       }
 
       if (buttonImage) {
         if (!isStr(buttonImage)) {
-          typerror(``)
+          typerror(`props.link.buttonImage must be "string"`)
         }
         side.buttonImage = `url(${buttonImage})`
       }
 
       if (coverColor) {
         if (!isStr(coverColor)) {
-          typerror(``)
+          typerror(`props.link.coverColor must be "string"`)
         }
         side.coverColor = coverColor
       }
@@ -45,16 +45,16 @@ export default ({ sides }) => {
         } else if (isArr(description)) {
           const [text, style] = description
           if (!isStr(text)) {
-            typerror(``)
+            typerror(`props.link.description must be "string"`)
           }
           if (!isObj(style)) {
-            typerror(``)
+            typerror(`props.link.description style must be "object"`)
           }
 
           side.descriptionText = text
           side.descriptionStyle = style
         } else {
-          typerror(``)
+          typerror(`props.link.description is invalid`)
         }
       }
 

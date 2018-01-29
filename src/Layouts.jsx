@@ -24,7 +24,7 @@ export const Preload = ((a) =>
       bottom: 0,
       left: 0,
       right: 0,
-      transitionDuration: '0.7s',
+      transitionDuration: '0.45s',
       transitionProperty: 'opacity'
     }
   },

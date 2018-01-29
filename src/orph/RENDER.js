@@ -38,11 +38,11 @@ export default (extension = {}) => [Object.assign(extension, {
       }
     },renderCallback),
 
-  INFORM_CHANGE: ({ index, inform }, { state, render }) => {
-    const informs = state('informs')
-    informs[index] = inform
-    render({ informs })
-  }
+  INFORM_CHANGE: ({ index, inform }, { state, render }) =>
+    state('informs').then(informs => {
+      informs[index] = inform
+      render({ informs })
+    })
 
 }),{
   prefix: 'RENDER:',

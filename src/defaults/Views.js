@@ -7,19 +7,19 @@ export default ({ views }) => {
 
   if (views) {
     if (!isArr(views)) {
-      typerror(``)
+      typerror(`props.views must be "array"`)
     }
 
     if(views.length > 7) {
-      error('')
+      error('props.views max length => 7')
     }
 
     views.forEach(({ head, Button, create }) => {
       if (head && !isStr(head)) {
-        typerror(``)
+        typerror(`props.view.head must be "string"`)
       }
       if (!isFnc(Button)) {
-        typerror(``)
+        typerror(`props.view.Button required as component function`)
       }
       if (!create) {
         error(`view.create is required`)
@@ -30,7 +30,6 @@ export default ({ views }) => {
 
       result.views.push({ head, Button })
       result.creates.push(create)
-      // result.push({ head, Button, create })
     })
   }
 

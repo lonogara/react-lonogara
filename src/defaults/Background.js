@@ -16,10 +16,10 @@ export default ({ background }) => {
       const [url, style] = background
 
       if (!isStr(url)) {
-        typerror(``)
+        typerror(`props.background url must be "string"`)
       }
       if (!isObj(style)) {
-        typerror(``)
+        typerror(`props.background style must be "object"`)
       }
 
       result.backgroundURL = url
@@ -27,7 +27,7 @@ export default ({ background }) => {
         result.backgroundStyle[key] = value
       })
     } else {
-      typerror(``)
+      typerror(`props.background is invalid`)
     }
   }
 

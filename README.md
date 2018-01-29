@@ -1,4 +1,4 @@
-# 路の柄
+# 路の柄 / lonogara
 
 <!-- [![Build Status]()]()
 [![Coverage Status]()]()
@@ -11,32 +11,83 @@
 
 * **view the local.** -->
 
-## usage
+<!-- ## Installation
+```shell
+yarn
+``` -->
+
+## Usage
 
 ```js
 import React from 'react'
 import { render } from 'react-dom'
-import { Desktop, Mobile } from 'lonogara'
-import props from './props'
+import { Mobile, Desktop } from 'lonogara'
 
-render(
-  isMobile() ? <Mobile {...props} /> : <Desktop {...props} />,
-  document.getElementById('app')
-)
+window.addEventListener('load', () => {
+  const App = navigator.userAgent.toLowerCase().includes('mobile')
+    ? Mobile
+    : Desktop
+
+  render(<App {...props} />, document.getElementById('app'))
+})
 ```
 
-## props
+## Props
 
-```js
-type Props = {}
-```
+### firstIndex: number
 
-<!-- ## Installation
-```shell
-```
-## Usage
-```js
-```
-## API
+### Preloader: () => ReactNode
+
+Able to use: [`lonogara-tool/preloader`](https://github.com/kthjm/lonogara-tool/tree/master/preloader)
+
+### background: url | [url, style]
+
+same origin url will be fetched then used as `BlobUrl`.
+
+### colors: { [key]: color }
+
+* `base`
+* `sub`
+* `background`
+* `preloader`
+* `detail`
+* `detailQuit`
+* `links`
+
+### links: Array<{...}>
+
+* `href: url`
+* `buttonImage: url`
+* `coverColor: color`
+* `description: string | [string, style]`
+
+### views: Array<{...}>
+
+#### head: string
+
+#### Button: (props) => ReactNode
+
+##### props
+
+* `choised: boolean`
+* `mainColor: colors.base`
+* `subColor: colors.sub`
+
+Able to use: [`lonogara-tool/button`](https://github.com/kthjm/lonogara-tool/tree/master/button)
+
+#### create: (utils) => components | Promise<\components>
+
+##### utils
+
+* `renderDetail: (data: any) => Promise<void>`
+* `setPopdown: (src: string) => Promise<void>`
+* `setInform: (inform: number) => Promise<void>`
+
+##### components
+
+* `Exhibit: () => ReactNode`
+* `Detail: ({ data, isContinued }) => ReactNode`
+
 ## License
-MIT (http://opensource.org/licenses/MIT) -->
+
+MIT (http://opensource.org/licenses/MIT)

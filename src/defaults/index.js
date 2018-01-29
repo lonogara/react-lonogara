@@ -1,6 +1,6 @@
 // @flow
 import background from './Background.js'
-import sides from './Sides.js'
+import links from './Links.js'
 import views from './Views.js'
 import {
   isObj,
@@ -17,7 +17,7 @@ export const HoColors = (Colors) => ({ colors }) => {
     if (!isObj(colors)) {
       typerror(`props.colors must be "pure object"`)
     }
-    if (!Object.values(colors).every(value => isStr(value))) {
+    if (!Object.values(colors).every(value => isStr(value) || !value)) {
       typerror(`props.colors contain invalied value`)
     }
 
@@ -29,7 +29,13 @@ export const HoColors = (Colors) => ({ colors }) => {
   return result
 }
 
-const firstIndex = ({ firstIndex }) => (isNum(firstIndex) ? firstIndex : 0)
+const firstIndex = ({ firstIndex, views }) => {
+  if (firstIndex > views.length - 1) {
+    throw new Error('props.firstIndex > views.length - 1')
+  }
+
+  return isNum(firstIndex) ? firstIndex : 0
+}
 const preloader = ({ Preloader }) => isFnc(Preloader) && Preloader
 
-export const create = () => ({ firstIndex, background, preloader, sides, views })
+export const create = () => ({ firstIndex, background, preloader, links, views })

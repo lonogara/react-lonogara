@@ -24,6 +24,7 @@ export const windowOn = (type, fn, opts) => window.addEventListener(type, fn, op
 export const windowOff = (type, fn, opts) => window.removeEventListener(type, fn, opts)
 export const createBlobURL = (blob) => window.URL.createObjectURL(blob)
 export const revokeBlobURL = (blob) => window.URL.revokeObjectURL(blob)
+export const lag = (time=0) => new Promise(resolve => setTimeout(resolve, time))
 
 export const jsx = (Component, props) => isFnc(Component) && <Component {...props} />
 

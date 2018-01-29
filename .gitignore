@@ -1,4 +1,5 @@
-src/.garbage
+wds/served/dll.js
+wds/served/dll.manifest.json
 
 # Logs
 logs
