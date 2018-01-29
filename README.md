@@ -1,5 +1,7 @@
 # 路の柄 / lonogara
 
+![](https://github.com/kthjm/ikc-lonogara/blob/master/src/single/rogo/opengraph.white.svg)
+
 <!-- [![Build Status]()]()
 [![Coverage Status]()]()
 
