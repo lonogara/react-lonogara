@@ -4606,9 +4606,9 @@ optionator@^0.8.1:
     type-check "~0.3.2"
     wordwrap "~1.0.0"
 
-orph@^3.0.6:
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/orph/-/orph-3.0.6.tgz#76bf3d7643cc424253aa7d5802ab6a11d8d4a4db"
+orph@^3.0.7:
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/orph/-/orph-3.0.7.tgz#ff3a452c8703c38423a7848fe63f5c6c8dca05e4"
 
 os-browserify@^0.3.0:
   version "0.3.0"
