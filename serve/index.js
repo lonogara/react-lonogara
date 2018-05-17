@@ -1,12 +1,22 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { House } from 'lonogara-tool/button'
-import { RotaingPlaneLoading as Preloader } from 'lonogara-tool/preloader'
+import { House } from 'lonogara-sdk/button'
+import { RotaingPlaneLoading as Preloader } from 'lonogara-sdk/preloader'
 import * as lonogara from '../src'
+import backgroundURL from './background.png';
 
-window.addEventListener('load', () => {
+const arr = num => [...lengthGenerate(num)]
 
-  const isMobile = navigator.userAgent.toLowerCase().includes('mobile')
+function* lengthGenerate(num) {
+  let from = 0
+  while (from < num) {
+    yield from
+    from++
+  }
+}
+
+const rendering = (isMobile) => {
+
   const App = isMobile ? lonogara.Mobile : lonogara.Desktop
 
   render(
@@ -16,7 +26,7 @@ window.addEventListener('load', () => {
 
       Preloader: () => <Preloader size={60} />,
 
-      background: ['./background.jpg', {
+      background: [backgroundURL, {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
       }],
@@ -96,13 +106,12 @@ window.addEventListener('load', () => {
     }} />,
     document.getElementById('app')
   )
-})
-
-const arr = num => [...lengthGenerate(num)]
-function* lengthGenerate(num) {
-  let from = 0
-  while (from < num) {
-    yield from
-    from++
-  }
 }
+
+rendering(
+  navigator
+  .userAgent
+  .toLowerCase()
+  .includes('mobile')
+)
+

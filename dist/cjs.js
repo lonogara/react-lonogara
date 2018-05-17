@@ -11,8 +11,8 @@ var React__default = _interopDefault(React)
 var Atra = _interopDefault(require('atra'))
 var reactShut = require('react-shut')
 var Center = _interopDefault(require('react-centpn'))
-var Orph = _interopDefault(require('orph'))
 var _regeneratorRuntime = _interopDefault(require('babel-runtime/regenerator'))
+var Orph = _interopDefault(require('orph'))
 
 var _typeof =
   typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol'
@@ -190,6 +190,7 @@ var toConsumableArray = function(arr) {
 }
 
 //
+
 var EXHIBIT_SCROLL_ID = 'exhibitScrollElement'
 var DETAIL_SCROLL_ID = 'detailScrollParent'
 var MOBILE_SIDE_SCROLL_ID = 'sideScrollElement'
@@ -233,15 +234,12 @@ var winnerHeight = function winnerHeight() {
 var raf = function raf(callback) {
   return window.requestAnimationFrame(callback)
 }
-
 var windowOn = function windowOn(type, fn, opts) {
   return window.addEventListener(type, fn, opts)
 }
-
 var createBlobURL = function createBlobURL(blob) {
   return window.URL.createObjectURL(blob)
 }
-
 var lag = function lag() {
   var time =
     arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0
@@ -250,10 +248,8 @@ var lag = function lag() {
   })
 }
 
-var jsx$1 = function jsx$$1(Component$$1, props) {
-  return (
-    isFnc(Component$$1) && React__default.createElement(Component$$1, props)
-  )
+var jsx$1 = function jsx$$1(Component, props) {
+  return isFnc(Component) && React__default.createElement(Component, props)
 }
 
 var createClickA = function createClickA(href) {
@@ -271,6 +267,7 @@ var createClickA = function createClickA(href) {
 }
 
 //
+
 var Preload = (function(a) {
   return function(_ref) {
     var onTransitionEnd = _ref.onTransitionEnd,
@@ -310,6 +307,7 @@ var Preload = (function(a) {
 )
 
 //
+
 var Button = (function(a) {
   return function(_ref) {
     var width = _ref.width,
@@ -567,6 +565,7 @@ var QuitPopdown = (function(a) {
 )
 
 //
+
 var Listen = (function(a) {
   var specifies = ['type', 'listener', 'positionValue']
   var reposition = function reposition(value) {
@@ -689,6 +688,7 @@ var ArrowWideUp = (function(a) {
 )
 
 //
+
 var Popdown = (function(a) {
   return function(_ref) {
     var src = _ref.src
@@ -793,6 +793,7 @@ var Strap = (function(a) {
 )
 
 //
+
 var HEAD_HEIGHT = 90
 var BUTTON_HEIGHT = 110
 var BOTTOM_MARGIN = 40
@@ -808,6 +809,8 @@ var MouseUp = function MouseUp(props) {
     Object.assign({ type: 'onMouseUp' }, props)
   )
 }
+
+var _ref3 = React__default.createElement(ArrowWideUp, null)
 
 var LonogaraDesktop = (function(_Component) {
   inherits(LonogaraDesktop, _Component)
@@ -966,7 +969,7 @@ var LonogaraDesktop = (function(_Component) {
           return React__default.createElement(
             QuitPopdown,
             null,
-            React__default.createElement(ArrowWideUp, null),
+            _ref3,
             React__default.createElement(MouseDown, {
               positionValue: -10,
               listener: fn
@@ -1088,12 +1091,12 @@ var LonogaraDesktop = (function(_Component) {
     {
       key: 'DimItems',
       value: function DimItems() {
-        return this.props.links.map(function(_ref3, index) {
-          var href = _ref3.href,
-            buttonImage = _ref3.buttonImage,
-            coverColor = _ref3.coverColor,
-            descriptionText = _ref3.descriptionText,
-            descriptionStyle = _ref3.descriptionStyle
+        return this.props.links.map(function(_ref4, index) {
+          var href = _ref4.href,
+            buttonImage = _ref4.buttonImage,
+            coverColor = _ref4.coverColor,
+            descriptionText = _ref4.descriptionText,
+            descriptionStyle = _ref4.descriptionStyle
           return React__default.createElement(
             DimItem,
             _extends(
@@ -1383,7 +1386,6 @@ var RENDER = function() {
 
 var _this = undefined
 
-//
 var assign = Object.assign
 
 var detailScrollElement = function detailScrollElement() {
@@ -1500,9 +1502,11 @@ var DOM = function DOM() {
                         )
                       )
 
-                      return function renderCallback() {
+                      function renderCallback() {
                         return _ref3.apply(this, arguments)
                       }
+
+                      return renderCallback
                     })()
                   })
                 })
@@ -1598,6 +1602,7 @@ var PASSED = function PASSED() {
 }
 
 //
+
 var background = function(_ref) {
   var background = _ref.background
 
@@ -1640,6 +1645,7 @@ var background = function(_ref) {
 }
 
 //
+
 var links = function(_ref) {
   var links = _ref.links
 
@@ -1715,6 +1721,7 @@ var links = function(_ref) {
 }
 
 //
+
 var views = function(_ref) {
   var views = _ref.views
 
@@ -1759,6 +1766,7 @@ var views = function(_ref) {
 }
 
 //
+
 var HoColors = function HoColors(Colors) {
   return function(_ref) {
     var colors = _ref.colors
@@ -1812,6 +1820,7 @@ var create = function create() {
 }
 
 //
+
 var initials = [
   { key: 'exhibitScrollTop', value: 0 },
   { key: 'detailScrollTop', value: 0 },
@@ -1968,6 +1977,7 @@ var Guardian = function(_ref) {
 }
 
 //
+
 var orph = new Orph({
   preloading: true,
   index: undefined,
@@ -2044,6 +2054,7 @@ defaults$1.colors = HoColors(function() {
 var index = Guardian({ App: LonogaraDesktop, orph: orph, defaults: defaults$1 })
 
 //
+
 var Button$1 = (function(a) {
   return function(_ref) {
     var width = _ref.width,
@@ -2313,6 +2324,7 @@ var QuitPopdown$1 = (function(a) {
 )
 
 //
+
 var Popdown$1 = (function(a) {
   return function(_ref) {
     var src = _ref.src,
@@ -2385,6 +2397,7 @@ var Burger = (function(a) {
 )
 
 //
+
 var HEAD_HEIGHT$1 = 190
 var BUTTON_HEIGHT$1 = 160
 var SIDE_WIDTH = 370
@@ -2406,6 +2419,8 @@ var TouchEndCapture = function TouchEndCapture(props) {
     Object.assign({ type: 'onTouchEndCapture' }, props)
   )
 }
+
+var _ref4 = React__default.createElement(ArrowWideUp, null)
 
 var LonogaraMobile = (function(_Component) {
   inherits(LonogaraMobile, _Component)
@@ -2586,7 +2601,7 @@ var LonogaraMobile = (function(_Component) {
           return React__default.createElement(
             QuitPopdown$1,
             null,
-            React__default.createElement(ArrowWideUp, null),
+            _ref4,
             React__default.createElement(TouchEnd, {
               onTouchStartCapture: function onTouchStartCapture(e) {
                 return e.stopPropagation()
@@ -2826,6 +2841,7 @@ var a$1 = Atra({
 })
 
 //
+
 var orph$1 = new Orph({
   preloading: true,
   index: undefined,

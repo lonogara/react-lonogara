@@ -1,5 +1,5 @@
-wds/served/dll.js
-wds/served/dll.manifest.json
+.cache/
+.serve/
 
 # Logs
 logs
