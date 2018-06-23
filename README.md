@@ -25,13 +25,14 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Mobile, Desktop } from 'lonogara'
 
-window.addEventListener('load', () => {
-  const App = navigator.userAgent.toLowerCase().includes('mobile')
-    ? Mobile
-    : Desktop
+const isMobile = () => navigator.userAgent.toLowerCase().includes('mobile')
 
-  render(<App {...props} />, document.getElementById('app'))
-})
+const App = isMobile() ? Mobile : Desktop
+
+render(
+  <App {...props} />,
+  document.getElementById('app')
+)
 ```
 
 ## Props
