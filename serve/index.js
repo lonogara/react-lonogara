@@ -114,4 +114,3 @@ rendering(
   .toLowerCase()
   .includes('mobile')
 )
-

@@ -17,9 +17,10 @@
   "scripts": {
     "start": "cross-env BABEL_ENV=DEV parcel serve serve/index.html --out-dir .serve --open",
     "//pretest": "flow",
-    "test": "cross-env BABEL_ENV=TEST nyc mocha --recursive",
+    "test": "cross-env BABEL_ENV=TEST nyc mocha",
     "prebuild": "yarn test",
-    "build": "cross-env BABEL_ENV=BUILD rollup -c"
+    "build": "cross-env BABEL_ENV=BUILD rollup -c",
+    "coverage": "nyc report --reporter=lcov && codecov"
   },
   "dependencies": {
     "atra": "^1.2.2",
@@ -49,7 +50,7 @@
     "flow-typed": "^2.2.1",
     "jsdom": "^11.5.1",
     "jsdom-global": "^3.0.2",
-    "lonogara-sdk": "https://github.com/kthjm/lonogara-sdk",
+    "lonogara-sdk": "https://github.com/lonogara/sdk",
     "mocha": "^4.1.0",
     "npm-run-all": "^4.1.2",
     "nyc": "^11.4.1",
