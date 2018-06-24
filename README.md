@@ -1,22 +1,4 @@
-# 路の柄 / lonogara
-
-![](https://i.gyazo.com/3a74206535199e07322a9ef8745fec47.png)
-
-<!-- [![Build Status]()]()
-[![Coverage Status]()]()
-
-## ?catchphrase?
-
-* **Local figures gathered**
-
-* **ローカルの形があつまった**
-
-* **view the local.** -->
-
-<!-- ## Installation
-```shell
-yarn
-``` -->
+# react-lonogara ![GitHub release](https://img.shields.io/github/release/lonogara/react-lonogara.svg?longCache=true&style=flat-square) [![CircleCI](https://img.shields.io/circleci/project/github/lonogara/react-lonogara.svg?longCache=true&style=flat-square)](https://circleci.com/gh/lonogara/react-lonogara) [![Codecov](https://img.shields.io/codecov/c/github/lonogara/react-lonogara.svg?longCache=true&style=flat-square)](https://codecov.io/gh/lonogara/react-lonogara)
 
 ## Usage
 
@@ -26,13 +8,8 @@ import { render } from 'react-dom'
 import { Mobile, Desktop } from 'lonogara'
 
 const isMobile = () => navigator.userAgent.toLowerCase().includes('mobile')
-
 const App = isMobile() ? Mobile : Desktop
-
-render(
-  <App {...props} />,
-  document.getElementById('app')
-)
+render(<App {...props} />, document.getElementById('app'))
 ```
 
 ## Props
@@ -41,7 +18,7 @@ render(
 
 ### Preloader: () => ReactNode
 
-Able to use: [`lonogara-tool/preloader`](https://github.com/kthjm/lonogara-tool/tree/master/preloader)
+Able to use: [`lonogara-tool/preloader`](https://github.com/lonogara/sdk/tree/master/preloader)
 
 ### background: url | [url, style]
 
@@ -76,7 +53,7 @@ same origin url will be fetched then used as `BlobUrl`.
 * `mainColor: colors.base`
 * `subColor: colors.sub`
 
-Able to use: [`lonogara-tool/button`](https://github.com/kthjm/lonogara-tool/tree/master/button)
+Able to use: [`lonogara-tool/button`](https://github.com/lonogara/sdk/tree/master/button)
 
 #### create: (utils) => components | Promise<\components>
 
