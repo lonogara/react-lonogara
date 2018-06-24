@@ -1,6 +1,6 @@
 # directories
 .circleci export-ignore
-serve export-ignore
+start export-ignore
 src export-ignore
 test export-ignore
 

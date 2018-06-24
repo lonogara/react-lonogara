@@ -15,7 +15,7 @@
     "instrument": false
   },
   "scripts": {
-    "start": "cross-env BABEL_ENV=DEV parcel serve serve/index.html --out-dir .serve --open",
+    "start": "cross-env BABEL_ENV=DEV parcel serve start/index.html --out-dir .start --open",
     "//pretest": "flow",
     "test": "cross-env BABEL_ENV=TEST nyc mocha",
     "prebuild": "yarn test",
