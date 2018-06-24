@@ -1,11 +1,10 @@
 {
-  "name": "lonogara",
-  "version": "0.0.10",
-  "private": true,
+  "name": "react-lonogara",
+  "version": "0.0.11",
   "main": "dist/cjs.js",
   "module": "dist/es.js",
   "jsnext:main": "dist/es.js",
-  "repository": "kthjm/lonogara",
+  "repository": "lonogara/react-lonogara",
   "author": "kthjm <toxictoxer@gmail.com>",
   "nyc": {
     "require": [
