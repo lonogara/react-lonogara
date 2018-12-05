@@ -1,6 +1,6 @@
 {
   "name": "react-lonogara",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "main": "dist/cjs.js",
   "module": "dist/es.js",
   "jsnext:main": "dist/es.js",
