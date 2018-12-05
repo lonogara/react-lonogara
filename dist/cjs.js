@@ -296,7 +296,9 @@ var createClickA = function createClickA(href) {
         var a = document.createElement('a')
         a.href = href
         a.target = href.includes('tel') ? '' : '_blank'
+        document.body.appendChild(a)
         a.click()
+        a.remove()
       }, 50)
     )
   }

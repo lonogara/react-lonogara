@@ -6,6 +6,9 @@ import prettier from 'rollup-plugin-prettier'
 
 export default {
   input: `src/index.js`,
+  external: [
+    '@babel/runtime/regenerator'
+  ],
   output: [
     { format: 'cjs', file: `dist/cjs.js` },
     { format: 'es', file: `dist/es.js` }
