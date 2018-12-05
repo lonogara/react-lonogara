@@ -121,11 +121,12 @@ export default class LonogaraMobile extends Component {
     const transform = (!drifting || drifting === 'lag') ? `translateX(0px)` : `translateX(${-SIDE_WIDTH}px)`
     const transition = (!drifting || drifting === 'lag') ? '0.6s' : '0.72s'
     const height = winnerHeight() - (noButtons ? 0 : BUTTON_HEIGHT)
+    const left = winnerWidth()
     const veil = this.Veil()
     const view = this.props.views[this.state.index] || {}
     return (
       <div {...{ style: { backgroundColor: this.props.colors.links } }}>
-        <aside {...a('SIDES', { style: { transform, transition, height } })}>
+        <aside {...a('SIDES', { style: { transform, transition, height, left } })}>
           {this.links}
         </aside>
         <div {...a('HEAD_AND_MIDDLE', { style: { transform } })}>
@@ -346,7 +347,7 @@ const a = Atra({
     style: {
       position: 'fixed',
       top: 0,
-      left: winnerWidth(),
+      // left: winnerWidth(),
       width: SIDE_WIDTH,
       fontSize: 34,
       color: '#fff',

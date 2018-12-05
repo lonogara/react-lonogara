@@ -33,5 +33,7 @@ export const createClickA = (href) =>
     const a = document.createElement('a')
     a.href = href
     a.target = href.includes('tel') ? '' : '_blank'
+    document.body.appendChild(a)
     a.click()
+    a.remove()
   }, 50)

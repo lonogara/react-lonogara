@@ -6,190 +6,234 @@ function _interopDefault(ex) {
   return ex && typeof ex === 'object' && 'default' in ex ? ex['default'] : ex
 }
 
+var _regeneratorRuntime = _interopDefault(require('@babel/runtime/regenerator'))
+var reactShut = require('react-shut')
+var Center = _interopDefault(require('react-centpn'))
 var React = require('react')
 var React__default = _interopDefault(React)
 var Atra = _interopDefault(require('atra'))
-var reactShut = require('react-shut')
-var Center = _interopDefault(require('react-centpn'))
-var _regeneratorRuntime = _interopDefault(require('babel-runtime/regenerator'))
 var Orph = _interopDefault(require('orph'))
 
-var _typeof =
-  typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol'
-    ? function(obj) {
-        return typeof obj
-      }
-    : function(obj) {
-        return obj &&
-          typeof Symbol === 'function' &&
-          obj.constructor === Symbol &&
-          obj !== Symbol.prototype
-          ? 'symbol'
-          : typeof obj
-      }
+function _typeof(obj) {
+  if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
+    _typeof = function(obj) {
+      return typeof obj
+    }
+  } else {
+    _typeof = function(obj) {
+      return obj &&
+        typeof Symbol === 'function' &&
+        obj.constructor === Symbol &&
+        obj !== Symbol.prototype
+        ? 'symbol'
+        : typeof obj
+    }
+  }
 
-var asyncToGenerator = function(fn) {
+  return _typeof(obj)
+}
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg)
+    var value = info.value
+  } catch (error) {
+    reject(error)
+    return
+  }
+
+  if (info.done) {
+    resolve(value)
+  } else {
+    Promise.resolve(value).then(_next, _throw)
+  }
+}
+
+function _asyncToGenerator(fn) {
   return function() {
-    var gen = fn.apply(this, arguments)
+    var self = this,
+      args = arguments
     return new Promise(function(resolve, reject) {
-      function step(key, arg) {
-        try {
-          var info = gen[key](arg)
-          var value = info.value
-        } catch (error) {
-          reject(error)
-          return
-        }
+      var gen = fn.apply(self, args)
 
-        if (info.done) {
-          resolve(value)
-        } else {
-          return Promise.resolve(value).then(
-            function(value) {
-              step('next', value)
-            },
-            function(err) {
-              step('throw', err)
-            }
-          )
-        }
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, 'next', value)
       }
 
-      return step('next')
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, 'throw', err)
+      }
+
+      _next(undefined)
     })
   }
 }
 
-var classCallCheck = function(instance, Constructor) {
+function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError('Cannot call a class as a function')
   }
 }
 
-var createClass = (function() {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i]
-      descriptor.enumerable = descriptor.enumerable || false
-      descriptor.configurable = true
-      if ('value' in descriptor) descriptor.writable = true
-      Object.defineProperty(target, descriptor.key, descriptor)
-    }
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i]
+    descriptor.enumerable = descriptor.enumerable || false
+    descriptor.configurable = true
+    if ('value' in descriptor) descriptor.writable = true
+    Object.defineProperty(target, descriptor.key, descriptor)
   }
+}
 
-  return function(Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps)
-    if (staticProps) defineProperties(Constructor, staticProps)
-    return Constructor
-  }
-})()
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps)
+  if (staticProps) _defineProperties(Constructor, staticProps)
+  return Constructor
+}
 
-var _extends =
-  Object.assign ||
-  function(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i]
+function _extends() {
+  _extends =
+    Object.assign ||
+    function(target) {
+      for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i]
 
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key]
+        for (var key in source) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
+            target[key] = source[key]
+          }
         }
       }
+
+      return target
     }
 
-    return target
-  }
+  return _extends.apply(this, arguments)
+}
 
-var inherits = function(subClass, superClass) {
+function _inherits(subClass, superClass) {
   if (typeof superClass !== 'function' && superClass !== null) {
-    throw new TypeError(
-      'Super expression must either be null or a function, not ' +
-        typeof superClass
-    )
+    throw new TypeError('Super expression must either be null or a function')
   }
 
   subClass.prototype = Object.create(superClass && superClass.prototype, {
     constructor: {
       value: subClass,
-      enumerable: false,
       writable: true,
       configurable: true
     }
   })
-  if (superClass)
-    Object.setPrototypeOf
-      ? Object.setPrototypeOf(subClass, superClass)
-      : (subClass.__proto__ = superClass)
+  if (superClass) _setPrototypeOf(subClass, superClass)
 }
 
-var possibleConstructorReturn = function(self, call) {
-  if (!self) {
+function _getPrototypeOf(o) {
+  _getPrototypeOf = Object.setPrototypeOf
+    ? Object.getPrototypeOf
+    : function _getPrototypeOf(o) {
+        return o.__proto__ || Object.getPrototypeOf(o)
+      }
+  return _getPrototypeOf(o)
+}
+
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf =
+    Object.setPrototypeOf ||
+    function _setPrototypeOf(o, p) {
+      o.__proto__ = p
+      return o
+    }
+
+  return _setPrototypeOf(o, p)
+}
+
+function _assertThisInitialized(self) {
+  if (self === void 0) {
     throw new ReferenceError(
       "this hasn't been initialised - super() hasn't been called"
     )
   }
 
-  return call && (typeof call === 'object' || typeof call === 'function')
-    ? call
-    : self
+  return self
 }
 
-var slicedToArray = (function() {
-  function sliceIterator(arr, i) {
-    var _arr = []
-    var _n = true
-    var _d = false
-    var _e = undefined
-
-    try {
-      for (
-        var _i = arr[Symbol.iterator](), _s;
-        !(_n = (_s = _i.next()).done);
-        _n = true
-      ) {
-        _arr.push(_s.value)
-
-        if (i && _arr.length === i) break
-      }
-    } catch (err) {
-      _d = true
-      _e = err
-    } finally {
-      try {
-        if (!_n && _i['return']) _i['return']()
-      } finally {
-        if (_d) throw _e
-      }
-    }
-
-    return _arr
+function _possibleConstructorReturn(self, call) {
+  if (call && (typeof call === 'object' || typeof call === 'function')) {
+    return call
   }
 
-  return function(arr, i) {
-    if (Array.isArray(arr)) {
-      return arr
-    } else if (Symbol.iterator in Object(arr)) {
-      return sliceIterator(arr, i)
-    } else {
-      throw new TypeError(
-        'Invalid attempt to destructure non-iterable instance'
-      )
-    }
-  }
-})()
+  return _assertThisInitialized(self)
+}
 
-var toConsumableArray = function(arr) {
+function _slicedToArray(arr, i) {
+  return (
+    _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest()
+  )
+}
+
+function _toConsumableArray(arr) {
+  return (
+    _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread()
+  )
+}
+
+function _arrayWithoutHoles(arr) {
   if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++)
+    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++)
       arr2[i] = arr[i]
 
     return arr2
-  } else {
-    return Array.from(arr)
   }
 }
 
-//
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr
+}
+
+function _iterableToArray(iter) {
+  if (
+    Symbol.iterator in Object(iter) ||
+    Object.prototype.toString.call(iter) === '[object Arguments]'
+  )
+    return Array.from(iter)
+}
+
+function _iterableToArrayLimit(arr, i) {
+  var _arr = []
+  var _n = true
+  var _d = false
+  var _e = undefined
+
+  try {
+    for (
+      var _i = arr[Symbol.iterator](), _s;
+      !(_n = (_s = _i.next()).done);
+      _n = true
+    ) {
+      _arr.push(_s.value)
+
+      if (i && _arr.length === i) break
+    }
+  } catch (err) {
+    _d = true
+    _e = err
+  } finally {
+    try {
+      if (!_n && _i['return'] != null) _i['return']()
+    } finally {
+      if (_d) throw _e
+    }
+  }
+
+  return _arr
+}
+
+function _nonIterableSpread() {
+  throw new TypeError('Invalid attempt to spread non-iterable instance')
+}
+
+function _nonIterableRest() {
+  throw new TypeError('Invalid attempt to destructure non-iterable instance')
+}
 
 var EXHIBIT_SCROLL_ID = 'exhibitScrollElement'
 var DETAIL_SCROLL_ID = 'detailScrollParent'
@@ -200,13 +244,9 @@ var getElementById = function getElementById(id) {
 var extractDetailScrollElement = function extractDetailScrollElement(el) {
   return el.children[0].children[0].children[0]
 }
-
 var isArr = Array.isArray
 var isObj = function isObj(target) {
-  return (
-    (typeof target === 'undefined' ? 'undefined' : _typeof(target)) ===
-      'object' && !isArr(target)
-  )
+  return _typeof(target) === 'object' && !isArr(target)
 }
 var isStr = function isStr(target) {
   return typeof target === 'string'
@@ -217,14 +257,12 @@ var isNum = function isNum(target) {
 var isFnc = function isFnc(target) {
   return typeof target === 'function'
 }
-
 var error = function error(message) {
   throw new Error(message)
 }
 var typerror = function typerror(message) {
   throw new TypeError(message)
 }
-
 var winnerWidth = function winnerWidth() {
   return window.innerWidth
 }
@@ -247,11 +285,9 @@ var lag = function lag() {
     return setTimeout(resolve, time)
   })
 }
-
-var jsx$1 = function jsx$$1(Component, props) {
+var jsx = function jsx(Component, props) {
   return isFnc(Component) && React__default.createElement(Component, props)
 }
-
 var createClickA = function createClickA(href) {
   return function() {
     return (
@@ -260,14 +296,15 @@ var createClickA = function createClickA(href) {
         var a = document.createElement('a')
         a.href = href
         a.target = href.includes('tel') ? '' : '_blank'
+        document.body.appendChild(a)
         a.click()
+        a.remove()
       }, 50)
     )
   }
 }
 
 //
-
 var Preload = (function(a) {
   return function(_ref) {
     var onTransitionEnd = _ref.onTransitionEnd,
@@ -278,7 +315,10 @@ var Preload = (function(a) {
       'div',
       a('ROOT', {
         onTransitionEnd: onTransitionEnd,
-        style: { backgroundColor: backgroundColor, opacity: opacity }
+        style: {
+          backgroundColor: backgroundColor,
+          opacity: opacity
+        }
       }),
       React__default.createElement('div', a('RELATIVE'), children)
     )
@@ -307,7 +347,6 @@ var Preload = (function(a) {
 )
 
 //
-
 var Button = (function(a) {
   return function(_ref) {
     var width = _ref.width,
@@ -318,7 +357,10 @@ var Button = (function(a) {
     return React__default.createElement(
       'div',
       a('ROOT', {
-        style: { width: width, borderBottomColor: borderBottomColor }
+        style: {
+          width: width,
+          borderBottomColor: borderBottomColor
+        }
       }),
       React__default.createElement(
         'span',
@@ -341,7 +383,8 @@ var Button = (function(a) {
       }
     },
     WRAP: {
-      className: 'lonogara_button', // for svg { height: 100%; }
+      className: 'lonogara_button',
+      // for svg { height: 100%; }
       style: {
         display: 'inline-block',
         position: 'relative',
@@ -368,7 +411,6 @@ var Button = (function(a) {
     }
   })
 )
-
 var DimItem = (function(a) {
   return function(_ref2) {
     var size = _ref2.size,
@@ -383,17 +425,27 @@ var DimItem = (function(a) {
       React__default.createElement(
         'span',
         a('WRAP', {
-          style: { width: size, height: size, backgroundImage: buttonImage }
+          style: {
+            width: size,
+            height: size,
+            backgroundImage: buttonImage
+          }
         }),
         coverColor &&
           React__default.createElement(
             'span',
-            a('COVER', { style: { backgroundColor: coverColor } })
+            a('COVER', {
+              style: {
+                backgroundColor: coverColor
+              }
+            })
           ),
         descriptionText &&
           React__default.createElement(
             'span',
-            { style: descriptionStyle },
+            {
+              style: descriptionStyle
+            },
             descriptionText
           ),
         children
@@ -438,14 +490,17 @@ var DimItem = (function(a) {
     }
   })
 )
-
 var DimBoard = (function(a) {
   return function(_ref3) {
     var backgroundColor = _ref3.backgroundColor,
       children = _ref3.children
     return React__default.createElement(
       'div',
-      a('ROOT', { style: { backgroundColor: backgroundColor } }),
+      a('ROOT', {
+        style: {
+          backgroundColor: backgroundColor
+        }
+      }),
       children
     )
   }
@@ -462,11 +517,11 @@ var DimBoard = (function(a) {
     }
   })
 )
-
 var DimSwitch = (function(createA) {
   var transform = -12
-  var a = createA({ transform: transform })
-
+  var a = createA({
+    transform: transform
+  })
   return function(_ref4) {
     var children = _ref4.children
     return React__default.createElement(
@@ -491,26 +546,23 @@ var DimSwitch = (function(createA) {
     WRAP: {
       onMouseDown: function onMouseDown(e) {
         var style = e.currentTarget.style
-
         style.transitionDuration = '0.1s'
         style.transform = 'translateY(0px)'
-
         setTimeout(function() {
           style.transitionDuration = '0.4s'
-          style.transform = 'translateY(' + transform + 'px)'
+          style.transform = 'translateY('.concat(transform, 'px)')
         }, 100)
       },
       style: {
         display: 'inline-block',
         height: '100%',
         position: 'relative',
-        transform: 'translateY(' + transform + 'px)',
+        transform: 'translateY('.concat(transform, 'px)'),
         cursor: 'pointer'
       }
     }
   })
 })
-
 var QuitDetail = (function(a) {
   return function(_ref6) {
     var children = _ref6.children
@@ -531,7 +583,6 @@ var QuitDetail = (function(a) {
     }
   })
 )
-
 var QuitPopdown = (function(a) {
   return function(_ref7) {
     var children = _ref7.children
@@ -565,9 +616,9 @@ var QuitPopdown = (function(a) {
 )
 
 //
-
 var Listen = (function(a) {
   var specifies = ['type', 'listener', 'positionValue']
+
   var reposition = function reposition(value) {
     return {
       top: value,
@@ -581,7 +632,6 @@ var Listen = (function(a) {
     var type = props.type,
       listener = props.listener,
       positionValue = props.positionValue
-
     var reprops = {}
     reprops[type] = listener
     reprops.style = isNum(positionValue) ? reposition(positionValue) : {}
@@ -592,7 +642,6 @@ var Listen = (function(a) {
       .forEach(function(key) {
         reprops[key] = props[key]
       })
-
     return React__default.createElement('span', a('EL', reprops))
   }
 })(
@@ -609,7 +658,6 @@ var Listen = (function(a) {
     }
   })
 )
-
 var Background = (function(a) {
   return function(props) {
     return React__default.createElement(
@@ -630,7 +678,6 @@ var Background = (function(a) {
     }
   })
 )
-
 var ArrowLeft = (function(a) {
   return function(_ref) {
     var stroke = _ref.stroke
@@ -639,7 +686,11 @@ var ArrowLeft = (function(a) {
       a('SVG'),
       React__default.createElement(
         'path',
-        a('PATH', { style: { stroke: stroke } })
+        a('PATH', {
+          style: {
+            stroke: stroke
+          }
+        })
       )
     )
   }
@@ -660,7 +711,6 @@ var ArrowLeft = (function(a) {
     }
   })
 )
-
 var ArrowWideUp = (function(a) {
   return function() {
     return React__default.createElement(
@@ -688,14 +738,18 @@ var ArrowWideUp = (function(a) {
 )
 
 //
-
 var Popdown = (function(a) {
   return function(_ref) {
     var src = _ref.src
     return React__default.createElement(
       'div',
       a('ROOT'),
-      React__default.createElement('img', a('IMG', { src: src }))
+      React__default.createElement(
+        'img',
+        a('IMG', {
+          src: src
+        })
+      )
     )
   }
 })(
@@ -720,7 +774,6 @@ var Popdown = (function(a) {
     }
   })
 )
-
 var ArrowUp = (function(a) {
   return function(_ref2) {
     var fn = _ref2.fn,
@@ -730,7 +783,11 @@ var ArrowUp = (function(a) {
       a('SVG'),
       React__default.createElement(
         'path',
-        a('PATH', { style: { stroke: stroke } })
+        a('PATH', {
+          style: {
+            stroke: stroke
+          }
+        })
       )
     )
   }
@@ -751,7 +808,6 @@ var ArrowUp = (function(a) {
     }
   })
 )
-
 var Strap = (function(a) {
   return function(_ref3) {
     var stroke = _ref3.stroke
@@ -760,7 +816,11 @@ var Strap = (function(a) {
       a('SVG'),
       React__default.createElement(
         'path',
-        a('PATH_0', { style: { stroke: stroke } })
+        a('PATH_0', {
+          style: {
+            stroke: stroke
+          }
+        })
       ),
       React__default.createElement('path', a('PATH_1'))
     )
@@ -784,375 +844,419 @@ var Strap = (function(a) {
       d:
         'm 172.32747,229.01407 c 0,12.33112 -9.99635,22.32747 -22.32747,22.32747 -12.33112,0 -22.32747,-9.99635 -22.32747,-22.32747 0,-12.33112 9.99635,-22.32747 22.32747,-22.32747 12.33112,0 22.32747,9.99635 22.32747,22.32747 z',
       style: {
-        fill: '#c30000'
-        // stroke: '#780d00',
+        fill: '#c30000' // stroke: '#780d00',
         // strokeWidth: 12
       }
     }
   })
 )
 
-//
-
 var HEAD_HEIGHT = 90
 var BUTTON_HEIGHT = 110
 var BOTTOM_MARGIN = 40
+
 var MouseDown = function MouseDown(props) {
   return React__default.createElement(
     Listen,
-    Object.assign({ type: 'onMouseDown' }, props)
+    Object.assign(
+      {
+        type: 'onMouseDown'
+      },
+      props
+    )
   )
 }
+
 var MouseUp = function MouseUp(props) {
   return React__default.createElement(
     Listen,
-    Object.assign({ type: 'onMouseUp' }, props)
+    Object.assign(
+      {
+        type: 'onMouseUp'
+      },
+      props
+    )
   )
 }
 
 var _ref3 = React__default.createElement(ArrowWideUp, null)
 
-var LonogaraDesktop = (function(_Component) {
-  inherits(LonogaraDesktop, _Component)
+var LonogaraDesktop =
+  /*#__PURE__*/
+  (function(_Component) {
+    _inherits(LonogaraDesktop, _Component)
 
-  function LonogaraDesktop(props) {
-    classCallCheck(this, LonogaraDesktop)
+    function LonogaraDesktop(props) {
+      var _this
 
-    var _this = possibleConstructorReturn(
-      this,
-      (
-        LonogaraDesktop.__proto__ || Object.getPrototypeOf(LonogaraDesktop)
-      ).call(this, props)
-    )
+      _classCallCheck(this, LonogaraDesktop)
 
-    props.orph.attach(_this)
-    _this.listeners = props.orph.order([
-      'WINDOW:RESIZE_FORCE_UPDATE',
-      'RENDER:PRELOADING_OFF',
-      'DOM:DETAIL_OFF',
-      'DOM:VIEW_SWITCH',
-      'DOM:DIM_SWITCH',
-      'RENDER:POPDOWN_OFF'
-    ])
+      _this = _possibleConstructorReturn(
+        this,
+        _getPrototypeOf(LonogaraDesktop).call(this, props)
+      )
+      props.orph.attach(_assertThisInitialized(_assertThisInitialized(_this)))
+      _this.listeners = props.orph.order([
+        'WINDOW:RESIZE_FORCE_UPDATE',
+        'RENDER:PRELOADING_OFF',
+        'DOM:DETAIL_OFF',
+        'DOM:VIEW_SWITCH',
+        'DOM:DIM_SWITCH',
+        'RENDER:POPDOWN_OFF'
+      ])
+      _this.DetailQuit = _this.HoDetailQuit()
+      _this.PopdownQuit = _this.HoPopdownQuit()
+      return _this
+    }
 
-    _this.DetailQuit = _this.HoDetailQuit()
-    _this.PopdownQuit = _this.HoPopdownQuit()
-    return _this
-  }
-
-  createClass(LonogaraDesktop, [
-    {
-      key: 'componentDidMount',
-      value: function componentDidMount() {
-        windowOn('resize', this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
-        this.props.orph.dispatch('REACT:DID_MOUNT')
-      }
-    },
-    {
-      key: 'componentWillReceiveProps',
-      value: function componentWillReceiveProps(nextProps) {
-        if (nextProps.views && !('noButtons' in this)) {
-          this.noButtons = nextProps.views.length < 2
+    _createClass(LonogaraDesktop, [
+      {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+          windowOn('resize', this.listeners['WINDOW:RESIZE_FORCE_UPDATE'])
+          this.props.orph.dispatch('REACT:DID_MOUNT')
         }
-      }
-    },
-    {
-      key: 'isReady',
-      value: function isReady() {
-        return Boolean(this.props.views)
-      }
-    },
-    {
-      key: 'render',
-      value: function render() {
-        var isReady = this.isReady()
-        return React__default.createElement(
-          React.Fragment,
-          null,
-          this.Background(),
-          isReady && this.Tree(),
-          this.state.popdown.src && this.Popdown(),
-          this.state.preloading && this.Preload(isReady ? 0 : 1)
-        )
-      }
-    },
-    {
-      key: 'Tree',
-      value: function Tree() {
-        var noButtons = this.noButtons
-        var base = this.props.colors.base
-        var dimming = this.state.dimming
-
-        var height =
-          winnerHeight() -
-          HEAD_HEIGHT -
-          (noButtons ? 80 : BUTTON_HEIGHT) -
-          BOTTOM_MARGIN
-        var view = this.props.views[this.state.index] || {}
-        return React__default.createElement(
-          'div',
-          a('ROOT'),
-          React__default.createElement(
-            'header',
-            a('HEAD', { style: { visibility: dimming && 'hidden' } }),
-            React__default.createElement(
-              'span',
-              a('HEAD:WORD', { style: { color: base } }),
-              view.head
-            )
-          ),
-          React__default.createElement(
-            'div',
-            a('MAIN', { style: { height: height, borderColor: base } }),
-            this.Middle(view),
-            this.DimSwitch(),
-            dimming && this.DimBoard()
-          ),
-          !noButtons &&
-            React__default.createElement(
-              'nav',
-              a('BUTTONS', { style: { visibility: dimming && 'hidden' } }),
-              this.Buttons()
-            )
-        )
-      }
-    },
-    {
-      key: 'Background',
-      value: function Background$$1() {
-        return React__default.createElement(
-          'div',
-          {
-            style: {
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0
-            }
-          },
-          React__default.createElement(Background, {
-            style: this.props.backgroundStyle || {}
-          }),
-          React__default.createElement(Background, {
-            style: { backgroundColor: this.props.colors.background }
-          })
-        )
-      }
-    },
-    {
-      key: 'HoDetailQuit',
-      value: function HoDetailQuit() {
-        var _this2 = this
-
-        return function(_ref) {
-          var fn = _ref.fn
+      },
+      {
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(nextProps) {
+          if (nextProps.views && !('noButtons' in this)) {
+            this.noButtons = nextProps.views.length < 2
+          }
+        }
+      },
+      {
+        key: 'isReady',
+        value: function isReady() {
+          return Boolean(this.props.views)
+        }
+      },
+      {
+        key: 'render',
+        value: function render() {
+          var isReady = this.isReady()
           return React__default.createElement(
-            QuitDetail,
+            React.Fragment,
             null,
-            React__default.createElement(ArrowLeft, {
-              stroke: _this2.props.colors.detailQuit
+            this.Background(),
+            isReady && this.Tree(),
+            this.state.popdown.src && this.Popdown(),
+            this.state.preloading && this.Preload(isReady ? 0 : 1)
+          )
+        }
+      },
+      {
+        key: 'Tree',
+        value: function Tree() {
+          var noButtons = this.noButtons
+          var base = this.props.colors.base
+          var dimming = this.state.dimming
+          var height =
+            winnerHeight() -
+            HEAD_HEIGHT -
+            (noButtons ? 80 : BUTTON_HEIGHT) -
+            BOTTOM_MARGIN
+          var view = this.props.views[this.state.index] || {}
+          return React__default.createElement(
+            'div',
+            a('ROOT'),
+            React__default.createElement(
+              'header',
+              a('HEAD', {
+                style: {
+                  visibility: dimming && 'hidden'
+                }
+              }),
+              React__default.createElement(
+                'span',
+                a('HEAD:WORD', {
+                  style: {
+                    color: base
+                  }
+                }),
+                view.head
+              )
+            ),
+            React__default.createElement(
+              'div',
+              a('MAIN', {
+                style: {
+                  height: height,
+                  borderColor: base
+                }
+              }),
+              this.Middle(view),
+              this.DimSwitch(),
+              dimming && this.DimBoard()
+            ),
+            !noButtons &&
+              React__default.createElement(
+                'nav',
+                a('BUTTONS', {
+                  style: {
+                    visibility: dimming && 'hidden'
+                  }
+                }),
+                this.Buttons()
+              )
+          )
+        }
+      },
+      {
+        key: 'Background',
+        value: function Background$$1() {
+          return React__default.createElement(
+            'div',
+            {
+              style: {
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0
+              }
+            },
+            React__default.createElement(Background, {
+              style: this.props.backgroundStyle || {}
             }),
-            React__default.createElement(MouseDown, {
-              positionValue: -20,
-              listener: fn
+            React__default.createElement(Background, {
+              style: {
+                backgroundColor: this.props.colors.background
+              }
             })
           )
         }
-      }
-    },
-    {
-      key: 'HoPopdownQuit',
-      value: function HoPopdownQuit() {
-        return function(_ref2) {
-          var fn = _ref2.fn
-          return React__default.createElement(
-            QuitPopdown,
-            null,
-            _ref3,
-            React__default.createElement(MouseDown, {
-              positionValue: -10,
-              listener: fn
-            })
-          )
-        }
-      }
-    },
-    {
-      key: 'Preload',
-      value: function Preload$$1(opacity) {
-        return React__default.createElement(
-          Preload,
-          {
-            opacity: opacity,
-            onTransitionEnd: this.listeners['RENDER:PRELOADING_OFF'],
-            backgroundColor: this.props.colors.preloader
-          },
-          React__default.createElement(
-            Center,
-            { top: -60 },
-            jsx$1(this.props.Preloader)
-          )
-        )
-      }
-    },
-    {
-      key: 'Popdown',
-      value: function Popdown$$1() {
-        var Quit = this.PopdownQuit
-        var onQuitEnd = this.listeners['RENDER:POPDOWN_OFF']
-        var src = this.state.popdown.src
+      },
+      {
+        key: 'HoDetailQuit',
+        value: function HoDetailQuit() {
+          var _this2 = this
 
-        return React__default.createElement(
-          reactShut.ShutFromTop,
-          a('POPDOWN_SHUT', { Quit: Quit, onQuitEnd: onQuitEnd }),
-          React__default.createElement(Popdown, { src: src })
-        )
-      }
-    },
-    {
-      key: 'Middle',
-      value: function Middle(view) {
-        return React__default.createElement(
-          'div',
-          a('MIDDLE_WRAP:BOTH'),
-          React__default.createElement(
-            'div',
-            a('MIDDLE_WRAP:EXHIBIT'),
-            jsx$1(view.Exhibit)
-          ),
-          React__default.createElement(
-            'div',
-            a('MIDDLE_WRAP:DETAIL'),
-            this.state.detail.props && this.Detail(view)
-          )
-        )
-      }
-    },
-    {
-      key: 'Detail',
-      value: function Detail(view) {
-        return React__default.createElement(
-          reactShut.ShutFromLeft,
-          {
-            mountWithShut: this.state.detail.mountWithShut,
-            touchRatio: 0,
-            duration: 0.55,
-            background: this.props.colors.detail,
-            Quit: this.DetailQuit,
-            onQuitEnd: this.listeners['DOM:DETAIL_OFF']
-          },
-          jsx$1(view.Detail, this.state.detail.props)
-        )
-      }
-    },
-    {
-      key: 'DimSwitch',
-      value: function DimSwitch$$1() {
-        return React__default.createElement(
-          DimSwitch,
-          null,
-          React__default.createElement(Strap, {
-            stroke: this.props.colors.base
-          }),
-          React__default.createElement(MouseDown, {
-            listener: this.listeners['DOM:DIM_SWITCH']
-          })
-        )
-      }
-    },
-    {
-      key: 'DimBoard',
-      value: function DimBoard$$1() {
-        return React__default.createElement(
-          DimBoard,
-          { backgroundColor: this.props.colors.links },
-          React__default.createElement(
-            'div',
-            a('DIM_WRAP'),
+          return function(_ref) {
+            var fn = _ref.fn
+            return React__default.createElement(
+              QuitDetail,
+              null,
+              React__default.createElement(ArrowLeft, {
+                stroke: _this2.props.colors.detailQuit
+              }),
+              React__default.createElement(MouseDown, {
+                positionValue: -20,
+                listener: fn
+              })
+            )
+          }
+        }
+      },
+      {
+        key: 'HoPopdownQuit',
+        value: function HoPopdownQuit() {
+          return function(_ref2) {
+            var fn = _ref2.fn
+            return React__default.createElement(
+              QuitPopdown,
+              null,
+              _ref3,
+              React__default.createElement(MouseDown, {
+                positionValue: -10,
+                listener: fn
+              })
+            )
+          }
+        }
+      },
+      {
+        key: 'Preload',
+        value: function Preload$$1(opacity) {
+          return React__default.createElement(
+            Preload,
+            {
+              opacity: opacity,
+              onTransitionEnd: this.listeners['RENDER:PRELOADING_OFF'],
+              backgroundColor: this.props.colors.preloader
+            },
             React__default.createElement(
               Center,
-              { top: -24 },
+              {
+                top: -60
+              },
+              jsx(this.props.Preloader)
+            )
+          )
+        }
+      },
+      {
+        key: 'Popdown',
+        value: function Popdown$$1() {
+          var Quit = this.PopdownQuit
+          var onQuitEnd = this.listeners['RENDER:POPDOWN_OFF']
+          var src = this.state.popdown.src
+          return React__default.createElement(
+            reactShut.ShutFromTop,
+            a('POPDOWN_SHUT', {
+              Quit: Quit,
+              onQuitEnd: onQuitEnd
+            }),
+            React__default.createElement(Popdown, {
+              src: src
+            })
+          )
+        }
+      },
+      {
+        key: 'Middle',
+        value: function Middle(view) {
+          return React__default.createElement(
+            'div',
+            a('MIDDLE_WRAP:BOTH'),
+            React__default.createElement(
+              'div',
+              a('MIDDLE_WRAP:EXHIBIT'),
+              jsx(view.Exhibit)
+            ),
+            React__default.createElement(
+              'div',
+              a('MIDDLE_WRAP:DETAIL'),
+              this.state.detail.props && this.Detail(view)
+            )
+          )
+        }
+      },
+      {
+        key: 'Detail',
+        value: function Detail(view) {
+          return React__default.createElement(
+            reactShut.ShutFromLeft,
+            {
+              mountWithShut: this.state.detail.mountWithShut,
+              touchRatio: 0,
+              duration: 0.55,
+              background: this.props.colors.detail,
+              Quit: this.DetailQuit,
+              onQuitEnd: this.listeners['DOM:DETAIL_OFF']
+            },
+            jsx(view.Detail, this.state.detail.props)
+          )
+        }
+      },
+      {
+        key: 'DimSwitch',
+        value: function DimSwitch$$1() {
+          return React__default.createElement(
+            DimSwitch,
+            null,
+            React__default.createElement(Strap, {
+              stroke: this.props.colors.base
+            }),
+            React__default.createElement(MouseDown, {
+              listener: this.listeners['DOM:DIM_SWITCH']
+            })
+          )
+        }
+      },
+      {
+        key: 'DimBoard',
+        value: function DimBoard$$1() {
+          return React__default.createElement(
+            DimBoard,
+            {
+              backgroundColor: this.props.colors.links
+            },
+            React__default.createElement(
+              'div',
+              a('DIM_WRAP'),
               React__default.createElement(
-                'div',
+                Center,
                 {
-                  style:
-                    this.props.links.length < 5
-                      ? { textAlign: 'center' }
-                      : { display: 'flex' }
+                  top: -24
                 },
-                this.DimItems()
+                React__default.createElement(
+                  'div',
+                  {
+                    style:
+                      this.props.links.length < 5
+                        ? {
+                            textAlign: 'center'
+                          }
+                        : {
+                            display: 'flex'
+                          }
+                  },
+                  this.DimItems()
+                )
               )
             )
           )
-        )
-      }
-    },
-    {
-      key: 'DimItems',
-      value: function DimItems() {
-        return this.props.links.map(function(_ref4, index) {
-          var href = _ref4.href,
-            buttonImage = _ref4.buttonImage,
-            coverColor = _ref4.coverColor,
-            descriptionText = _ref4.descriptionText,
-            descriptionStyle = _ref4.descriptionStyle
-          return React__default.createElement(
-            DimItem,
-            _extends(
-              { key: index },
-              {
-                size: 130,
-                buttonImage: buttonImage,
-                coverColor: coverColor,
-                descriptionText: descriptionText,
-                descriptionStyle: descriptionStyle
-              }
-            ),
-            React__default.createElement(MouseUp, {
-              listener: createClickA(href)
-            })
-          )
-        })
-      }
-    },
-    {
-      key: 'Buttons',
-      value: function Buttons() {
-        var _this3 = this
+        }
+      },
+      {
+        key: 'DimItems',
+        value: function DimItems() {
+          return this.props.links.map(function(_ref4, index) {
+            var href = _ref4.href,
+              buttonImage = _ref4.buttonImage,
+              coverColor = _ref4.coverColor,
+              descriptionText = _ref4.descriptionText,
+              descriptionStyle = _ref4.descriptionStyle
+            return React__default.createElement(
+              DimItem,
+              _extends(
+                {
+                  key: index
+                },
+                {
+                  size: 130,
+                  buttonImage: buttonImage,
+                  coverColor: coverColor,
+                  descriptionText: descriptionText,
+                  descriptionStyle: descriptionStyle
+                }
+              ),
+              React__default.createElement(MouseUp, {
+                listener: createClickA(href)
+              })
+            )
+          })
+        }
+      },
+      {
+        key: 'Buttons',
+        value: function Buttons() {
+          var _this3 = this
 
-        var _props$colors = this.props.colors,
-          base = _props$colors.base,
-          sub = _props$colors.sub
-
-        return this.props.views.map(function(view, index) {
-          return React__default.createElement(
-            Button,
-            _extends(
-              { key: index },
-              {
-                width: 100,
-                borderBottomColor: base,
-                inform: _this3.state.informs[index],
-                svg: jsx$1(view.Button, {
-                  choised: index === _this3.state.index,
-                  mainColor: base,
-                  subColor: sub
-                })
-              }
-            ),
-            React__default.createElement(MouseDown, {
-              listener: _this3.listeners['DOM:VIEW_SWITCH'],
-              'data-index': index
-            })
-          )
-        })
+          var _this$props$colors = this.props.colors,
+            base = _this$props$colors.base,
+            sub = _this$props$colors.sub
+          return this.props.views.map(function(view, index) {
+            return React__default.createElement(
+              Button,
+              _extends(
+                {
+                  key: index
+                },
+                {
+                  width: 100,
+                  borderBottomColor: base,
+                  inform: _this3.state.informs[index],
+                  svg: jsx(view.Button, {
+                    choised: index === _this3.state.index,
+                    mainColor: base,
+                    subColor: sub
+                  })
+                }
+              ),
+              React__default.createElement(MouseDown, {
+                listener: _this3.listeners['DOM:VIEW_SWITCH'],
+                'data-index': index
+              })
+            )
+          })
+        }
       }
-    }
-  ])
-  return LonogaraDesktop
-})(React.Component)
+    ])
 
+    return LonogaraDesktop
+  })(React.Component)
 var a = Atra({
   ROOT: {
     style: {
@@ -1224,13 +1328,10 @@ var a = Atra({
 })
 
 //
-
 var STORE = function() {
   var extension =
     arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {}
-
   var views = new Map()
-
   return [
     Object.assign(extension, {
       INIT: function INIT(_ref) {
@@ -1238,14 +1339,12 @@ var STORE = function() {
           initials = _ref.initials
         return views.set(index, new View(initials))
       },
-
       SET_DATA: function SET_DATA(_ref2) {
         var index = _ref2.index,
           key = _ref2.key,
           value = _ref2.value
         return views.get(index).setData(key, value)
       },
-
       GET_DATA: function GET_DATA(_ref3) {
         var index = _ref3.index,
           key = _ref3.key
@@ -1259,49 +1358,51 @@ var STORE = function() {
   ]
 }
 
-var View = (function() {
-  function View(initials) {
-    var _this = this
+var View =
+  /*#__PURE__*/
+  (function() {
+    function View(initials) {
+      var _this = this
 
-    classCallCheck(this, View)
+      _classCallCheck(this, View)
 
-    this.data = new Map()
-    initials.forEach(function(_ref4) {
-      var key = _ref4.key,
-        value = _ref4.value
-      return _this.data.set(key, value)
-    })
-  }
+      this.data = new Map()
+      initials.forEach(function(_ref4) {
+        var key = _ref4.key,
+          value = _ref4.value
+        return _this.data.set(key, value)
+      })
+    }
 
-  createClass(View, [
-    {
-      key: 'setData',
-      value: function setData(key, value) {
-        this.throwInvalidKey(key)
-        this.data.set(key, value)
-      }
-    },
-    {
-      key: 'getData',
-      value: function getData(key) {
-        this.throwInvalidKey(key)
-        return this.data.get(key)
-      }
-    },
-    {
-      key: 'throwInvalidKey',
-      value: function throwInvalidKey(key) {
-        if (!this.data.has(key)) {
-          throw new Error('STORE: ' + key + ' is not set.')
+    _createClass(View, [
+      {
+        key: 'setData',
+        value: function setData(key, value) {
+          this.throwInvalidKey(key)
+          this.data.set(key, value)
+        }
+      },
+      {
+        key: 'getData',
+        value: function getData(key) {
+          this.throwInvalidKey(key)
+          return this.data.get(key)
+        }
+      },
+      {
+        key: 'throwInvalidKey',
+        value: function throwInvalidKey(key) {
+          if (!this.data.has(key)) {
+            throw new Error('STORE: '.concat(key, ' is not set.'))
+          }
         }
       }
-    }
-  ])
-  return View
-})()
+    ])
+
+    return View
+  })()
 
 //
-
 var RENDER = function() {
   var extension =
     arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {}
@@ -1309,41 +1410,50 @@ var RENDER = function() {
     Object.assign(extension, {
       PRELOADING_OFF: function PRELOADING_OFF(n, _ref) {
         var render = _ref.render
-        return render({ preloading: false })
+        return render({
+          preloading: false
+        })
       },
-
       POPDOWN_ON: function POPDOWN_ON(_ref2, _ref3) {
         var src = _ref2.src,
           vertically = _ref2.vertically
         var render = _ref3.render
-        return render({ popdown: { src: src, vertically: vertically } })
+        return render({
+          popdown: {
+            src: src,
+            vertically: vertically
+          }
+        })
       },
-
       POPDOWN_OFF: function POPDOWN_OFF(n, _ref4) {
         var render = _ref4.render
-        return render({ popdown: {} })
+        return render({
+          popdown: {}
+        })
       },
-
       DETAIL_ON: function DETAIL_ON(props, _ref5) {
         var render = _ref5.render
         return render({
           detail: {
             mountWithShut: true,
-            props: Object.assign({}, props, { isContinued: false })
+            props: Object.assign({}, props, {
+              isContinued: false
+            })
           }
         })
       },
-
       DETAIL_OFF: function DETAIL_OFF(n, _ref6) {
         var render = _ref6.render
-        return render({ detail: {} })
+        return render({
+          detail: {}
+        })
       },
-
       BY_REACT_DIDMOUNT: function BY_REACT_DIDMOUNT(index, _ref7) {
         var render = _ref7.render
-        return render({ index: index })
+        return render({
+          index: index
+        })
       },
-
       BY_DOM_VIEW_SWITCH: function BY_DOM_VIEW_SWITCH(_ref8, _ref9) {
         var index = _ref8.index,
           detailProps = _ref8.detailProps,
@@ -1356,13 +1466,14 @@ var RENDER = function() {
               ? {}
               : {
                   mountWithShut: false,
-                  props: Object.assign({}, detailProps, { isContinued: true })
+                  props: Object.assign({}, detailProps, {
+                    isContinued: true
+                  })
                 }
           },
           renderCallback
         )
       },
-
       INFORM_CHANGE: function INFORM_CHANGE(_ref10, _ref11) {
         var index = _ref10.index,
           inform = _ref10.inform
@@ -1370,7 +1481,9 @@ var RENDER = function() {
           render = _ref11.render
         return state('informs').then(function(informs) {
           informs[index] = inform
-          render({ informs: informs })
+          render({
+            informs: informs
+          })
         })
       }
     }),
@@ -1383,8 +1496,6 @@ var RENDER = function() {
     }
   ]
 }
-
-var _this = undefined
 
 var assign = Object.assign
 
@@ -1423,9 +1534,7 @@ var DOM = function DOM() {
       VIEW_SWITCH: function VIEW_SWITCH(e, _ref2) {
         var state = _ref2.state,
           dispatch = _ref2.dispatch
-
         var index = +e.target.dataset.index
-
         return state('index').then(function(nowIndex) {
           return (
             nowIndex !== index &&
@@ -1454,56 +1563,55 @@ var DOM = function DOM() {
                     index: index,
                     detailProps: detailProps,
                     renderCallback: (function() {
-                      var _ref3 = asyncToGenerator(
-                        /*#__PURE__*/ _regeneratorRuntime.mark(
-                          function _callee() {
-                            return _regeneratorRuntime.wrap(
-                              function _callee$(_context) {
-                                while (1) {
-                                  switch ((_context.prev = _context.next)) {
-                                    case 0:
-                                      _context.next = 2
-                                      return dispatch('STORE:GET_DATA', {
-                                        index: index,
-                                        key: 'exhibitScrollTop'
-                                      })
+                      var _renderCallback = _asyncToGenerator(
+                        /*#__PURE__*/
+                        _regeneratorRuntime.mark(function _callee() {
+                          return _regeneratorRuntime.wrap(
+                            function _callee$(_context) {
+                              while (1) {
+                                switch ((_context.prev = _context.next)) {
+                                  case 0:
+                                    _context.next = 2
+                                    return dispatch('STORE:GET_DATA', {
+                                      index: index,
+                                      key: 'exhibitScrollTop'
+                                    })
 
-                                    case 2:
-                                      getElementById(
-                                        EXHIBIT_SCROLL_ID
-                                      ).scrollTop =
-                                        _context.sent
+                                  case 2:
+                                    getElementById(
+                                      EXHIBIT_SCROLL_ID
+                                    ).scrollTop =
+                                      _context.sent
 
-                                      if (!detailProps) {
-                                        _context.next = 7
-                                        break
-                                      }
+                                    if (!detailProps) {
+                                      _context.next = 7
+                                      break
+                                    }
 
-                                      _context.next = 6
-                                      return dispatch('STORE:GET_DATA', {
-                                        index: index,
-                                        key: 'detailScrollTop'
-                                      })
+                                    _context.next = 6
+                                    return dispatch('STORE:GET_DATA', {
+                                      index: index,
+                                      key: 'detailScrollTop'
+                                    })
 
-                                    case 6:
-                                      detailScrollElement().scrollTop =
-                                        _context.sent
+                                  case 6:
+                                    detailScrollElement().scrollTop =
+                                      _context.sent
 
-                                    case 7:
-                                    case 'end':
-                                      return _context.stop()
-                                  }
+                                  case 7:
+                                  case 'end':
+                                    return _context.stop()
                                 }
-                              },
-                              _callee,
-                              _this
-                            )
-                          }
-                        )
+                              }
+                            },
+                            _callee,
+                            this
+                          )
+                        })
                       )
 
                       function renderCallback() {
-                        return _ref3.apply(this, arguments)
+                        return _renderCallback.apply(this, arguments)
                       }
 
                       return renderCallback
@@ -1514,10 +1622,9 @@ var DOM = function DOM() {
           )
         })
       },
-
-      DETAIL_OFF: function DETAIL_OFF(n, _ref4) {
-        var state = _ref4.state,
-          dispatch = _ref4.dispatch
+      DETAIL_OFF: function DETAIL_OFF(n, _ref3) {
+        var state = _ref3.state,
+          dispatch = _ref3.dispatch
         return state('index')
           .then(function(index) {
             return Promise.all([
@@ -1553,12 +1660,12 @@ var PASSED = function PASSED() {
     arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {}
   return [
     assign(extension, {
-      DETAIL_ON: function DETAIL_ON(data, _ref5) {
-        var state = _ref5.state,
-          dispatch = _ref5.dispatch
-
-        var props = { data: data }
-
+      DETAIL_ON: function DETAIL_ON(data, _ref4) {
+        var state = _ref4.state,
+          dispatch = _ref4.dispatch
+        var props = {
+          data: data
+        }
         state('index')
           .then(function(index) {
             return dispatch('STORE:SET_DATA', {
@@ -1571,23 +1678,23 @@ var PASSED = function PASSED() {
             return dispatch('RENDER:DETAIL_ON', props)
           })
       },
-
-      POPDOWN_ON: function POPDOWN_ON(arg, _ref6) {
-        var dispatch = _ref6.dispatch
+      POPDOWN_ON: function POPDOWN_ON(arg, _ref5) {
+        var dispatch = _ref5.dispatch
 
         if (isObj(arg) && arg.src) {
           dispatch('RENDER:POPDOWN_ON', arg)
         }
       },
-
-      INFORM_ON: function INFORM_ON(arg, _ref7) {
-        var dispatch = _ref7.dispatch
-
+      INFORM_ON: function INFORM_ON(arg, _ref6) {
+        var dispatch = _ref6.dispatch
         var inform = +arg.inform
+
         if (inform || inform === 0) {
           var index = arg.index
-
-          dispatch('RENDER:INFORM_CHANGE', { index: index, inform: inform })
+          dispatch('RENDER:INFORM_CHANGE', {
+            index: index,
+            inform: inform
+          })
         }
       }
     }),
@@ -1601,11 +1708,8 @@ var PASSED = function PASSED() {
   ]
 }
 
-//
-
 var background = function(_ref) {
   var background = _ref.background
-
   var result = {
     backgroundURL: undefined,
     backgroundStyle: {}
@@ -1614,23 +1718,23 @@ var background = function(_ref) {
   if (background) {
     if (isStr(background)) {
       var url = background
-
       result.backgroundURL = url
     } else if (isArr(background)) {
-      var _background = slicedToArray(background, 2),
+      var _background = _slicedToArray(background, 2),
         _url = _background[0],
         style = _background[1]
 
       if (!isStr(_url)) {
         typerror('props.background url must be "string"')
       }
+
       if (!isObj(style)) {
         typerror('props.background style must be "object"')
       }
 
       result.backgroundURL = _url
       Object.entries(style).forEach(function(_ref2) {
-        var _ref3 = slicedToArray(_ref2, 2),
+        var _ref3 = _slicedToArray(_ref2, 2),
           key = _ref3[0],
           value = _ref3[1]
 
@@ -1644,11 +1748,8 @@ var background = function(_ref) {
   return result
 }
 
-//
-
 var links = function(_ref) {
   var links = _ref.links
-
   var result = []
 
   if (links) {
@@ -1661,7 +1762,6 @@ var links = function(_ref) {
         buttonImage = _ref2.buttonImage,
         coverColor = _ref2.coverColor,
         description = _ref2.description
-
       var side = {
         href: undefined,
         buttonImage: undefined,
@@ -1674,6 +1774,7 @@ var links = function(_ref) {
         if (!isStr(href)) {
           typerror('props.link.href must be "string"')
         }
+
         side.href = href
       }
 
@@ -1681,13 +1782,15 @@ var links = function(_ref) {
         if (!isStr(buttonImage)) {
           typerror('props.link.buttonImage must be "string"')
         }
-        side.buttonImage = 'url(' + buttonImage + ')'
+
+        side.buttonImage = 'url('.concat(buttonImage, ')')
       }
 
       if (coverColor) {
         if (!isStr(coverColor)) {
           typerror('props.link.coverColor must be "string"')
         }
+
         side.coverColor = coverColor
       }
 
@@ -1695,13 +1798,14 @@ var links = function(_ref) {
         if (isStr(description)) {
           side.descriptionText = description
         } else if (isArr(description)) {
-          var _description = slicedToArray(description, 2),
+          var _description = _slicedToArray(description, 2),
             text = _description[0],
             style = _description[1]
 
           if (!isStr(text)) {
             typerror('props.link.description must be "string"')
           }
+
           if (!isObj(style)) {
             typerror('props.link.description style must be "object"')
           }
@@ -1720,12 +1824,12 @@ var links = function(_ref) {
   return result
 }
 
-//
-
 var views = function(_ref) {
   var views = _ref.views
-
-  var result = { views: [], creates: [] }
+  var result = {
+    views: [],
+    creates: []
+  }
 
   if (views) {
     if (!isArr(views)) {
@@ -1744,20 +1848,23 @@ var views = function(_ref) {
       if (head && !isStr(head)) {
         typerror('props.view.head must be "string"')
       }
+
       if (!isFnc(Button)) {
         typerror('props.view.Button required as component function')
       }
+
       if (!create) {
         error('view.create is required')
       }
+
       if (!isFnc(create)) {
-        typerror(
-          'view.create must be "function" but ' +
-            (typeof create === 'undefined' ? 'undefined' : _typeof(create))
-        )
+        typerror('view.create must be "function" but '.concat(_typeof(create)))
       }
 
-      result.views.push({ head: head, Button: Button })
+      result.views.push({
+        head: head,
+        Button: Button
+      })
       result.creates.push(create)
     })
   }
@@ -1766,17 +1873,16 @@ var views = function(_ref) {
 }
 
 //
-
 var HoColors = function HoColors(Colors) {
   return function(_ref) {
     var colors = _ref.colors
-
     var result = Colors()
 
     if (colors) {
       if (!isObj(colors)) {
         typerror('props.colors must be "pure object"')
       }
+
       if (
         !Object.values(colors).every(function(value) {
           return isStr(value) || !value
@@ -1804,6 +1910,7 @@ var firstIndex = function firstIndex(_ref2) {
 
   return isNum(firstIndex) ? firstIndex : 0
 }
+
 var preloader = function preloader(_ref3) {
   var Preloader = _ref3.Preloader
   return isFnc(Preloader) && Preloader
@@ -1819,164 +1926,183 @@ var create = function create() {
   }
 }
 
-//
-
 var initials = [
-  { key: 'exhibitScrollTop', value: 0 },
-  { key: 'detailScrollTop', value: 0 },
-  { key: 'detailProps', value: undefined }
+  {
+    key: 'exhibitScrollTop',
+    value: 0
+  },
+  {
+    key: 'detailScrollTop',
+    value: 0
+  },
+  {
+    key: 'detailProps',
+    value: undefined
+  }
 ]
-
 var Guardian = function(_ref) {
   var App = _ref.App,
     orph = _ref.orph,
-    defaults$$1 = _ref.defaults
-  return (function(_Component) {
-    inherits(Guardian, _Component)
+    defaults = _ref.defaults
+  return (
+    /*#__PURE__*/
+    (function(_Component) {
+      _inherits(Guardian, _Component)
 
-    function Guardian(props) {
-      classCallCheck(this, Guardian)
+      function Guardian(props) {
+        var _this
 
-      var _this = possibleConstructorReturn(
-        this,
-        (Guardian.__proto__ || Object.getPrototypeOf(Guardian)).call(
+        _classCallCheck(this, Guardian)
+
+        _this = _possibleConstructorReturn(
           this,
-          props
+          _getPrototypeOf(Guardian).call(this, props)
         )
-      )
+        _this.state = {
+          ready: false
+        }
+        _this.asynces = []
+        _this.results = {}
+        _this.results.firstIndex = defaults.firstIndex(props)
+        _this.results.colors = defaults.colors(props)
+        _this.results.Preloader = defaults.preloader(props)
+        _this.results.links = defaults.links(props)
 
-      _this.state = { ready: false }
-      _this.asynces = []
-      _this.results = {}
+        var _defaults$background = defaults.background(props),
+          backgroundURL = _defaults$background.backgroundURL,
+          backgroundStyle = _defaults$background.backgroundStyle
 
-      _this.results.firstIndex = defaults$$1.firstIndex(props)
-      _this.results.colors = defaults$$1.colors(props)
-      _this.results.Preloader = defaults$$1.preloader(props)
-      _this.results.links = defaults$$1.links(props)
+        _this.results.backgroundStyle = backgroundStyle
 
-      var _defaults$background = defaults$$1.background(props),
-        backgroundURL = _defaults$background.backgroundURL,
-        backgroundStyle = _defaults$background.backgroundStyle
+        if (backgroundURL) {
+          if (backgroundURL.includes('http')) {
+            _this.results.backgroundStyle.backgroundImage = 'url('.concat(
+              backgroundURL,
+              ')'
+            )
+          } else {
+            _this.asynces.push(
+              fetch(backgroundURL)
+                .then(function(res) {
+                  return res.ok && res.blob()
+                })
+                .then(function(blob) {
+                  return blob && createBlobURL(blob)
+                })
+                .then(function(backgroundURL) {
+                  if (backgroundURL) {
+                    _this.results.backgroundStyle.backgroundImage = 'url('.concat(
+                      backgroundURL,
+                      ')'
+                    )
+                  }
+                })
+            )
+          }
+        }
 
-      _this.results.backgroundStyle = backgroundStyle
+        var _defaults$views = defaults.views(props),
+          views = _defaults$views.views,
+          creates = _defaults$views.creates
 
-      if (backgroundURL) {
-        if (backgroundURL.includes('http')) {
-          _this.results.backgroundStyle.backgroundImage =
-            'url(' + backgroundURL + ')'
-        } else {
-          _this.asynces.push(
-            fetch(backgroundURL)
-              .then(function(res) {
-                return res.ok && res.blob()
+        _this.results.views = views
+        creates.forEach(function(create, index) {
+          return _this.asynces.push(
+            orph
+              .dispatch('STORE:INIT', {
+                index: index,
+                initials: initials
               })
-              .then(function(blob) {
-                return blob && createBlobURL(blob)
+              .then(function() {
+                return create({
+                  renderDetail: function renderDetail(data) {
+                    return lag().then(function() {
+                      return orph.dispatch('PASSED:DETAIL_ON', data)
+                    })
+                  },
+                  setPopdown: function setPopdown(src) {
+                    return lag().then(function() {
+                      return orph.dispatch('PASSED:POPDOWN_ON', src)
+                    })
+                  },
+                  setInform: function setInform(inform) {
+                    return lag().then(function() {
+                      return orph.dispatch('PASSED:INFORM_ON', {
+                        index: index,
+                        inform: inform
+                      })
+                    })
+                  }
+                })
               })
-              .then(function(backgroundURL) {
-                if (backgroundURL) {
-                  _this.results.backgroundStyle.backgroundImage =
-                    'url(' + backgroundURL + ')'
-                }
+              .then(function() {
+                var components =
+                  arguments.length > 0 && arguments[0] !== undefined
+                    ? arguments[0]
+                    : {}
+                return Object.keys(components).forEach(function(key) {
+                  _this.results.views[index][key] = components[key]
+                })
               })
           )
-        }
+        })
+        return _this
       }
 
-      var _defaults$views = defaults$$1.views(props),
-        views = _defaults$views.views,
-        creates = _defaults$views.creates
+      _createClass(Guardian, [
+        {
+          key: 'componentDidMount',
+          value: function componentDidMount() {
+            var _this2 = this
 
-      _this.results.views = views
-
-      creates.forEach(function(create, index) {
-        return _this.asynces.push(
-          orph
-            .dispatch('STORE:INIT', { index: index, initials: initials })
-            .then(function() {
-              return create({
-                renderDetail: function renderDetail(data) {
-                  return lag().then(function() {
-                    return orph.dispatch('PASSED:DETAIL_ON', data)
-                  })
-                },
-                setPopdown: function setPopdown(src) {
-                  return lag().then(function() {
-                    return orph.dispatch('PASSED:POPDOWN_ON', src)
-                  })
-                },
-                setInform: function setInform(inform) {
-                  return lag().then(function() {
-                    return orph.dispatch('PASSED:INFORM_ON', {
-                      index: index,
-                      inform: inform
-                    })
-                  })
-                }
+            Promise.all(this.asynces).then(function() {
+              return raf(function() {
+                return _this2.setState({
+                  ready: true
+                })
               })
             })
-            .then(function() {
-              var components =
-                arguments.length > 0 && arguments[0] !== undefined
-                  ? arguments[0]
-                  : {}
-              return Object.keys(components).forEach(function(key) {
-                _this.results.views[index][key] = components[key]
-              })
-            })
-        )
-      })
-      return _this
-    }
-
-    createClass(Guardian, [
-      {
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-          var _this2 = this
-
-          Promise.all(this.asynces).then(function() {
-            return raf(function() {
-              return _this2.setState({ ready: true })
-            })
-          })
-        }
-      },
-      {
-        key: 'render',
-        value: function render() {
-          return React__default.createElement(
-            React.Fragment,
-            null,
-            React__default.createElement(
-              'style',
-              { type: 'text/css' },
-              '\n          body {\n            margin: 0px;\n            overflow: hidden;\n            font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;\n          }\n          .lonogara_button svg {\n            height: 100%;\n          }\n        '
-            ),
-            React__default.createElement(
-              App,
-              _extends(
-                { orph: orph },
+          }
+        },
+        {
+          key: 'render',
+          value: function render() {
+            return React__default.createElement(
+              React.Fragment,
+              null,
+              React__default.createElement(
+                'style',
                 {
-                  firstIndex: this.results.firstIndex,
-                  colors: this.results.colors,
-                  Preloader: this.results.Preloader,
-                  links: this.results.links,
-                  backgroundStyle:
-                    this.state.ready && this.results.backgroundStyle,
-                  views: this.state.ready && this.results.views
-                }
+                  type: 'text/css'
+                },
+                '\n          body {\n            margin: 0px;\n            overflow: hidden;\n            font-family: meiryo, Helvetica, Arial, "hiragino kaku gothic pro", "ms pgothic", sans-serif;\n          }\n          .lonogara_button svg {\n            height: 100%;\n          }\n        '
+              ),
+              React__default.createElement(
+                App,
+                _extends(
+                  {
+                    orph: orph
+                  },
+                  {
+                    firstIndex: this.results.firstIndex,
+                    colors: this.results.colors,
+                    Preloader: this.results.Preloader,
+                    links: this.results.links,
+                    backgroundStyle:
+                      this.state.ready && this.results.backgroundStyle,
+                    views: this.state.ready && this.results.views
+                  }
+                )
               )
             )
-          )
+          }
         }
-      }
-    ])
-    return Guardian
-  })(React.Component)
-}
+      ])
 
-//
+      return Guardian
+    })(React.Component)
+  )
+}
 
 var orph = new Orph({
   preloading: true,
@@ -1986,30 +2112,30 @@ var orph = new Orph({
   dimming: false,
   informs: [0, 0, 0, 0]
 })
-
-orph.register.apply(orph, toConsumableArray(STORE()))
-
+orph.register.apply(orph, _toConsumableArray(STORE()))
 orph.register.apply(
   orph,
-  toConsumableArray(
+  _toConsumableArray(
     RENDER({
       DIMMING_ON: function DIMMING_ON(n, _ref) {
         var render = _ref.render
-        return render({ dimming: true })
+        return render({
+          dimming: true
+        })
       },
       DIMMING_OFF: function DIMMING_OFF(n, _ref2) {
         var render = _ref2.render
-        return render({ dimming: false })
+        return render({
+          dimming: false
+        })
       }
     })
   )
 )
-
-orph.register.apply(orph, toConsumableArray(REACT()))
-
+orph.register.apply(orph, _toConsumableArray(REACT()))
 orph.register.apply(
   orph,
-  toConsumableArray(
+  _toConsumableArray(
     DOM({
       DIM_SWITCH: function DIM_SWITCH(e, _ref3) {
         var state = _ref3.state,
@@ -2021,9 +2147,7 @@ orph.register.apply(
     })
   )
 )
-
-orph.register.apply(orph, toConsumableArray(PASSED()))
-
+orph.register.apply(orph, _toConsumableArray(PASSED()))
 orph.register(
   {
     RESIZE_FORCE_UPDATE: function RESIZE_FORCE_UPDATE(e, _ref4) {
@@ -2033,13 +2157,13 @@ orph.register(
   },
   {
     prefix: 'WINDOW:',
-    use: { update: true }
+    use: {
+      update: true
+    }
   }
 )
-
-var defaults$1 = create()
-
-defaults$1.colors = HoColors(function() {
+var defaults = create()
+defaults.colors = HoColors(function() {
   return {
     base: '#ffffff',
     sub: 'rgb(145, 145, 145)',
@@ -2050,11 +2174,13 @@ defaults$1.colors = HoColors(function() {
     links: 'rgba(28, 28, 28, 0.9)'
   }
 })
-
-var index = Guardian({ App: LonogaraDesktop, orph: orph, defaults: defaults$1 })
+var index = Guardian({
+  App: LonogaraDesktop,
+  orph: orph,
+  defaults: defaults
+})
 
 //
-
 var Button$1 = (function(a) {
   return function(_ref) {
     var width = _ref.width,
@@ -2063,7 +2189,11 @@ var Button$1 = (function(a) {
       children = _ref.children
     return React__default.createElement(
       'div',
-      a('ROOT', { style: { width: width } }),
+      a('ROOT', {
+        style: {
+          width: width
+        }
+      }),
       React__default.createElement(
         'span',
         a('WRAP'),
@@ -2083,13 +2213,13 @@ var Button$1 = (function(a) {
       }
     },
     WRAP: {
-      className: 'lonogara_button', // for svg { height: 100%; }
+      className: 'lonogara_button',
+      // for svg { height: 100%; }
       style: {
         display: 'inline-block',
         position: 'relative',
         top: '25%',
-        height: '56%'
-        // top: '20%',
+        height: '56%' // top: '20%',
         // height: '62%'
       }
     },
@@ -2110,7 +2240,6 @@ var Button$1 = (function(a) {
     }
   })
 )
-
 var Head = (function(a) {
   return function(_ref2) {
     var height = _ref2.height,
@@ -2121,20 +2250,33 @@ var Head = (function(a) {
     return React__default.createElement(
       'header',
       a('ROOT', {
-        style: { height: height, backgroundColor: backgroundColor }
+        style: {
+          height: height,
+          backgroundColor: backgroundColor
+        }
       }),
       React__default.createElement(
         Center,
-        { top: 12 },
+        {
+          top: 12
+        },
         React__default.createElement(
           'span',
-          a('WORD', { style: { color: color } }),
+          a('WORD', {
+            style: {
+              color: color
+            }
+          }),
           word
         )
       ),
       React__default.createElement(
         'span',
-        a('BUTTON', { style: { padding: (height - 100) / 2 + 'px 25px' } }),
+        a('BUTTON', {
+          style: {
+            padding: ''.concat((height - 100) / 2, 'px 25px')
+          }
+        }),
         children
       )
     )
@@ -2167,7 +2309,6 @@ var Head = (function(a) {
     }
   })
 )
-
 var SideItem = (function(a) {
   return function(_ref3) {
     var size = _ref3.size,
@@ -2182,17 +2323,27 @@ var SideItem = (function(a) {
       React__default.createElement(
         'span',
         a('WRAP', {
-          style: { width: size, height: size, backgroundImage: buttonImage }
+          style: {
+            width: size,
+            height: size,
+            backgroundImage: buttonImage
+          }
         }),
         coverColor &&
           React__default.createElement(
             'span',
-            a('COVER', { style: { backgroundColor: coverColor } })
+            a('COVER', {
+              style: {
+                backgroundColor: coverColor
+              }
+            })
           ),
         descriptionText &&
           React__default.createElement(
             'span',
-            { style: descriptionStyle },
+            {
+              style: descriptionStyle
+            },
             descriptionText
           ),
         children
@@ -2236,11 +2387,9 @@ var SideItem = (function(a) {
     }
   })
 )
-
 var Veil = (function(a) {
   var BLACK = 'rgba(0, 0, 0, 0.8)'
   var TRANS = 'rgba(0, 0, 0, 0)'
-
   return function(_ref4) {
     var onTransitionEnd = _ref4.onTransitionEnd,
       drifting = _ref4.drifting,
@@ -2271,7 +2420,6 @@ var Veil = (function(a) {
     }
   })
 )
-
 var QuitDetail$1 = (function(a) {
   return function(_ref5) {
     var children = _ref5.children
@@ -2291,7 +2439,6 @@ var QuitDetail$1 = (function(a) {
     }
   })
 )
-
 var QuitPopdown$1 = (function(a) {
   return function(_ref6) {
     var children = _ref6.children
@@ -2324,15 +2471,23 @@ var QuitPopdown$1 = (function(a) {
 )
 
 //
-
 var Popdown$1 = (function(a) {
   return function(_ref) {
     var src = _ref.src,
       top = _ref.top
     return React__default.createElement(
       'div',
-      a('ROOT', { style: { top: top } }),
-      React__default.createElement('img', a('IMG', { src: src }))
+      a('ROOT', {
+        style: {
+          top: top
+        }
+      }),
+      React__default.createElement(
+        'img',
+        a('IMG', {
+          src: src
+        })
+      )
     )
   }
 })(
@@ -2355,7 +2510,6 @@ var Popdown$1 = (function(a) {
     }
   })
 )
-
 var Burger = (function(a) {
   return function(_ref2) {
     var stroke = _ref2.stroke
@@ -2364,7 +2518,9 @@ var Burger = (function(a) {
       a('SVG'),
       React__default.createElement(
         'g',
-        a('G', { stroke: stroke }),
+        a('G', {
+          stroke: stroke
+        }),
         React__default.createElement('path', a('PATH_0')),
         React__default.createElement('path', a('PATH_1')),
         React__default.createElement('path', a('PATH_2'))
@@ -2396,386 +2552,432 @@ var Burger = (function(a) {
   })
 )
 
-//
-
 var HEAD_HEIGHT$1 = 190
 var BUTTON_HEIGHT$1 = 160
 var SIDE_WIDTH = 370
+
 var TouchStartCapture = function TouchStartCapture(props) {
   return React__default.createElement(
     Listen,
-    Object.assign({ type: 'onTouchStartCapture' }, props)
+    Object.assign(
+      {
+        type: 'onTouchStartCapture'
+      },
+      props
+    )
   )
 }
+
 var TouchEnd = function TouchEnd(props) {
   return React__default.createElement(
     Listen,
-    Object.assign({ type: 'onTouchEnd' }, props)
+    Object.assign(
+      {
+        type: 'onTouchEnd'
+      },
+      props
+    )
   )
 }
+
 var TouchEndCapture = function TouchEndCapture(props) {
   return React__default.createElement(
     Listen,
-    Object.assign({ type: 'onTouchEndCapture' }, props)
+    Object.assign(
+      {
+        type: 'onTouchEndCapture'
+      },
+      props
+    )
   )
 }
 
 var _ref4 = React__default.createElement(ArrowWideUp, null)
 
-var LonogaraMobile = (function(_Component) {
-  inherits(LonogaraMobile, _Component)
+var LonogaraMobile =
+  /*#__PURE__*/
+  (function(_Component) {
+    _inherits(LonogaraMobile, _Component)
 
-  // this.listeners: { [name: string]: () => {} }
-  // links: React$Node
+    // this.listeners: { [name: string]: () => {} }
+    // links: React$Node
+    function LonogaraMobile(props) {
+      var _this
 
-  function LonogaraMobile(props) {
-    classCallCheck(this, LonogaraMobile)
+      _classCallCheck(this, LonogaraMobile)
 
-    var _this = possibleConstructorReturn(
-      this,
-      (LonogaraMobile.__proto__ || Object.getPrototypeOf(LonogaraMobile)).call(
+      _this = _possibleConstructorReturn(
         this,
-        props
+        _getPrototypeOf(LonogaraMobile).call(this, props)
       )
-    )
+      props.orph.attach(_assertThisInitialized(_assertThisInitialized(_this)))
+      _this.listeners = props.orph.order([
+        'RENDER:PRELOADING_OFF',
+        'DOM:VIEW_SWITCH',
+        'DOM:DETAIL_OFF',
+        'RENDER:DRIFTING_ON',
+        'RENDER:DRIFTING_LAG',
+        'RENDER:DRIFTING_OFF',
+        'RENDER:POPDOWN_OFF'
+      ])
+      _this.links = _this.Links()
+      _this.DetailQuit = _this.HoDetailQuit()
+      _this.PopdownQuit = _this.HoPopdownQuit()
+      return _this
+    }
 
-    props.orph.attach(_this)
-    _this.listeners = props.orph.order([
-      'RENDER:PRELOADING_OFF',
-      'DOM:VIEW_SWITCH',
-      'DOM:DETAIL_OFF',
-      'RENDER:DRIFTING_ON',
-      'RENDER:DRIFTING_LAG',
-      'RENDER:DRIFTING_OFF',
-      'RENDER:POPDOWN_OFF'
-    ])
-
-    _this.links = _this.Links()
-    _this.DetailQuit = _this.HoDetailQuit()
-    _this.PopdownQuit = _this.HoPopdownQuit()
-    return _this
-  }
-
-  createClass(LonogaraMobile, [
-    {
-      key: 'componentDidMount',
-      value: function componentDidMount() {
-        this.props.orph.dispatch('REACT:DID_MOUNT')
-      }
-    },
-    {
-      key: 'componentWillReceiveProps',
-      value: function componentWillReceiveProps(nextProps) {
-        if (nextProps.views) {
-          // if (!('noHeader' in this)) {
-          //   this.noHeader = nextProps.views.every(({ head }) => !head)
-          // }
-          if (!('noButtons' in this)) {
-            this.noButtons = nextProps.views.length < 2
+    _createClass(LonogaraMobile, [
+      {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+          this.props.orph.dispatch('REACT:DID_MOUNT')
+        }
+      },
+      {
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(nextProps) {
+          if (nextProps.views) {
+            // if (!('noHeader' in this)) {
+            //   this.noHeader = nextProps.views.every(({ head }) => !head)
+            // }
+            if (!('noButtons' in this)) {
+              this.noButtons = nextProps.views.length < 2
+            }
           }
         }
-      }
-    },
-    {
-      key: 'isReady',
-      value: function isReady() {
-        return Boolean(this.props.views)
-      }
-    },
-    {
-      key: 'render',
-      value: function render() {
-        var isReady = this.isReady()
-        return React__default.createElement(
-          React.Fragment,
-          null,
-          isReady && this.Tree(),
-          this.state.popdown.src && this.Popdown(),
-          this.state.preloading && this.Preload(isReady ? 0 : 1)
-        )
-      }
-    },
-    {
-      key: 'Tree',
-      value: function Tree() {
-        var drifting = this.state.drifting
-        var noButtons = this.noButtons
-
-        var transform =
-          !drifting || drifting === 'lag'
-            ? 'translateX(0px)'
-            : 'translateX(' + -SIDE_WIDTH + 'px)'
-        var transition = !drifting || drifting === 'lag' ? '0.6s' : '0.72s'
-        var height = winnerHeight() - (noButtons ? 0 : BUTTON_HEIGHT$1)
-        var veil = this.Veil()
-        var view = this.props.views[this.state.index] || {}
-        return React__default.createElement(
-          'div',
-          { style: { backgroundColor: this.props.colors.links } },
-          React__default.createElement(
-            'aside',
-            a$1('SIDES', {
+      },
+      {
+        key: 'isReady',
+        value: function isReady() {
+          return Boolean(this.props.views)
+        }
+      },
+      {
+        key: 'render',
+        value: function render() {
+          var isReady = this.isReady()
+          return React__default.createElement(
+            React.Fragment,
+            null,
+            isReady && this.Tree(),
+            this.state.popdown.src && this.Popdown(),
+            this.state.preloading && this.Preload(isReady ? 0 : 1)
+          )
+        }
+      },
+      {
+        key: 'Tree',
+        value: function Tree() {
+          var drifting = this.state.drifting
+          var noButtons = this.noButtons
+          var transform =
+            !drifting || drifting === 'lag'
+              ? 'translateX(0px)'
+              : 'translateX('.concat(-SIDE_WIDTH, 'px)')
+          var transition = !drifting || drifting === 'lag' ? '0.6s' : '0.72s'
+          var height = winnerHeight() - (noButtons ? 0 : BUTTON_HEIGHT$1)
+          var left = winnerWidth()
+          var veil = this.Veil()
+          var view = this.props.views[this.state.index] || {}
+          return React__default.createElement(
+            'div',
+            {
               style: {
-                transform: transform,
-                transition: transition,
+                backgroundColor: this.props.colors.links
+              }
+            },
+            React__default.createElement(
+              'aside',
+              a$1('SIDES', {
+                style: {
+                  transform: transform,
+                  transition: transition,
+                  height: height,
+                  left: left
+                }
+              }),
+              this.links
+            ),
+            React__default.createElement(
+              'div',
+              a$1('HEAD_AND_MIDDLE', {
+                style: {
+                  transform: transform
+                }
+              }),
+              this.Head(view),
+              this.Middle(view),
+              veil
+            ),
+            !noButtons &&
+              React__default.createElement(
+                'nav',
+                a$1('BUTTONS'),
+                this.Buttons(),
+                veil
+              )
+          )
+        }
+      },
+      {
+        key: 'Links',
+        value: function Links() {
+          return this.props.links.map(function(_ref, index) {
+            var href = _ref.href,
+              buttonImage = _ref.buttonImage,
+              coverColor = _ref.coverColor,
+              descriptionText = _ref.descriptionText,
+              descriptionStyle = _ref.descriptionStyle
+            return React__default.createElement(
+              SideItem,
+              _extends(
+                {
+                  key: index
+                },
+                {
+                  size: SIDE_WIDTH / 1.7,
+                  buttonImage: buttonImage,
+                  coverColor: coverColor,
+                  descriptionText: descriptionText,
+                  descriptionStyle: descriptionStyle
+                }
+              ),
+              React__default.createElement(TouchEnd, {
+                listener: createClickA(href)
+              })
+            )
+          })
+        }
+      },
+      {
+        key: 'HoDetailQuit',
+        value: function HoDetailQuit() {
+          var _this2 = this
+
+          return function(_ref2) {
+            var fn = _ref2.fn
+            return React__default.createElement(
+              QuitDetail$1,
+              null,
+              React__default.createElement(ArrowLeft, {
+                stroke: _this2.props.colors.detailQuit
+              }),
+              React__default.createElement(TouchEndCapture, {
+                positionValue: -20,
+                listener: function listener(e) {
+                  e.stopPropagation()
+                  e.preventDefault()
+                  fn()
+                }
+              })
+            )
+          }
+        }
+      },
+      {
+        key: 'HoPopdownQuit',
+        value: function HoPopdownQuit() {
+          return function(_ref3) {
+            var fn = _ref3.fn
+            return React__default.createElement(
+              QuitPopdown$1,
+              null,
+              _ref4,
+              React__default.createElement(TouchEnd, {
+                onTouchStartCapture: function onTouchStartCapture(e) {
+                  return e.stopPropagation()
+                },
+                positionValue: -10,
+                listener: function listener(e) {
+                  e.stopPropagation()
+                  fn()
+                }
+              })
+            )
+          }
+        }
+      },
+      {
+        key: 'Preload',
+        value: function Preload$$1(opacity) {
+          return React__default.createElement(
+            Preload,
+            {
+              opacity: opacity,
+              onTransitionEnd: this.listeners['RENDER:PRELOADING_OFF'],
+              backgroundColor: this.props.colors.preloader
+            },
+            React__default.createElement(
+              Center,
+              {
+                top: -100
+              },
+              jsx(this.props.Preloader)
+            )
+          )
+        }
+      },
+      {
+        key: 'Popdown',
+        value: function Popdown$$1() {
+          var Quit = this.PopdownQuit
+          var onQuitEnd = this.listeners['RENDER:POPDOWN_OFF']
+          var _this$state$popdown = this.state.popdown,
+            src = _this$state$popdown.src,
+            vertically = _this$state$popdown.vertically
+          var top = vertically && '4%'
+          return React__default.createElement(
+            reactShut.ShutFromTop,
+            a$1('POPDOWN_SHUT', {
+              Quit: Quit,
+              onQuitEnd: onQuitEnd
+            }),
+            React__default.createElement(Popdown$1, {
+              src: src,
+              top: top
+            })
+          )
+        }
+      },
+      {
+        key: 'Veil',
+        value: function Veil$$1() {
+          return React__default.createElement(
+            Veil,
+            {
+              onTransitionEnd: this.listeners['RENDER:DRIFTING_OFF'],
+              drifting: this.state.drifting
+            },
+            React__default.createElement(TouchEnd, {
+              listener: this.listeners['RENDER:DRIFTING_LAG']
+            })
+          )
+        }
+      },
+      {
+        key: 'Head',
+        value: function Head$$1(view) {
+          var _this$props$colors = this.props.colors,
+            base = _this$props$colors.base,
+            sub = _this$props$colors.sub
+          return React__default.createElement(
+            Head,
+            {
+              height: HEAD_HEIGHT$1,
+              word: view.head,
+              backgroundColor: base,
+              color: sub
+            },
+            React__default.createElement(Burger, {
+              stroke: sub
+            }),
+            React__default.createElement(TouchEnd, {
+              listener: this.listeners['RENDER:DRIFTING_ON']
+            })
+          )
+        }
+      },
+      {
+        key: 'Middle',
+        value: function Middle(view) {
+          var height =
+            winnerHeight() -
+            HEAD_HEIGHT$1 -
+            (this.noButtons ? 0 : BUTTON_HEIGHT$1)
+          var backgroundStyle = this.props.backgroundStyle
+          var backgroundColor = this.props.colors.background
+          var isDetail = isObj(this.state.detail.props)
+          return React__default.createElement(
+            'div',
+            a$1('MIDDLE', {
+              style: {
                 height: height
               }
             }),
-            this.links
-          ),
-          React__default.createElement(
-            'div',
-            a$1('HEAD_AND_MIDDLE', { style: { transform: transform } }),
-            this.Head(view),
-            this.Middle(view),
-            veil
-          ),
-          !noButtons &&
-            React__default.createElement(
-              'nav',
-              a$1('BUTTONS'),
-              this.Buttons(),
-              veil
-            )
-        )
-      }
-    },
-    {
-      key: 'Links',
-      value: function Links() {
-        return this.props.links.map(function(_ref, index) {
-          var href = _ref.href,
-            buttonImage = _ref.buttonImage,
-            coverColor = _ref.coverColor,
-            descriptionText = _ref.descriptionText,
-            descriptionStyle = _ref.descriptionStyle
-          return React__default.createElement(
-            SideItem,
-            _extends(
-              { key: index },
-              {
-                size: SIDE_WIDTH / 1.7,
-                buttonImage: buttonImage,
-                coverColor: coverColor,
-                descriptionText: descriptionText,
-                descriptionStyle: descriptionStyle
-              }
-            ),
-            React__default.createElement(TouchEnd, {
-              listener: createClickA(href)
-            })
-          )
-        })
-      }
-    },
-    {
-      key: 'HoDetailQuit',
-      value: function HoDetailQuit() {
-        var _this2 = this
-
-        return function(_ref2) {
-          var fn = _ref2.fn
-          return React__default.createElement(
-            QuitDetail$1,
-            null,
-            React__default.createElement(ArrowLeft, {
-              stroke: _this2.props.colors.detailQuit
+            React__default.createElement(Background, {
+              style: backgroundStyle
             }),
-            React__default.createElement(TouchEndCapture, {
-              positionValue: -20,
-              listener: function listener(e) {
-                e.stopPropagation()
-                e.preventDefault()
-                fn()
+            React__default.createElement(Background, {
+              style: {
+                backgroundColor: backgroundColor
               }
-            })
-          )
-        }
-      }
-    },
-    {
-      key: 'HoPopdownQuit',
-      value: function HoPopdownQuit() {
-        return function(_ref3) {
-          var fn = _ref3.fn
-          return React__default.createElement(
-            QuitPopdown$1,
-            null,
-            _ref4,
-            React__default.createElement(TouchEnd, {
-              onTouchStartCapture: function onTouchStartCapture(e) {
-                return e.stopPropagation()
-              },
-              positionValue: -10,
-              listener: function listener(e) {
-                e.stopPropagation()
-                fn()
-              }
-            })
-          )
-        }
-      }
-    },
-    {
-      key: 'Preload',
-      value: function Preload$$1(opacity) {
-        return React__default.createElement(
-          Preload,
-          {
-            opacity: opacity,
-            onTransitionEnd: this.listeners['RENDER:PRELOADING_OFF'],
-            backgroundColor: this.props.colors.preloader
-          },
-          React__default.createElement(
-            Center,
-            { top: -100 },
-            jsx$1(this.props.Preloader)
-          )
-        )
-      }
-    },
-    {
-      key: 'Popdown',
-      value: function Popdown$$1() {
-        var Quit = this.PopdownQuit
-        var onQuitEnd = this.listeners['RENDER:POPDOWN_OFF']
-        var _state$popdown = this.state.popdown,
-          src = _state$popdown.src,
-          vertically = _state$popdown.vertically
-
-        var top = vertically && '4%'
-        return React__default.createElement(
-          reactShut.ShutFromTop,
-          a$1('POPDOWN_SHUT', { Quit: Quit, onQuitEnd: onQuitEnd }),
-          React__default.createElement(Popdown$1, { src: src, top: top })
-        )
-      }
-    },
-    {
-      key: 'Veil',
-      value: function Veil$$1() {
-        return React__default.createElement(
-          Veil,
-          {
-            onTransitionEnd: this.listeners['RENDER:DRIFTING_OFF'],
-            drifting: this.state.drifting
-          },
-          React__default.createElement(TouchEnd, {
-            listener: this.listeners['RENDER:DRIFTING_LAG']
-          })
-        )
-      }
-    },
-    {
-      key: 'Head',
-      value: function Head$$1(view) {
-        var _props$colors = this.props.colors,
-          base = _props$colors.base,
-          sub = _props$colors.sub
-
-        return React__default.createElement(
-          Head,
-          {
-            height: HEAD_HEIGHT$1,
-            word: view.head,
-            backgroundColor: base,
-            color: sub
-          },
-          React__default.createElement(Burger, { stroke: sub }),
-          React__default.createElement(TouchEnd, {
-            listener: this.listeners['RENDER:DRIFTING_ON']
-          })
-        )
-      }
-    },
-    {
-      key: 'Middle',
-      value: function Middle(view) {
-        var height =
-          winnerHeight() -
-          HEAD_HEIGHT$1 -
-          (this.noButtons ? 0 : BUTTON_HEIGHT$1)
-        var backgroundStyle = this.props.backgroundStyle
-        var backgroundColor = this.props.colors.background
-        var isDetail = isObj(this.state.detail.props)
-        return React__default.createElement(
-          'div',
-          a$1('MIDDLE', { style: { height: height } }),
-          React__default.createElement(Background, { style: backgroundStyle }),
-          React__default.createElement(Background, {
-            style: { backgroundColor: backgroundColor }
-          }),
-          React__default.createElement(
-            'div',
-            a$1('MIDDLE_WRAP:BOTH'),
+            }),
             React__default.createElement(
               'div',
-              a$1('MIDDLE_WRAP:EXHIBIT', {
-                style: { overflowY: isDetail ? 'hidden' : 'scroll' }
-              }),
-              jsx$1(view.Exhibit)
-            ),
-            React__default.createElement(
-              'div',
-              a$1('MIDDLE_WRAP:DETAIL'),
-              isDetail && this.Detail(view)
+              a$1('MIDDLE_WRAP:BOTH'),
+              React__default.createElement(
+                'div',
+                a$1('MIDDLE_WRAP:EXHIBIT', {
+                  style: {
+                    overflowY: isDetail ? 'hidden' : 'scroll'
+                  }
+                }),
+                jsx(view.Exhibit)
+              ),
+              React__default.createElement(
+                'div',
+                a$1('MIDDLE_WRAP:DETAIL'),
+                isDetail && this.Detail(view)
+              )
             )
           )
-        )
-      }
-    },
-    {
-      key: 'Detail',
-      value: function Detail(view) {
-        return React__default.createElement(
-          reactShut.ShutFromLeft,
-          {
-            mountWithShut: this.state.detail.mountWithShut,
-            duration: 0.55,
-            background: this.props.colors.detail,
-            notScroll: Boolean(this.state.popdown.src),
-            Quit: this.DetailQuit,
-            onQuitEnd: this.listeners['DOM:DETAIL_OFF']
-          },
-          jsx$1(view.Detail, this.state.detail.props)
-        )
-      }
-    },
-    {
-      key: 'Buttons',
-      value: function Buttons() {
-        var _this3 = this
-
-        return this.props.views.map(function(view, index, views) {
+        }
+      },
+      {
+        key: 'Detail',
+        value: function Detail(view) {
           return React__default.createElement(
-            Button$1,
-            _extends(
-              { key: index },
-              {
-                width: winnerWidth() / views.length - 0.5,
-                inform: _this3.state.informs[index],
-                svg: jsx$1(view.Button, {
-                  choised: index === _this3.state.index,
-                  mainColor: _this3.props.colors.base,
-                  subColor: _this3.props.colors.sub
-                })
-              }
-            ),
-            React__default.createElement(TouchStartCapture, {
-              'data-index': index,
-              listener: function listener(e) {
-                e.stopPropagation()
-                _this3.listeners['DOM:VIEW_SWITCH'](e)
-              }
-            })
+            reactShut.ShutFromLeft,
+            {
+              mountWithShut: this.state.detail.mountWithShut,
+              duration: 0.55,
+              background: this.props.colors.detail,
+              notScroll: Boolean(this.state.popdown.src),
+              Quit: this.DetailQuit,
+              onQuitEnd: this.listeners['DOM:DETAIL_OFF']
+            },
+            jsx(view.Detail, this.state.detail.props)
           )
-        })
-      }
-    }
-  ])
-  return LonogaraMobile
-})(React.Component)
+        }
+      },
+      {
+        key: 'Buttons',
+        value: function Buttons() {
+          var _this3 = this
 
+          return this.props.views.map(function(view, index, views) {
+            return React__default.createElement(
+              Button$1,
+              _extends(
+                {
+                  key: index
+                },
+                {
+                  width: winnerWidth() / views.length - 0.5,
+                  inform: _this3.state.informs[index],
+                  svg: jsx(view.Button, {
+                    choised: index === _this3.state.index,
+                    mainColor: _this3.props.colors.base,
+                    subColor: _this3.props.colors.sub
+                  })
+                }
+              ),
+              React__default.createElement(TouchStartCapture, {
+                'data-index': index,
+                listener: function listener(e) {
+                  e.stopPropagation()
+
+                  _this3.listeners['DOM:VIEW_SWITCH'](e)
+                }
+              })
+            )
+          })
+        }
+      }
+    ])
+
+    return LonogaraMobile
+  })(React.Component)
 var a$1 = Atra({
   HEAD_AND_MIDDLE: {
     style: {
@@ -2829,7 +3031,7 @@ var a$1 = Atra({
     style: {
       position: 'fixed',
       top: 0,
-      left: winnerWidth(),
+      // left: winnerWidth(),
       width: SIDE_WIDTH,
       fontSize: 34,
       color: '#fff',
@@ -2840,8 +3042,6 @@ var a$1 = Atra({
   }
 })
 
-//
-
 var orph$1 = new Orph({
   preloading: true,
   index: undefined,
@@ -2850,20 +3050,22 @@ var orph$1 = new Orph({
   drifting: false,
   informs: [0, 0, 0, 0]
 })
-
-orph$1.register.apply(orph$1, toConsumableArray(STORE()))
-
+orph$1.register.apply(orph$1, _toConsumableArray(STORE()))
 orph$1.register.apply(
   orph$1,
-  toConsumableArray(
+  _toConsumableArray(
     RENDER({
       DRIFTING_ON: function DRIFTING_ON(n, _ref) {
         var render = _ref.render
-        return render({ drifting: true })
+        return render({
+          drifting: true
+        })
       },
       DRIFTING_LAG: function DRIFTING_LAG(n, _ref2) {
         var render = _ref2.render
-        return render({ drifting: 'lag' })
+        return render({
+          drifting: 'lag'
+        })
       },
       DRIFTING_OFF: function DRIFTING_OFF(n, _ref3) {
         var state = _ref3.state,
@@ -2871,25 +3073,25 @@ orph$1.register.apply(
         return state('drifting').then(function(drifting) {
           return (
             drifting === 'lag' &&
-            render({ drifting: false }, function() {
-              getElementById(MOBILE_SIDE_SCROLL_ID).scrollTop = 0
-            })
+            render(
+              {
+                drifting: false
+              },
+              function() {
+                getElementById(MOBILE_SIDE_SCROLL_ID).scrollTop = 0
+              }
+            )
           )
         })
       }
     })
   )
 )
-
-orph$1.register.apply(orph$1, toConsumableArray(REACT()))
-
-orph$1.register.apply(orph$1, toConsumableArray(DOM()))
-
-orph$1.register.apply(orph$1, toConsumableArray(PASSED()))
-
-var defaults$2 = create()
-
-defaults$2.colors = HoColors(function() {
+orph$1.register.apply(orph$1, _toConsumableArray(REACT()))
+orph$1.register.apply(orph$1, _toConsumableArray(DOM()))
+orph$1.register.apply(orph$1, _toConsumableArray(PASSED()))
+var defaults$1 = create()
+defaults$1.colors = HoColors(function() {
   return {
     base: 'rgb(24, 24, 35)',
     sub: 'rgb(255, 255, 255)',
@@ -2900,11 +3102,10 @@ defaults$2.colors = HoColors(function() {
     links: 'rgb(77, 172, 125)'
   }
 })
-
 var index$1 = Guardian({
   App: LonogaraMobile,
   orph: orph$1,
-  defaults: defaults$2
+  defaults: defaults$1
 })
 
 exports.Desktop = index
